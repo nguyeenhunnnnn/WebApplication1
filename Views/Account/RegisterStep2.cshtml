@@ -1,0 +1,213 @@
+﻿@model WebApplication1.Models.ViewModels.RegisterStep2ViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký - Bước 2";
+}
+<div class="container">
+    <h1>Thông Tin Cá Nhân</h1>
+    <p class="subtitle">Chỉ một bước nữa thôi, bạn đã có thể đăng tin tuyển dụng tìm kiếm gia sư phù hợp</p>
+
+    <form id="registerForm" asp-action="RegisterStep2" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="VaiTro" />
+        <input type="hidden" asp-for="Email" />
+        <input type="hidden" asp-for="MatKhau" />
+        <!-- Ảnh đại diện -->
+        <div class="profile-pic-container">
+            <div class="profile-pic">
+                <img id="profile-image" src="" alt="" style="display: none;">
+                <span id="upload-icon">📷</span>
+            </div>
+            <button type="button" class="upload-btn" id="choose-photo">Chọn ảnh</button>
+            <input type="file" id="photo-input" asp-for="sFile_Avata" style="display: none;" accept="image/*">
+            <small id="avatar-error" style="color: red;"></small>
+        </div>
+
+        <!-- Thông tin cá nhân -->
+        <div class="form-group">
+            <label for="fullname">Họ và tên *</label>
+            <input type="text" id="fullname" asp-for="HoTen" placeholder="Vui lòng nhập" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label for="birthday">Ngày sinh *</label>
+                <div class="input-icon">
+                    <input type="date" id="birthday" name="NgaySinh" placeholder="Vui lòng chọn" required>
+                    <span class="calendar-icon">📅</span>
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="phone">Số điện thoại *</label>
+                <input type="tel" id="phone" asp-for="SDT" placeholder="Vui lòng nhập" required>
+            </div>
+            <div class="form-col">
+                <label for="email">Email *</label>
+                <input type="email" id="email" asp-for="Email" placeholder="Vui lòng nhập" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id-number">Số định danh cá nhân (CCCD/CMT) *</label>
+            <input type="text" id="id-number" asp-for="CCCD" placeholder="Vui lòng nhập" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label for="city">Tỉnh/Thành phố *</label>
+                <select id="city" name="TinhThanh" required>
+                    <option value="" disabled selected>Chọn thành phố</option>
+                    <option value="hanoi">Hà Nội</option>
+                    <option value="hcm">TP. Hồ Chí Minh</option>
+                    <option value="danang">Đà Nẵng</option>
+                    <option value="other">Khác</option>
+                </select>
+            </div>
+            <div class="form-col">
+                <label for="address">Địa chỉ chi tiết *</label>
+                <input type="text" id="address" asp-for="DiaChi" placeholder="Vui lòng nhập" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label for="bio">Mô tả bản thân</label>
+                <textarea id="bio" name="MoTa" placeholder="Vui lòng nhập"></textarea>
+            </div>
+            <div class="form-col">
+                <label>Tải ảnh CCCD *</label>
+                <div class="cccd-upload" id="cccd-upload">
+                    <span>📎 Tải ảnh CCCD</span>
+                </div>
+                <input type="file" id="cccd-input" asp-for="sFile_CCCD" style="display: none;" accept="image/*" required>
+                <small id="cccd-error" style="color: red;"></small>
+                <div style="margin-top:10px;">
+                    <img id="cccd-preview" src="" alt="Ảnh CCCD" style="display: none; max-width: 250px; border-radius: 10px;">
+                </div>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="terms" name="DongYDieuKhoan" required>
+                <label for="terms">Bằng việc đăng ký, tôi đã đọc và đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của web *</label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">Đăng ký</button>
+            <div style="display:none;">
+                <p>Email từ TempData: @TempData["Email"]</p>
+                <p>Mật khẩu từ TempData: @TempData["MatKhau"]</p>
+                <p>Vaitro từ TempData: @TempData["VaiTro"]</p>
+            </div>
+
+    </form>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Xử lý upload ảnh đại diện
+        const photoInput = document.getElementById('photo-input');
+        const choosePhoto = document.getElementById('choose-photo');
+        const profileImage = document.getElementById('profile-image');
+        const uploadIcon = document.getElementById('upload-icon');
+        const avatarError = document.getElementById('avatar-error');
+
+
+        choosePhoto.addEventListener('click', function () {
+            photoInput.click();
+        });
+
+        photoInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                // Validate file
+                const file = this.files[0];
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!validTypes.includes(file.type)) {
+                    avatarError.textContent = 'Chỉ chấp nhận file ảnh (JPEG, PNG, GIF)';
+                    this.value = '';
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    avatarError.textContent = 'File ảnh không được vượt quá 5MB';
+                    this.value = '';
+                    return;
+                }
+
+                avatarError.textContent = '';
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profileImage.src = e.target.result;
+                    profileImage.style.display = 'block';
+                    uploadIcon.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Xử lý upload ảnh CCCD
+        const cccdInput = document.getElementById('cccd-input');
+        const cccdUpload = document.getElementById('cccd-upload');
+        const cccdError = document.getElementById('cccd-error');
+        //const cccdError = document.getElementById('cccd-error');
+        const cccdPreview = document.getElementById('cccd-preview');
+
+        cccdUpload.addEventListener('click', function () {
+            cccdInput.click();
+        });
+
+        cccdInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                const validTypes = ['image/jpeg', 'image/png'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!validTypes.includes(file.type)) {
+                    cccdError.textContent = 'Chỉ chấp nhận file ảnh (JPEG, PNG)';
+                    this.value = '';
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    cccdError.textContent = 'File ảnh không được vượt quá 5MB';
+                    this.value = '';
+                    return;
+                }
+
+                cccdError.textContent = '';
+                cccdUpload.innerHTML = `<span>📎 ${file.name}</span>`;
+                // 👇 Hiển thị ảnh preview
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    cccdPreview.src = e.target.result;
+                    cccdPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Xử lý submit form
+        // Xử lý submit form
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', function (e) {
+            // Validate trước khi submit
+            if (!cccdInput.files || cccdInput.files.length === 0) {
+                e.preventDefault();
+                cccdError.textContent = 'Vui lòng tải lên ảnh CCCD';
+                return;
+            }
+
+            // Hiển thị loading
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang xử lý...';
+        });
+
+    });
+</script>
+

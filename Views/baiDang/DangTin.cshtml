@@ -1,0 +1,386 @@
+﻿@{
+    ViewData["Title"] = "Bai Dang ";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/styleDangTin.css" />
+    <title>BOWO - Đăng Tin Tuyển Dụng</title>
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+            <div class="menu">
+                <div class="menu-item ">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Tìm hồ sơ</span>
+                </div>
+                <div class="menu-item active">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Đăng Tin</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Quản Lí Tin Đăng</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Quản Lí Ứng Viên</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Đơn Hàng</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Cấu Hình Email</span>
+                </div>
+            </div>
+
+            <div class="footer-sidebar">
+                <div>Version V2.74.39</div>
+                <div>© 2024 BOWO. All Rights Reserved.</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <!-- Content Area -->
+            <div class="content">
+                <h2 class="section-title">Đăng Tin</h2>
+
+                <div class="form-card">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Môn học</label>
+                                <div class="select-wrapper">
+                                    <select class="form-control">
+                                        <option>Toán học</option>
+                                        <option>Ngữ Văn</option>
+                                        <option>Tiếng Anh</option>
+                                        <option>Vật Lý</option>
+                                        <option>Ngữ Văn</option>
+                                        <option>Tiếng Anh</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Số lượng tuyển</label>
+                                <input type="number" class="form-control" placeholder="6">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tiêu đề</label>
+                        <input type="text" class="form-control" placeholder="Vui lòng nhập">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Địa điểm làm việc</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>Thành phố Hồ Chí Minh</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                            </select>
+                        </div>
+                        <button class="add-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>Thêm</span>
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Địa chỉ chi tiết</label>
+                        <input type="text" class="form-control" placeholder="212, Nguyễn Thái Bình, p. Nguyễn Thái Bình, Q.1, Tp.HCM">
+                        <button class="add-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>Thêm</span>
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Mô tả công việc</label>
+                        <div class="editor-toolbar">
+                            <span class="editor-tool"><i class="fas fa-bold"></i></span>
+                            <span class="editor-tool"><i class="fas fa-italic"></i></span>
+                            <span class="editor-tool"><i class="fas fa-underline"></i></span>
+                            <span class="editor-tool"><i class="fas fa-list-ul"></i></span>
+                            <span class="editor-tool"><i class="fas fa-list-ol"></i></span>
+                        </div>
+                        <div class="editor-content">
+                            Chịu trách nhiệm trực tiếp đối với thiết kế, trải nghiệm khách hàng trong các dự án được giao.
+                            Xây dựng và cải tiến quy trình thiết kế, phân tích trải nghiệm người dùng. Am hiểu các lĩnh vực sản phẩm của Viễn thông, phát triển và cải tiến giao diện, trải nghiệm cho khách hàng theo định hướng kinh doanh từng thời kỳ. Xây dựng Design system/Product map/Trải nghiệm khách hàng
+                            Tham gia xây dựng Design system, components, Mobile app, web app cho người dùng cuối cũng như hệ thống nội bộ.Tham gia xây dựng mô hình hoạt động phục vụ dự án và sản phẩm.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Yêu cầu công việc</label>
+                        <div class="editor-toolbar">
+                            <span class="editor-tool"><i class="fas fa-bold"></i></span>
+                            <span class="editor-tool"><i class="fas fa-italic"></i></span>
+                            <span class="editor-tool"><i class="fas fa-underline"></i></span>
+                            <span class="editor-tool"><i class="fas fa-list-ul"></i></span>
+                            <span class="editor-tool"><i class="fas fa-list-ol"></i></span>
+                        </div>
+                        <div class="editor-content">
+                            Tốt nghiệp Đại học trở lên các ngành/chuyên ngành. Thiết kế đồ họa, thiết kế giao diện phần mềm, Tương tác người-máy hoặc tương đương Có từ 2 đến 5 năm kinh nghiệm làm việc cho vị trí,ngành nghề có liên quan. Sử dụng thành thạo các phần mềm thiết kế: Figma, Illustrator, Photoshop. Biết sử dụng thêm các phần mềm khác như: Sketch, AE, 3D, biết vẽ tay, animation là một điểm cộng.
+                            Kỹ năng đọc hiểu và phân tích dữ liệu, khả năng sáng tạo tốt.
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Mức lương</label>
+                                <div class="select-wrapper">
+                                    <select class="form-control">
+                                        <option>VND</option>
+                                        <option>USD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Từ</label>
+                                <input type="text" class="form-control" value="12 triệu">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Đến</label>
+                                <input type="text" class="form-control" value="14 triệu">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ngôn ngữ trình bày hồ sơ</label>
+                        <div class="checkbox-languages">
+                            <div class="benefit-item">
+                                <input type="checkbox" id="vietnamese" checked>
+                                <label for="vietnamese">Tiếng Việt</label>
+                            </div>
+                            <div class="benefit-item">
+                                <input type="checkbox" id="korean">
+                                <label for="korean">Tiếng Hàn</label>
+                            </div>
+                            <div class="benefit-item">
+                                <input type="checkbox" id="chinese">
+                                <label for="chinese">Tiếng Trung</label>
+                            </div>
+                            <div class="benefit-item">
+                                <input type="checkbox" id="english" checked>
+                                <label for="english">Tiếng Anh</label>
+                            </div>
+                            <div class="benefit-item">
+                                <input type="checkbox" id="japanese">
+                                <label for="japanese">Tiếng Nhật</label>
+                            </div>
+                            <div class="benefit-item">
+                                <input type="checkbox" id="other">
+                                <label for="other">Khác</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <h2 class="section-title">YÊU CẦU CHUNG</h2>
+
+                <div class="form-card">
+                    <div class="form-group">
+                        <label class="form-label">Giới tính</label>
+                        <div class="radio-group">
+
+                            <div class="radio-item">
+                                <input type="radio" name="gender" id="male">
+                                <label for="male">Nam</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="gender" id="female">
+                                <label for="female">Nữ</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Tuổi</label>
+                                <input type="number" class="form-control" value="21">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Đến</label>
+                                <input type="number" class="form-control" value="25">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Kinh nghiệm</label>
+                                <div class="select-wrapper">
+                                    <select class="form-control">
+                                        <option>2-3 năm</option>
+                                        <option>0-1 năm</option>
+                                        <option>3-5 năm</option>
+                                        <option>Trên 5 năm</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Bằng cấp</label>
+                                <div class="select-wrapper">
+                                    <select class="form-control">
+                                        <option>Sau Đại học</option>
+                                        <option>Đại học</option>
+                                        <option>Cao đẳng</option>
+                                        <option>Trung cấp</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-title">TIÊU CHÍ ƯU TIÊN TRONG SÀNG LỌC</h2>
+
+                <div class="form-card">
+                    <p>Hồ sơ của ứng viên sẽ được tự động lựa chọn phù hợp với yêu cầu của bạn. Tất cả các hồ sơ mà bạn nhận sẽ được đánh giá từ 0% đến 100%.</p>
+
+                    <table class="requirements-table">
+                        <thead>
+                            <tr>
+                                <th>Thuộc tính</th>
+                                <th>Bắt buộc</th>
+                                <th>Quan trọng</th>
+                                <th>Ít quan trọng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Chức danh vị trí tuyển dụng</td>
+                                <td><input type="radio" name="position" checked></td>
+                                <td><input type="radio" name="position"></td>
+                                <td><input type="radio" name="position"></td>
+                            </tr>
+                            <tr>
+                                <td>Nơi làm việc</td>
+                                <td><input type="radio" name="location"></td>
+                                <td><input type="radio" name="location" checked></td>
+                                <td><input type="radio" name="location"></td>
+                            </tr>
+                            <tr>
+                                <td>Ngành nghề</td>
+                                <td><input type="radio" name="industry" checked></td>
+                                <td><input type="radio" name="industry"></td>
+                                <td><input type="radio" name="industry"></td>
+                            </tr>
+                            <tr>
+                                <td>Kỹ năng, kinh nghiệm, cấp bậc</td>
+                                <td><input type="radio" name="skill" checked></td>
+                                <td><input type="radio" name="skill"></td>
+                                <td><input type="radio" name="skill"></td>
+                            </tr>
+                            <tr>
+                                <td>Mức lương</td>
+                                <td><input type="radio" name="salary"></td>
+                                <td><input type="radio" name="salary" checked></td>
+                                <td><input type="radio" name="salary"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Button container -->
+                    <div class="buttons-container">
+                        <button class="btn btn-cancel">Huỷ</button>
+                        <button class="btn btn-save">Lưu và Đăng tuyển</button>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+    </div>
+                    <!-- JavaScript for handling radio button selections -->
+                    <script>
+                        // Function to handle radio button selection
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Track changes to any radio button
+                            const radioButtons = document.querySelectorAll('input[type="radio"]');
+
+                            radioButtons.forEach(radio => {
+                                radio.addEventListener('change', function() {
+                                    // You could add validation or other logic here
+                                    console.log(`Changed ${this.name} to ${this.checked}`);
+                                });
+                            });
+
+                            // Handle button clicks
+                            const cancelButton = document.querySelector('.btn-cancel');
+                            const saveButton = document.querySelector('.btn-save');
+
+                            cancelButton.addEventListener('click', function() {
+                                // Handle cancel action
+                                if (confirm('Bạn có chắc chắn muốn huỷ các thay đổi?')) {
+                                    // Reset form or redirect
+                                    console.log('Cancelled changes');
+                                    // You could reset the form here
+                                    // window.location.href = '/previous-page'; // Or redirect
+                                }
+                            });
+
+                            saveButton.addEventListener('click', function() {
+                                // Collect all the selected preferences
+                                const preferences = {};
+                                const categories = ['position', 'location', 'industry', 'skill', 'salary'];
+
+                                categories.forEach(category => {
+                                    const selectedOption = document.querySelector(`input[name="${category}"]:checked`);
+                                    if (selectedOption) {
+                                        // Determine which column was selected (Bắt buộc, Quan trọng, Ít quan trọng)
+                                        const parentCell = selectedOption.closest('td');
+                                        const columnIndex = Array.from(parentCell.parentNode.children).indexOf(parentCell);
+
+                                        let priority;
+                                        switch(columnIndex) {
+                                            case 1: priority = 'required'; break;
+                                            case 2: priority = 'important'; break;
+                                            case 3: priority = 'lessImportant'; break;
+                                            default: priority = 'unknown';
+                                        }
+
+                                        preferences[category] = priority;
+                                    }
+                                });
+
+                                console.log('Saving preferences:', preferences);
+                                // Here you would typically send this data to the server
+                                alert('Đã lưu và đăng tuyển thành công!');
+                                // After saving, you might redirect:
+                                // window.location.href = '/recruitment-dashboard';
+                            });
+                        });
+                    </script>
+                    </body>
+                    </html>
+

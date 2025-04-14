@@ -1,0 +1,559 @@
+﻿@model WebApplication1.Models.ViewModels.LoginViewModel;
+@{
+    ViewData["Title"] = "Log in";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOWO - Nền tảng tuyển dụng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+        /* Thêm vào phần style */
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Ngăn scroll toàn trang */
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        /* Thêm hệ thống grid 12 cột */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            height: calc(100vh - 72px);
+            margin-top: 72px;
+        }
+
+        .left-panel {
+            grid-column: span 5; /* Chiếm 5/12 cột */
+            background-color: #f0e6ff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .right-panel {
+            grid-column: span 7; /* Chiếm 7/12 cột */
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: white;
+        }
+
+        /* Điều chỉnh kích thước form */
+        .form-container {
+            max-width: 600px; /* Giảm kích thước form */
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Điều chỉnh kích thước card */
+        .option-card {
+            padding: 30px;
+            max-width: 450px;
+            margin: 0 auto;
+            height: 180px;
+        }
+
+        .left-panel, .right-panel {
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* Tùy chỉnh thanh scroll */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #6b5fd9;
+            border-radius: 3px;
+        }
+        /* Giảm khoảng cách giữa các phần tử */
+        .left-panel {
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 20px;
+        }
+
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+        }
+
+        .card-content h3 {
+            font-size: 26px;
+        }
+
+        .card-content p {
+            font-size: 18px;
+        }
+
+        /*    .form-container {
+                            max-width: 500px; /* Mở rộng form
+                        }
+
+                        */
+
+
+        .form-title {
+            font-size: 28px;
+        }
+
+        .form-subtitle {
+            font-size: 18px;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            font-size: 18px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background-color: #13121c;
+            height: 120px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+            .logo img {
+                height: 40px;
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-icon, .notification-icon {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 24px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #6b5fd9;
+            color: #6b5fd9;
+        }
+
+        .btn-primary {
+            background-color: #6b5fd9;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .left-panel {
+            width: 50%;
+            background-color: #f0e6ff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .right-panel {
+            width: 50%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: white;
+        }
+
+        .option-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+            .option-card:hover {
+                transform: translateY(-4px);
+            }
+
+            .option-card.active {
+                border: 2px solid #6b5fd9;
+            }
+
+        .card-icon {
+            width: 100px;
+            height: 100px;
+        }
+
+        .card-content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .card-content p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+            color: #333;
+        }
+
+        .form-subtitle {
+            font-size: 20px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-label {
+            font-size: 18px;
+            color: #666;
+        }
+
+            .checkbox-label a {
+                color: #6b5fd9;
+                text-decoration: none;
+            }
+
+        #submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+            #submit-btn:disabled {
+                background-color: #ccc;
+                color: #666;
+                cursor: not-allowed;
+            }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            color: #999;
+            font-size: 18px;
+        }
+
+            .divider::before, .divider::after {
+                content: "";
+                flex: 1;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .divider::before {
+                margin-right: 12px;
+            }
+
+            .divider::after {
+                margin-left: 12px;
+            }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            color: #333;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .login-link {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+        }
+
+            .login-link a {
+                color: #6b5fd9;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="4" fill="#6B5FD9" />
+                    <rect x="10" y="10" width="8" height="8" rx="2" fill="white" />
+                    <rect x="22" y="10" width="8" height="8" rx="2" fill="white" />
+                    <rect x="10" y="22" width="20" height="8" rx="2" fill="white" />
+                </svg>
+                BOWO
+            </a>
+            <nav class="nav-links">
+                <a href="#" class="nav-link">Trang Chủ</a>
+                <a href="#" class="nav-link">Bảng Tin</a>
+                <a href="#" class="nav-link">HR Central</a>
+                <a href="#" class="nav-link">Sản Phẩm Và Dịch Vụ</a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <div class="search-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <div class="notification-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.36 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.63 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16Z" fill="white" />
+                </svg>
+            </div>
+            <button class="btn btn-outline">Đăng kí</button>
+            <button class="btn btn-primary">Đăng nhập</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="left-panel">      
+        </div>
+        <div class="right-panel">
+            <div class="form-container">
+                <h2 class="form-title">Xin chào!</h2>
+                <p class="form-subtitle">Đăng nhập để bắt đầu</p>
+
+                <form method="post" asp-action="Login">
+                    <div class="form-group">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="email" id="Email" asp-for="Email" name="Email" class="form-input" placeholder="abc123@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Password" class="form-label">Mật khẩu</label>
+                        <div class="password-input">
+                            <input type="password" id="Password" asp-for="MatKhau" name="MatKhau" class="form-input" placeholder="Ít nhất 8 ký tự">
+                            <span class="eye-icon"></span>
+                        </div>
+                    </div>
+
+                   
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" class="form-checkbox">
+                        <label for="terms" class="checkbox-label">
+                           Remember ? 
+                        </label>
+                    </div>
+
+                   
+                    <button type="submit" id="submit-btn" disabled>Đăng nhập</button>
+                </form>
+
+                <div class="divider">Hoặc đăng nhập với</div>
+
+                <div class="social-login">
+                    <button class="social-btn">Google</button>
+                    <button class="social-btn">Facebook</button>
+                </div>
+
+                <p class="login-link">
+                    Bạn chưa có tài khoản? <a asp-action="RegisterStep1">Đăng ký</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Xử lý chọn vai trò
+            //const roleCards = document.querySelectorAll('.option-card');
+           // const vaiTroInput = document.getElementById('vaiTroInput');
+            //const Email = document.getElementById('Email');
+            //const Password = document.getElementById('Password');
+            const submitBtn = document.getElementById('submit-btn');
+
+ 
+
+            // Xử lý các trường input
+            const emailInput = document.getElementById('Email');
+            const passwordInput = document.getElementById('Password');
+            //const confirmPasswordInput = document.getElementById('confirm-password');
+            const termsCheckbox = document.getElementById('terms');
+
+            [emailInput, passwordInput, termsCheckbox].forEach(input => {
+                input.addEventListener('input', checkFormValidity);
+            });
+
+            function checkFormValidity() {
+               // console.log("" + vaiTroInput.value + emailInput.value + passwordInput.value);
+               // const isRoleSelected = vaiTroInput.value !== '';
+                const isEmailValid = emailInput.value.includes("@@");
+                const isPasswordValid = passwordInput.value.length >= 8;
+               // const isPasswordMatch = passwordInput.value === confirmPasswordInput.value;
+                const isTermsChecked = termsCheckbox.checked;
+
+                // Kích hoạt hoặc vô hiệu hóa nút đăng ký
+                submitBtn.disabled = !( isEmailValid && isPasswordValid && isTermsChecked);
+            }
+
+            // Xử lý hiển thị/ẩn mật khẩu
+            document.querySelectorAll('.eye-icon').forEach(eye => {
+                eye.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.classList.add('visible');
+                    } else {
+                        input.type = 'password';
+                        this.classList.remove('visible');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
