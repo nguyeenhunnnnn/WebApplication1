@@ -86,7 +86,7 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}")
+    pattern: "{controller=baiDang}/{action=DangTin}/{id?}")
     .WithStaticAssets();
 
 

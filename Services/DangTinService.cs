@@ -23,7 +23,7 @@ namespace WebApplication1.Services
         // Task UpdateDangTinAsync(DangTin dangTin);
         // Task DeleteDangTinAsync(int id);
         Task<bool> SaveChangesAsync();
-        Task<bool> CreatDangTin(BaiDang dangTin);
+        Task<bool> CreatDangTin(DangTinViewModel model, string userId);
         Task<BaiDang> GetDangTinById(int id);
         Task<bool> UpdateDangTin(BaiDang dangTin);
         Task<bool> DeleteDangTin(int id);
@@ -48,11 +48,35 @@ namespace WebApplication1.Services
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public async Task<bool> CreatDangTin(BaiDang dangTin)
+        public async Task<bool> CreatDangTin(DangTinViewModel model, string userId)
         {
-           
-            await _context.BaiDangs.AddAsync(dangTin);
-            return await SaveChangesAsync();
+            var dangTin = new BaiDang(); 
+            dangTin.sMonday = model.sMonday;
+            dangTin.sYCau = model.sYCau;
+            dangTin.sGioiTinh = model.sGioiTinh;
+            dangTin.sTuoi = model.sTuoi;
+            dangTin.sKinhNghiem = model.sKinhNghiem;
+            dangTin.sBangCap = model.sBangCap;
+            dangTin.sTieuDe = model.sTieuDe;
+            dangTin.sDiaDiem = model.sDiaDiem;
+            dangTin.fMucLuong = model.fMucLuong;
+            dangTin.dThoiGianHetHan = model.dThoiGianHetHan;
+            dangTin.sMoTa = model.sMoTa;
+            dangTin.dNgayTao = DateTime.Now;
+            dangTin.sTrangThai = "Đang chờ duyệt";
+            dangTin.FK_iMaTK = userId;
+            try
+            {
+                await _dangTinRepository.CreatDangTin(dangTin);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Log the exception or handle it as needed
+                return false;
+            }
+            
         }
         public async Task<BaiDang> GetDangTinById(int id)
         {
@@ -79,7 +103,7 @@ namespace WebApplication1.Services
         }
         public async Task<bool> DangTinExistsByTitleAsync(string title)
         {
-            return await _context.BaiDangs.AnyAsync(d => d.sTieuDe == title);
+            return await _dangTinRepository.DangTinExistsByTitleAsync(title);
         }
         
         public async Task<bool> SaveChangesAsync()
@@ -108,7 +132,12 @@ namespace WebApplication1.Services
 
            return baiDangs.Select(b=>new BaiDangViewModel
                 {
-                    
+                    sMonday =b.sMonday,
+                    sBangCap=b.sBangCap,
+                    sGioiTinh=b.sGioiTinh,
+                    sKinhNghiem=b.sKinhNghiem,
+                    sTuoi=b.sTuoi,
+                    sYCau=b.sYCau,
                     sTieuDe = b.sTieuDe,
                     sMoTa = b.sMoTa,
                     sDiaDiem = b.sDiaDiem,

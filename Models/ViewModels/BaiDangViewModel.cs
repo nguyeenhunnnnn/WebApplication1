@@ -19,5 +19,13 @@ namespace WebApplication1.Models.ViewModels
 
         public DateTime dNgayTao { get; set; }
         public DateTime dThoiGianHetHan { get; set; } // Tùy chọn
+
+        //cột mới 
+        public string sMonday { get; set; }
+        public string sYCau { get; set; }
+        public string sGioiTinh { get; set; }
+        public string sTuoi { get; set; }
+        public string sKinhNghiem { get; set; }
+        public string sBangCap { get; set; }
     }
 }

@@ -5,8 +5,6 @@ namespace WebApplication1.Models.ViewModels
 {
     public class DangTinViewModel
     {
-       
-
         public string FK_iMaTK { get; set; } // Bắt buộc
         public TaiKhoan TaiKhoan { get; set; } = null!;
 
@@ -28,5 +26,13 @@ namespace WebApplication1.Models.ViewModels
 
         public int? FK_iMaHS { get; set; } // Tùy chọn
         public HoSo? HoSo { get; set; }
+
+        //cột mới 
+        public string sMonday { get; set; }
+        public string sYCau { get; set; }
+        public string sGioiTinh { get; set; }
+        public string sTuoi { get; set; }
+        public string sKinhNghiem { get; set; }
+        public string sBangCap { get; set; }
     }
 }

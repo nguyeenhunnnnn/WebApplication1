@@ -57,7 +57,7 @@
         <div class="main-content">
 
             <!-- Content Area -->
-            <div class="content" style="width:120%">
+            <div class="content" style="width:220%">
                 <div class="section-title">
                     <a asp-action="DangTin">Đăng Tin</a>
                 </div>
@@ -66,10 +66,16 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label class="form-label">Môn học</label>
+                                    <label class="form-label">Tiêu đề</label>
+                                    <input asp-for="sTieuDe" type="text" class="form-control" placeholder="Vui lòng nhập">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label class="form-label">Môn dạy</label>
                                     <div class="select-wrapper">
-                                        <select  class="form-control">
-                                            <option>Toán học</option>
+                                        <select asp-for="sMonday" class="form-control">
+                                            <option>Toán Học</option>
                                             <option>Ngữ Văn</option>
                                             <option>Tiếng Anh</option>
                                             <option>Vật Lý</option>
@@ -79,24 +85,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label class="form-label">Số lượng tuyển</label>
-                                    <input type="number" class="form-control" placeholder="6">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Tiêu đề</label>
-                            <input asp-for="sTieuDe" type="text" class="form-control" placeholder="Vui lòng nhập">
-                        </div>
+                            
+                        </div> 
 
                         <div class="form-group">
                             <label class="form-label">Địa điểm làm việc</label>
                             <div class="select-wrapper">
                                 <select asp-for="sDiaDiem" class="form-control">
-                                    <option>Thành phố Hồ Chí Minh</option>
+                                    <option> Hồ Chí Minh</option>
                                     <option>Hà Nội</option>
                                     <option>Đà Nẵng</option>
                                 </select>
@@ -106,16 +102,6 @@
                                 <span>Thêm</span>
                             </button>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Địa chỉ chi tiết</label>
-                            <input type="text" class="form-control" placeholder="212, Nguyễn Thái Bình, p. Nguyễn Thái Bình, Q.1, Tp.HCM">
-                            <button class="add-btn">
-                                <i class="fas fa-plus"></i>
-                                <span>Thêm</span>
-                            </button>
-                        </div>
-
                         <div class="form-group">
                             <label class="form-label">Mô tả công việc</label>
                             <div class="editor-toolbar">
@@ -139,7 +125,7 @@
                                 <span class="editor-tool"><i class="fas fa-list-ul"></i></span>
                                 <span class="editor-tool"><i class="fas fa-list-ol"></i></span>
                             </div>
-                            <textarea class="editor-content">
+                            <textarea asp-for="sYCau" class="editor-content">
                             
                             </textarea>
                         </div>
@@ -148,118 +134,57 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Mức lương</label>
-                                    <div class="select-wrapper">
-                                        <select class="form-control">
-                                            <option>VND</option>
-                                            <option>USD</option>
-                                        </select>
-                                    </div>
+                                    <input asp-for="fMucLuong" type="text" class="form-control" placeholder="120000">
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label class="form-label">Từ</label>
-                                    <input asp-for="fMucLuong" type="text" class="form-control" placeholder="12 triệu">
+                                    <label class="form-label">Hạn nhận hồ sơ</label>
+                                    <input asp-for="dThoiGianHetHan" type="date" class="form-control" placeholder="2024-08-16">
                                 </div>
                             </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label class="form-label">Đến</label>
-                                    <input type="text" class="form-control" placeholder="14 triệu">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-col">
-                                    <div class="form-group">
-                                        <label class="form-label">Hình thức</label>
-                                        <div class="select-wrapper">
-                                            <select class="form-control">
-                                                <option>Online</option>
-                                                <option>Offline</option>
-                                              
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-col">
-                                    <div class="form-group">
-                                        <label class="form-label">Hạn nhận hồ sơ</label>
-                                        <input asp-for="dThoiGianHetHan" type="date" class="form-control" placeholder="2024-08-16">
-                                    </div>
-                                </div>
-                            </div>
+                           
+                           
 
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Ngôn ngữ trình bày hồ sơ</label>
-                            <div class="checkbox-languages">
-                                <div class="benefit-item">
-                                    <input type="checkbox" id="vietnamese" checked>
-                                    <label for="vietnamese">Tiếng Việt</label>
-                                </div>
-                                <div class="benefit-item">
-                                    <input type="checkbox" id="korean">
-                                    <label for="korean">Tiếng Hàn</label>
-                                </div>
-                                <div class="benefit-item">
-                                    <input type="checkbox" id="chinese">
-                                    <label for="chinese">Tiếng Trung</label>
-                                </div>
-                                <div class="benefit-item">
-                                    <input type="checkbox" id="english" checked>
-                                    <label for="english">Tiếng Anh</label>
-                                </div>
-                                <div class="benefit-item">
-                                    <input type="checkbox" id="japanese">
-                                    <label for="japanese">Tiếng Nhật</label>
-                                </div>
-                                <div class="benefit-item">
-                                    <input type="checkbox" id="other">
-                                    <label for="other">Khác</label>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
 
-                    <h2 class="section-title">YÊU CẦU CHUNG</h2>
+                    <h2 class="section-title" style="font-size:20px">YÊU CẦU CHUNG</h2>
 
                     <div class="form-card">
-                        <div class="form-group">
-                            <label class="form-label">Giới tính</label>
-                            <div class="radio-group">
-
-                                <div class="radio-item">
-                                    <input type="radio" name="gender" id="male">
-                                    <label for="male">Nam</label>
-                                </div>
-                                <div class="radio-item">
-                                    <input type="radio" name="gender" id="female">
-                                    <label for="female">Nữ</label>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label class="form-label">Tuổi</label>
-                                    <input type="number" class="form-control" value="21">
-                                </div>
+                                <label class="form-label">Giới tính</label>
+                                <div class="radio-group">
+                                    
+                                    <div class="radio-item">
+                                            <input type="radio" asp-for="sGioiTinh" name="sGioiTinh" id="male" value="Nam">
+                                        <label for="male">Nam</label>
+                                    </div>
+                                    <div class="radio-item">
+                                            <input type="radio" asp-for="sGioiTinh" name="sGioiTinh" id="female" value="Nữ">
+                                        <label for="female">Nữ</label>
+                                    </div>
+                            </div>
+                        </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label class="form-label">Đến</label>
-                                    <input type="number" class="form-control" value="25">
+                                    <label class="form-label">Tuổi</label>
+                                    <input asp-for="sTuoi" type="string" class="form-control" placeholder="21-24">
                                 </div>
                             </div>
                         </div>
+                       
 
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Kinh nghiệm</label>
                                     <div class="select-wrapper">
-                                        <select class="form-control">
+                                        <select asp-for="sKinhNghiem" class="form-control">
                                             <option>2-3 năm</option>
                                             <option>0-1 năm</option>
                                             <option>3-5 năm</option>
@@ -272,7 +197,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Bằng cấp</label>
                                     <div class="select-wrapper">
-                                        <select class="form-control">
+                                        <select asp-for="sBangCap" class="form-control">
                                             <option>Sau Đại học</option>
                                             <option>Đại học</option>
                                             <option>Cao đẳng</option>
@@ -283,61 +208,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <h2 class="section-title">TIÊU CHÍ ƯU TIÊN TRONG SÀNG LỌC</h2>
-
-                    <div class="form-card">
-                        <p>Hồ sơ của ứng viên sẽ được tự động lựa chọn phù hợp với yêu cầu của bạn. Tất cả các hồ sơ mà bạn nhận sẽ được đánh giá từ 0% đến 100%.</p>
-
-                        <table class="requirements-table">
-                            <thead>
-                                <tr>
-                                    <th>Thuộc tính</th>
-                                    <th>Bắt buộc</th>
-                                    <th>Quan trọng</th>
-                                    <th>Ít quan trọng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Chức danh vị trí tuyển dụng</td>
-                                    <td><input type="radio" name="position" checked></td>
-                                    <td><input type="radio" name="position"></td>
-                                    <td><input type="radio" name="position"></td>
-                                </tr>
-                                <tr>
-                                    <td>Nơi làm việc</td>
-                                    <td><input type="radio" name="location"></td>
-                                    <td><input type="radio" name="location" checked></td>
-                                    <td><input type="radio" name="location"></td>
-                                </tr>
-                                <tr>
-                                    <td>Ngành nghề</td>
-                                    <td><input type="radio" name="industry" checked></td>
-                                    <td><input type="radio" name="industry"></td>
-                                    <td><input type="radio" name="industry"></td>
-                                </tr>
-                                <tr>
-                                    <td>Kỹ năng, kinh nghiệm, cấp bậc</td>
-                                    <td><input type="radio" name="skill" checked></td>
-                                    <td><input type="radio" name="skill"></td>
-                                    <td><input type="radio" name="skill"></td>
-                                </tr>
-                                <tr>
-                                    <td>Mức lương</td>
-                                    <td><input type="radio" name="salary"></td>
-                                    <td><input type="radio" name="salary" checked></td>
-                                    <td><input type="radio" name="salary"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                  
                         <!-- Button container -->
                         <div class="buttons-container">
                             <button class="btn btn-cancel">Huỷ</button>
                             <button class="btn btn-save">Lưu và Đăng tuyển</button>
                         </div>
-                        </div>
-
                 </form>
             </div>
                     

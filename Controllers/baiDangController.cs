@@ -64,13 +64,13 @@ namespace WebApplication1.Controllers
             _logger.LogInformation("DangTin action called with model: {@Model}", model);
            
           
-            if (string.IsNullOrEmpty(model.sTieuDe) || string.IsNullOrEmpty(model.sDiaDiem) || model.fMucLuong <= 0 || string.IsNullOrEmpty(model.sMoTa))
+            if (string.IsNullOrEmpty(model.sTieuDe) || string.IsNullOrEmpty(model.sDiaDiem) || model.fMucLuong <= 0 || string.IsNullOrEmpty(model.sMoTa) || string.IsNullOrEmpty(model.sYCau)|| string.IsNullOrEmpty(model.sBangCap) || string.IsNullOrEmpty(model.sGioiTinh) || string.IsNullOrEmpty(model.sKinhNghiem) || string.IsNullOrEmpty(model.sMonday) || string.IsNullOrEmpty(model.sTuoi))
             {
                 ModelState.AddModelError("", "Vui lòng điền đầy đủ thông tin!");
                 return View(model);
             }
 
-            var dangTin = new BaiDang();
+            //var dangTin = new BaiDang();
            
                 bool isExist = await _dangTinService.DangTinExistsByTitleAsync(model.sTieuDe);
                 if (isExist)
@@ -78,6 +78,12 @@ namespace WebApplication1.Controllers
                     ModelState.AddModelError("", "Tiêu đề đã tồn tại!");
                     return View(model);
                 }
+              /*  dangTin.sMonday = model.sMonday;
+                dangTin.sYCau = model.sYCau;
+                dangTin.sGioiTinh = model.sGioiTinh;
+                dangTin.sTuoi = model.sTuoi;
+                dangTin.sKinhNghiem = model.sKinhNghiem;
+                dangTin.sBangCap = model.sBangCap;
                 dangTin.sTieuDe = model.sTieuDe;
                 dangTin.sDiaDiem = model.sDiaDiem;
                 dangTin.fMucLuong = model.fMucLuong;
@@ -85,8 +91,8 @@ namespace WebApplication1.Controllers
                 dangTin.sMoTa = model.sMoTa;
                 dangTin.dNgayTao = DateTime.Now;
                 dangTin.sTrangThai = "Đang chờ duyệt";
-                dangTin.FK_iMaTK = userId;
-                bool result = await _dangTinService.CreatDangTin(dangTin);
+                dangTin.FK_iMaTK = userId;*/
+                bool result = await _dangTinService.CreatDangTin(model, userId);
                 if (result)
                 {
                     TempData["Success"] = "Đăng tin thành công!";
@@ -129,7 +135,7 @@ namespace WebApplication1.Controllers
             return View(baidangList);
         }
         [HttpPost]
-        public async Task<IActionResult> SearchDB( string TieuDe, string Diadiem,string ThoiGian,string TuKhoa)
+        public async Task<IActionResult> SearchDB( string MonDay, string Diadiem,string ThoiGian,string TuKhoa)
         { string trangthai = "Đang chờ duyệt";
             var userId = _userManager.GetUserId(User);
             if (userId == null)
@@ -138,9 +144,9 @@ namespace WebApplication1.Controllers
             }
             var baiDangList = new List<BaiDangViewModel>();
              baiDangList = await _dangTinService.GetAllBaiDangByTaiKhoanId(userId, trangthai);
-            if (!string.IsNullOrEmpty(TieuDe))
+            if (!string.IsNullOrEmpty(MonDay))
             {
-                baiDangList = baiDangList.Where(bd => bd.sTieuDe.Contains(TieuDe)).ToList();
+                baiDangList = baiDangList.Where(bd => bd.sMonday.Contains(MonDay)).ToList();
             }
             if (!string.IsNullOrEmpty(Diadiem))
             {

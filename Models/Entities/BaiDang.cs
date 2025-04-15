@@ -21,5 +21,13 @@ namespace WebApplication1.Models.Entities
 
         public int? FK_iMaHS { get; set; } // Tùy chọn
         public HoSo? HoSo { get; set; }
+
+        // cột mới
+        public string sMonday { get; set; }
+        public string sYCau { get; set; }
+        public string sGioiTinh { get; set; }
+        public string sTuoi { get; set; }
+        public string sKinhNghiem { get; set; }
+        public string sBangCap { get; set; }
     }
 }
