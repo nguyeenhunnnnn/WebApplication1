@@ -47,8 +47,13 @@ builder.Services.Configure<IdentityOptions>(options => {
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 // Add Services
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IDangTinService, DangTinService>();
 
+// Add Repository
+builder.Services.AddScoped<IDangTinRepository, DangTinRepository>();
+
+// Add Services
+builder.Services.AddScoped<IAccountService, AccountService>();
 // Add Session (for TempData)
 builder.Services.AddSession(options =>
 {
@@ -81,7 +86,7 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=baiDang}/{action=DangTin}/{id?}")
+    pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 

@@ -1,13 +1,168 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using WebApplication1.Data;
+using WebApplication1.Models;
+using WebApplication1.Models.Entities;
+using WebApplication1.Repositories;
+using WebApplication1.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Controllers
 {
     public class baiDangController : Controller
     {
+        private readonly ILogger<baiDangController> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<TaiKhoan> _userManager;
+        private readonly SignInManager<TaiKhoan> _signInManager;
+        private readonly IDangTinService _dangTinService;
+        private readonly IDangTinRepository _dangTinRepository;
+
+        public baiDangController(
+            ILogger<baiDangController> logger,
+            IWebHostEnvironment webHostEnvironment,
+            ApplicationDbContext context,
+            IConfiguration configuration,
+            UserManager<TaiKhoan> userManager,
+            SignInManager<TaiKhoan> signInManager,
+            IDangTinService dangTinService,
+            IDangTinRepository dangTinRepository)
+        {
+            _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
+            _context = context;
+            _configuration = configuration;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _dangTinService = dangTinService;
+            _dangTinRepository = dangTinRepository;
+        }
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult DangTin()
         {
             return View();
         }
-      
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> DangTin(DangTinViewModel model)
+        {
+           var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            _logger.LogInformation("DangTin action called with model: {@Model}", model);
+           
+          
+            if (string.IsNullOrEmpty(model.sTieuDe) || string.IsNullOrEmpty(model.sDiaDiem) || model.fMucLuong <= 0 || string.IsNullOrEmpty(model.sMoTa))
+            {
+                ModelState.AddModelError("", "Vui lòng điền đầy đủ thông tin!");
+                return View(model);
+            }
+
+            var dangTin = new BaiDang();
+           
+                bool isExist = await _dangTinService.DangTinExistsByTitleAsync(model.sTieuDe);
+                if (isExist)
+                {
+                    ModelState.AddModelError("", "Tiêu đề đã tồn tại!");
+                    return View(model);
+                }
+                dangTin.sTieuDe = model.sTieuDe;
+                dangTin.sDiaDiem = model.sDiaDiem;
+                dangTin.fMucLuong = model.fMucLuong;
+                dangTin.dThoiGianHetHan = model.dThoiGianHetHan;
+                dangTin.sMoTa = model.sMoTa;
+                dangTin.dNgayTao = DateTime.Now;
+                dangTin.sTrangThai = "Đang chờ duyệt";
+                dangTin.FK_iMaTK = userId;
+                bool result = await _dangTinService.CreatDangTin(dangTin);
+                if (result)
+                {
+                    TempData["Success"] = "Đăng tin thành công!";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Đăng tin không thành công!");
+                }
+                return View(model);
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            string trangthai = "Đang chờ duyệt";
+            var userId= _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var baidangList = new List<BaiDangViewModel>();
+            baidangList = await _dangTinService.GetAllBaiDangByTaiKhoanId(userId, trangthai);
+            /* var baiDangList=_context.BaiDangs
+                 .Where(bd => bd.FK_iMaTK ==userId)
+                 .ToList();
+             var baidangList = new List<BaiDangViewModel>();
+             baidangList=baiDangList.Select(bd => new BaiDangViewModel()
+             {
+
+                 sTieuDe = bd.sTieuDe,
+                 sMoTa = bd.sMoTa,
+                 sDiaDiem = bd.sDiaDiem,
+                 fMucLuong = bd.fMucLuong ?? 0,
+                 dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
+                 dNgayTao = bd.dNgayTao,
+                 sTrangThai = bd.sTrangThai,
+
+             }).ToList();*/
+
+            return View(baidangList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SearchDB( string TieuDe, string Diadiem,string ThoiGian,string TuKhoa)
+        { string trangthai = "Đang chờ duyệt";
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var baiDangList = new List<BaiDangViewModel>();
+             baiDangList = await _dangTinService.GetAllBaiDangByTaiKhoanId(userId, trangthai);
+            if (!string.IsNullOrEmpty(TieuDe))
+            {
+                baiDangList = baiDangList.Where(bd => bd.sTieuDe.Contains(TieuDe)).ToList();
+            }
+            if (!string.IsNullOrEmpty(Diadiem))
+            {
+                baiDangList = baiDangList.Where(bd => bd.sDiaDiem.Contains(Diadiem)).ToList();
+            }
+            if (!string.IsNullOrEmpty(ThoiGian))
+            {
+                DateTime dateTime;
+                if (DateTime.TryParse(ThoiGian, out dateTime))
+                {
+                    baiDangList = baiDangList.Where(bd => bd.dThoiGianHetHan.Date == dateTime.Date).ToList();
+                }
+            }
+            if (!string.IsNullOrEmpty(TuKhoa))
+            {
+                baiDangList = baiDangList.Where(bd => bd.sMoTa.Contains(TuKhoa)).ToList();
+            }
+            return View("Index", baiDangList);
+        }
+
+
+
+
     }
 }
