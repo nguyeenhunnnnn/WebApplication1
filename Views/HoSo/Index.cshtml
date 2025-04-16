@@ -1,0 +1,214 @@
+﻿@model IEnumerable<WebApplication1.Models.ViewModels.HoSoViewModel>
+
+@using WebApplication1.Models
+
+@{
+    ViewData["Title"] = "Bai Dang ";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/styleDangTin.css" />
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/styleQlbd.css" />
+    <title>HUNO - Hồ sơ Tuyển Dụng</title>
+
+</head>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <div class="menu">
+            <div class="menu-item ">
+                <i class="fas fa-file-alt"></i>
+                <span>Tìm hồ sơ</span>
+            </div>
+            <div class="menu-item active">
+                <i class="fas fa-file-alt"></i>
+                <span>Đăng Tin</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Quản Lí Tin Đăng</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Quản Lí Ứng Viên</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Đơn Hàng</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>Cấu Hình Email</span>
+            </div>
+        </div>
+
+        <div class="footer-sidebar">
+            <div>Version V2.74.39</div>
+            <div>© 2024 BOWO. All Rights Reserved.</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Content Area -->
+        <div class="content" style="width:140%">
+
+            <div class="search-container">
+                <div class="section-title">
+                    
+                    <a asp-action="Index">Hồ sơ đã tạo</a>
+                </div>
+                <form method="post" asp-action="">
+                    <div class="search-row">
+
+                        <div class="search-field">
+                            <label class="search-label">Kỹ năng</label>
+                            <select name="kynang" class="search-select">
+                                <option value="" selected>Chọn</option>
+                                <option>Giao tiếp</option>
+                                <option>Giảng dạy</option>
+                                <option>Ngoại ngữ</option>
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label class="search-label">Học vấn</label>
+                            <select name="hocvan" class="search-select">
+                                <option value="" selected>Chọn</option>
+                                <option>Sau Đại học</option>
+                                <option>Đại học</option>
+                                <option>Cao đẳng</option>
+                                <option>Trung cấp</option>
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label class="search-label">Kinh nghiệm</label>
+                            <select name="kinhnghiem" class="search-select">
+                                <option value="" selected>Chọn</option>
+                                <option>2-3 năm</option>
+                                <option>0-1 năm</option>
+                                <option>3-5 năm</option>
+                                <option>Trên 5 năm</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-row">
+                        <div class="search-field">
+                            <label class="search-label">Tiêu đề</label>
+                            <input name="tieude" type="text" class="search-input" placeholder="Nhập từ khóa">
+                        </div>
+                        <button class="search-btn" type="submit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Tìm
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results section -->
+            <div class="results-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ứng viên</th>
+                            <th>Tiêu đề</th>
+                            <th>Kinh nghiệm</th>
+                            <th>Bằng cấp</th>
+                            <th>Kỹ năng</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            <tr>
+                                <td>@item.HoTen</td>
+                                <td>@item.sTieuDe</td>
+                                <td>@item.sKinhNghiem</td>
+                                <td>@item.sBangCap</td>
+                                <td>@item.sKyNang</td>
+                                <td class="action-cell">
+                                    <form asp-action="Get" asp-controller="HoSo" method="get">
+                                        <button type="submit" class="action-btn" name="Primakey" value="@item.iMaHS">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.0007 12C15.0007 13.6569 13.6576 15 12.0007 15C10.3439 15 9.00073 13.6569 9.00073 12C9.00073 10.3431 10.3439 9 12.0007 9C13.6576 9 15.0007 10.3431 15.0007 12Z" stroke="#8b3dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12.0012 5C7.52354 5 3.73326 7.94288 2.45898 12C3.73324 16.0571 7.52354 19 12.0012 19C16.4788 19 20.2691 16.0571 21.5434 12C20.2691 7.94291 16.4788 5 12.0012 5Z" stroke="#8b3dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                        </button>
+                                    </form>
+                                    <form asp-action="Delete" asp-controller="HoSo" method="get">
+                                        <button class="action-btn" type="submit" name="Id" value="@item.iMaHS">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+
+
+    // Search button functionality
+    const searchBtn = document.querySelector('.search-btn');
+    searchBtn.addEventListener('click', () => {
+      // In a real implementation, you would perform search here
+      alert('Search functionality would be implemented here');
+    });
+
+    // Export button functionality
+    const exportBtn = document.querySelector('.export-btn');
+    exportBtn.addEventListener('click', () => {
+      // In a real implementation, you would export data here
+      alert('Export functionality would be implemented here');
+    });
+
+    // Row action buttons
+    const actionBtns = document.querySelectorAll('.action-btn');
+    actionBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = e.currentTarget.querySelector('svg').innerHTML.includes('plus') ? 'view' : 'delete';
+        const row = e.currentTarget.closest('tr');
+        const position = row.cells[0].textContent;
+
+        if (action === 'view') {
+          alert(`Viewing details for ${position}`);
+        } else {
+          if (confirm(`Are you sure you want to delete the job posting for ${position}?`)) {
+            alert(`Deleted job posting for ${position}`);
+          }
+        }
+      });
+    });
+</script>
+</html>
+

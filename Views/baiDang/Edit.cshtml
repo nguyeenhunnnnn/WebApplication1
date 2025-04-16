@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.ViewModels.DangTinViewModel
+﻿ @model WebApplication1.Models.ViewModels.BaiDangViewModel
 @{
     ViewData["Title"] = "Bai Dang ";
 }
@@ -8,9 +8,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/styleDangTin.css" />
-    <link  rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
     <title>HUNO - Đăng Tin Tuyển Dụng</title>
-    
+
 </head>
 <body>
     <div class="container">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="menu-item active">
                     <i class="fas fa-file-alt"></i>
-                    <a >Đăng Tin</a>
+                    <a>Đăng Tin</a>
                 </div>
                 <div class="menu-item">
                     <i class="fas fa-tasks"></i>
@@ -62,21 +62,22 @@
                 <div class="section-title">
                     <a asp-action="DangTin">Đăng Tin</a>
                 </div>
-                 <form asp-action="DangTin" method="post" id="jobPostingForm">
+                <form asp-action="Edit" method="post" id="jobPostingForm">
                     @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.PK_iMaBaiDang)
                     <div class="form-card">
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Tiêu đề</label>
-                                    <input asp-for="sTieuDe"  type="text" class="form-control" placeholder="Vui lòng nhập">
+                                    <input asp-for="sTieuDe" type="text" class="form-control" placeholder="Vui lòng nhập">
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Môn dạy</label>
                                     <div class="select-wrapper">
-                                        <select asp-for="sMonday"  class="form-control">
+                                        <select asp-for="sMonday" class="form-control">
                                             <option value="">-- Chọn môn dạy --</option>
                                             <option>Toán Học</option>
                                             <option>Ngữ Văn</option>
@@ -88,13 +89,13 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                        </div> 
+
+                        </div>
 
                         <div class="form-group">
                             <label class="form-label">Địa điểm làm việc</label>
                             <div class="select-wrapper">
-                                <select asp-for="sDiaDiem"  class="form-control">
+                                <select asp-for="sDiaDiem" class="form-control">
                                     <option> Hồ Chí Minh</option>
                                     <option>Hà Nội</option>
                                     <option>Đà Nẵng</option>
@@ -115,7 +116,7 @@
                                 <span class="editor-tool"><i class="fas fa-list-ol"></i></span>
                             </div>
                             <textarea rows="4" cols="50" asp-for="sMoTa" class="editor-content">
-                            
+
                             </textarea>
                         </div>
 
@@ -129,7 +130,7 @@
                                 <span class="editor-tool"><i class="fas fa-list-ol"></i></span>
                             </div>
                             <textarea rows="4" cols="50" asp-for="sYCau" class="editor-content">
-                            
+
                             </textarea>
                         </div>
 
@@ -137,20 +138,20 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Mức lương</label>
-                                    <input asp-for="fMucLuong"  type="text" class="form-control" placeholder="120000">
+                                    <input asp-for="fMucLuong" type="text" class="form-control" placeholder="120000">
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Hạn nhận hồ sơ</label>
-                                    <input asp-for="dThoiGianHetHan"  type="date" class="form-control" placeholder="2024-08-16">
+                                    <input asp-for="dThoiGianHetHan" type="date" class="form-control" placeholder="2024-08-16">
                                 </div>
                             </div>
-                           
-                           
+
+
 
                         </div>
-                        
+
                     </div>
 
                     <h2 class="section-title" style="font-size:20px">YÊU CẦU CHUNG</h2>
@@ -159,37 +160,37 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                <label class="form-label">Giới tính</label>
-                                <div class="radio-group">
-                                    
-                                    <div class="radio-item">
+                                    <label class="form-label">Giới tính</label>
+                                    <div class="radio-group">
+
+                                        <div class="radio-item">
                                             <input type="radio" asp-for="sGioiTinh" name="sGioiTinh" id="male" value="Nam">
-                                           
-                                        <label for="male">Nam</label>
-                                    </div>
-                                    <div class="radio-item">
+
+                                            <label for="male">Nam</label>
+                                        </div>
+                                        <div class="radio-item">
                                             <input type="radio" asp-for="sGioiTinh" name="sGioiTinh" id="female" value="Nữ">
-                                           
-                                        <label for="female">Nữ</label>
+
+                                            <label for="female">Nữ</label>
+                                        </div>
                                     </div>
-                            </div>
-                        </div>
+                                </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Tuổi</label>
-                                    <input asp-for="sTuoi"  type="text" class="form-control" placeholder="21-24">
+                                    <input asp-for="sTuoi" type="text" class="form-control" placeholder="21-24">
                                 </div>
                             </div>
                         </div>
-                       
+
 
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
                                     <label class="form-label">Kinh nghiệm</label>
                                     <div class="select-wrapper">
-                                        <select asp-for="sKinhNghiem"  class="form-control">
+                                        <select asp-for="sKinhNghiem" class="form-control">
                                             <option>2-3 năm</option>
                                             <option>0-1 năm</option>
                                             <option>3-5 năm</option>
@@ -202,7 +203,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Bằng cấp</label>
                                     <div class="select-wrapper">
-                                        <select asp-for="sBangCap"  class="form-control">
+                                        <select asp-for="sBangCap" class="form-control">
                                             <option>Sau Đại học</option>
                                             <option>Đại học</option>
                                             <option>Cao đẳng</option>
@@ -213,78 +214,79 @@
                             </div>
                         </div>
                     </div>
-                  
-                        <!-- Button container -->
-                        <div class="buttons-container">
-                            <button type="button" class="btn btn-cancel">Huỷ</button>
-                            <button type="submit" class="btn btn-save">Lưu và Đăng tuyển</button>
-                        </div>
+
+                    <!-- Button container -->
+                    <div class="buttons-container">
+                        <button type="button" class="btn btn-cancel">Huỷ</button>
+                        <button type="submit" class="btn btn-save">Lưu và Đăng tuyển</button>
+                    </div>
                 </form>
             </div>
-                    
-                    </div>
-                   
+
+        </div>
+
     </div>
-                    <!-- JavaScript for handling radio button selections -->
-                    <script>
-                        // Function to handle radio button selection
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Track changes to any radio button
-                            const radioButtons = document.querySelectorAll('input[type="radio"]');
+    <!-- JavaScript for handling radio button selections -->
+    <script>
+        // Function to handle radio button selection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track changes to any radio button
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
 
-                            radioButtons.forEach(radio => {
-                                radio.addEventListener('change', function() {
-                                    // You could add validation or other logic here
-                                    console.log(`Changed ${this.name} to ${this.checked}`);
-                                });
-                            });
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // You could add validation or other logic here
+                    console.log(`Changed ${this.name} to ${this.checked}`);
+                });
+            });
 
-                            // Handle button clicks
-                            const cancelButton = document.querySelector('.btn-cancel');
-                            const saveButton = document.querySelector('.btn-save');
+            // Handle button clicks
+            const cancelButton = document.querySelector('.btn-cancel');
+            const saveButton = document.querySelector('.btn-save');
 
-                            cancelButton.addEventListener('click', function() {
-                                // Handle cancel action
-                                if (confirm('Bạn có chắc chắn muốn huỷ các thay đổi?')) {
-                                    // Reset form or redirect
-                                    console.log('Cancelled changes');
-                                    // You could reset the form here
-                                    // window.location.href = '/previous-page'; // Or redirect
-                                }
-                            });
+            cancelButton.addEventListener('click', function() {
+                // Handle cancel action
+                if (confirm('Bạn có chắc chắn muốn huỷ các thay đổi?')) {
+                    // Reset form or redirect
+                    console.log('Cancelled changes');
+                    // You could reset the form here
+                    // window.location.href = '/previous-page'; // Or redirect
+                }
+            });
 
-                            saveButton.addEventListener('click', function() {
-                                // Collect all the selected preferences
-                                const preferences = {};
-                                const categories = ['position', 'location', 'industry', 'skill', 'salary'];
+            saveButton.addEventListener('click', function() {
+                // Collect all the selected preferences
+                const preferences = {};
+                const categories = ['position', 'location', 'industry', 'skill', 'salary'];
 
-                                categories.forEach(category => {
-                                    const selectedOption = document.querySelector(`input[name="${category}"]:checked`);
-                                    if (selectedOption) {
-                                        // Determine which column was selected (Bắt buộc, Quan trọng, Ít quan trọng)
-                                        const parentCell = selectedOption.closest('td');
-                                        const columnIndex = Array.from(parentCell.parentNode.children).indexOf(parentCell);
+                categories.forEach(category => {
+                    const selectedOption = document.querySelector(`input[name="${category}"]:checked`);
+                    if (selectedOption) {
+                        // Determine which column was selected (Bắt buộc, Quan trọng, Ít quan trọng)
+                        const parentCell = selectedOption.closest('td');
+                        const columnIndex = Array.from(parentCell.parentNode.children).indexOf(parentCell);
 
-                                        let priority;
-                                        switch(columnIndex) {
-                                            case 1: priority = 'required'; break;
-                                            case 2: priority = 'important'; break;
-                                            case 3: priority = 'lessImportant'; break;
-                                            default: priority = 'unknown';
-                                        }
+                        let priority;
+                        switch(columnIndex) {
+                            case 1: priority = 'required'; break;
+                            case 2: priority = 'important'; break;
+                            case 3: priority = 'lessImportant'; break;
+                            default: priority = 'unknown';
+                        }
 
-                                        preferences[category] = priority;
-                                    }
-                                });
+                        preferences[category] = priority;
+                    }
+                });
 
-                                console.log('Saving preferences:', preferences);
-                                // Here you would typically send this data to the server
-                                alert('Đã lưu và đăng tuyển thành công!');
-                                // After saving, you might redirect:
-                                // window.location.href = '/recruitment-dashboard';
-                            });
-                        });
-                    </script>
-                    </body>
-                    </html>
+                console.log('Saving preferences:', preferences);
+                // Here you would typically send this data to the server
+                alert('Đã lưu và đăng tuyển thành công!');
+                // After saving, you might redirect:
+                // window.location.href = '/recruitment-dashboard';
+            });
+        });
+    </script>
+</body>
+</html>
+
 

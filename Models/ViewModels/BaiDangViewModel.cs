@@ -8,6 +8,7 @@ namespace WebApplication1.Models.ViewModels
 {
     public class BaiDangViewModel
     {
+        public int PK_iMaBaiDang { get; set; }
         public string sTieuDe { get; set; } = null!;
 
         [Display(Name = "Mô tả")]

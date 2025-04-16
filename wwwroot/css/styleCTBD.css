@@ -1,0 +1,168 @@
+:root {
+    --primary-bg: #f3f0ff;
+    --secondary-bg: #e8e3ff;
+    --section-bg: #f5f4ff;
+    --primary-text: #333;
+    --accent-color: #8167e6;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    line-height: 1.6;
+    
+}
+
+.job-container {
+    max-width: 1200px;
+    margin-left:260px;
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    padding: 30px;
+}
+
+.job-header {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job-title {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.job-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #ddd;
+}
+
+.btn-edit {
+    background-color: white;
+    color: var(--accent-color);
+}
+
+.btn-email {
+    background-color: white;
+    color: var(--accent-color);
+}
+
+.btn-view {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+}
+
+.section {
+    background-color: var(--section-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.info-label {
+    width: 120px;
+    font-weight: 500;
+    color: #555;
+}
+
+.info-value {
+    flex: 1;
+}
+
+/* Split the general info section into two columns */
+.split-info-container {
+    display: grid;
+    grid-template-columns: 0.7fr 1fr;
+    gap: 15px;
+}
+
+.info-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.job-description {
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.benefit-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tabs {
+    display: flex;
+    background-color: var(--secondary-bg);
+    margin-bottom: 30px;
+}
+
+.tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.tab.active {
+    background-color: #fff;
+    border-radius: 5px 5px 0 0;
+    font-weight: 600;
+}

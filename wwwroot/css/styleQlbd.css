@@ -201,6 +201,7 @@
     .action-cell {
       text-align: left;
       white-space: nowrap;
+      display:flex;
     }
     
     .action-btn {

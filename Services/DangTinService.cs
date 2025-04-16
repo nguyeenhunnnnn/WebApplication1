@@ -25,11 +25,12 @@ namespace WebApplication1.Services
         Task<bool> SaveChangesAsync();
         Task<bool> CreatDangTin(DangTinViewModel model, string userId);
         Task<BaiDang> GetDangTinById(int id);
-        Task<bool> UpdateDangTin(BaiDang dangTin);
+        Task<bool> UpdateDangTin(BaiDangViewModel model);
         Task<bool> DeleteDangTin(int id);
         Task<bool> DangTinExistsAsync(int id);
         Task<bool> DangTinExistsByTitleAsync(string title);
         Task<List<BaiDangViewModel>> GetAllBaiDangByTaiKhoanId(string taiKhoanId,string trangthai);
+        Task<BaiDangViewModel> GetBaiDangById(int id);
 
     }
     public class DangTinService : IDangTinService
@@ -80,22 +81,32 @@ namespace WebApplication1.Services
         }
         public async Task<BaiDang> GetDangTinById(int id)
         {
-            return await _context.BaiDangs.FindAsync(id);
+            return await _dangTinRepository.GetDangTinById(id);
         }
-        public async Task<bool> UpdateDangTin(BaiDang dangTin)
+        public async Task<bool> UpdateDangTin(BaiDangViewModel model )
         {
-            _context.BaiDangs.Update(dangTin);
-            return await SaveChangesAsync();
+            var dangTin = await _dangTinRepository.GetBaiDangById(model.PK_iMaBaiDang);
+            if (dangTin == null)
+            {
+                return false;
+            }
+            dangTin.sTieuDe = model.sTieuDe;
+            dangTin.sMoTa = model.sMoTa;
+            dangTin.sDiaDiem = model.sDiaDiem;
+            dangTin.fMucLuong = model.fMucLuong;
+            dangTin.dThoiGianHetHan = model.dThoiGianHetHan;
+            dangTin.dNgayTao = DateTime.Now;
+            dangTin.sMonday = model.sMonday;
+            dangTin.sYCau = model.sYCau;
+            dangTin.sGioiTinh = model.sGioiTinh;
+            dangTin.sTuoi = model.sTuoi;
+            dangTin.sKinhNghiem = model.sKinhNghiem;
+            dangTin.sBangCap = model.sBangCap;
+            return await _dangTinRepository.UpdateDangTin(dangTin);
         }
         public async Task<bool> DeleteDangTin(int id)
         {
-            var dangTin = await GetDangTinById(id);
-            if (dangTin != null)
-            {
-                _context.BaiDangs.Remove(dangTin);
-                return await SaveChangesAsync();
-            }
-            return false;
+            return await _dangTinRepository.DeleteDangTin(id);
         }
         public async Task<bool> DangTinExistsAsync(int id)
         {
@@ -132,6 +143,7 @@ namespace WebApplication1.Services
 
            return baiDangs.Select(b=>new BaiDangViewModel
                 {
+                    PK_iMaBaiDang = b.PK_iMaBaiDang,
                     sMonday =b.sMonday,
                     sBangCap=b.sBangCap,
                     sGioiTinh=b.sGioiTinh,
@@ -149,5 +161,35 @@ namespace WebApplication1.Services
                 .ToList();
           
         }
+       
+        public async Task<BaiDangViewModel> GetBaiDangById(int id)
+        {
+
+           var bd = await _dangTinRepository.GetBaiDangById(id);
+            if (bd == null)
+            {
+                return null; // Hoặc xử lý lỗi theo cách bạn muốn
+            }
+            return new BaiDangViewModel
+            {
+                PK_iMaBaiDang = bd.PK_iMaBaiDang,
+                sMonday = bd.sMonday,
+                sBangCap = bd.sBangCap,
+                sGioiTinh = bd.sGioiTinh,
+                sKinhNghiem = bd.sKinhNghiem,
+                sTuoi = bd.sTuoi,
+                sYCau = bd.sYCau,
+                sTieuDe = bd.sTieuDe,
+                sMoTa = bd.sMoTa,
+                sDiaDiem = bd.sDiaDiem,
+                fMucLuong = bd.fMucLuong ?? 0,
+                sTrangThai = bd.sTrangThai,
+                dNgayTao = bd.dNgayTao,
+                dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue
+            };
+
+
+        }
+        
     }
 }

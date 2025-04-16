@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using WebApplication1.Data;
 using WebApplication1.Models.Entities;
+using WebApplication1.Models.ViewModels;
 namespace WebApplication1.Repositories
 {
     public interface IDangTinRepository
@@ -22,6 +23,7 @@ namespace WebApplication1.Repositories
         Task<bool> DangTinExistsAsync(int id);
         Task<bool> DangTinExistsByTitleAsync(string title);
         Task<List<BaiDang>> GetAllBaiDangByTaiKhoanId(string taiKhoanId,string trangthai);
+        Task<BaiDang> GetBaiDangById(int id);
 
 
 
@@ -91,5 +93,12 @@ namespace WebApplication1.Repositories
             }
             return await query.ToListAsync();
         }
+       
+          public async Task<BaiDang> GetBaiDangById(int id)
+          {
+             
+              return await _context.BaiDangs.FirstOrDefaultAsync(bd => bd.PK_iMaBaiDang==id) ;
+              
+          }
     }
 }
