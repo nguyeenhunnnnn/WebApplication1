@@ -9,6 +9,7 @@ using WebApplication1.Data;
 using WebApplication1.Models.Entities;
 using WebApplication1.Repositories;
 using WebApplication1.Models.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 namespace WebApplication1.Services
 {
     public interface IAccountService
@@ -33,11 +34,13 @@ namespace WebApplication1.Services
         private readonly IAccountRepository _accountRepository;
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly SignInManager<TaiKhoan> _signInManager;
-        public AccountService(IAccountRepository accountRepository, UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AccountService(IAccountRepository accountRepository, UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             _accountRepository = accountRepository;
             _userManager = userManager;
             _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<TaiKhoan> GetTaiKhoanByIdAsync(string id)
         {
@@ -76,17 +79,38 @@ namespace WebApplication1.Services
 
             }
         }
+        /*  public async Task<bool> login(LoginViewModel model)
+          {
+
+              var taiKhoan = await _userManager.FindByEmailAsync(model.Email);
+              if (taiKhoan != null)
+              {
+                  var result = await _signInManager.PasswordSignInAsync(taiKhoan.UserName, model.MatKhau, true, lockoutOnFailure: true);
+                  return result.Succeeded;
+              }
+              return false;
+          }*/
         public async Task<bool> login(LoginViewModel model)
         {
-            
+            await _httpContextAccessor.HttpContext.SignOutAsync();
             var taiKhoan = await _userManager.FindByEmailAsync(model.Email);
             if (taiKhoan != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(taiKhoan.UserName, model.MatKhau, true, lockoutOnFailure: true);
-                return result.Succeeded;
+                var isValid = await _userManager.CheckPasswordAsync(taiKhoan, model.MatKhau);
+                if (!isValid)
+                    return false;
+
+                // Đăng xuất phiên cũ
+                await _httpContextAccessor.HttpContext.SignOutAsync();
+
+                // Đăng nhập mới để load lại Avatar, VaiTrò từ Claims
+                await _signInManager.SignInAsync(taiKhoan, isPersistent: false);
+
+                return true;
             }
             return false;
         }
+
         public async Task<bool> UpdateTaiKhoanAsync(TaiKhoan taiKhoan)
         {
             return await _accountRepository.UpdateTaiKhoanAsync(taiKhoan);

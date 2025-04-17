@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/css/styleHoso.css">
     <link href="~/css/StyleSidebar.css" rel="stylesheet" />
     <link href="~/css/styleNav.css" rel="stylesheet" />
-    <title>Thêm Hồ Sơ Mới</title>
+    <title>HUNO - Hồ sơ tuyển dụng</title>
 
 </head>
 <body>
@@ -18,41 +18,36 @@
     <div class="container">
 
         <div class="sidebar">
-
             <div class="menu">
-                <div class="menu-item ">
-                    <i class="fas fa-file-alt"></i>
-                    <a>Tìm hồ sơ</a>
-                </div>
                 <div class="menu-item active">
-                    <i class="fas fa-file-alt"></i>
-                    <a>Đăng Tin</a>
+                    <a asp-controller="HoSo" asp-action="CreateHoSo" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Hồ Sơ</span>
+                    </a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-tasks"></i>
-                    <a asp-action="Index" asp-controller="baiDang">Quản Lí Tin Đăng</a>
+                    <a asp-controller="HoSo" asp-action="Index" class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Quản Lí Tin Đăng</span>
+                    </a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <a>Quản Lí Ứng Viên</a>
+                    <a asp-controller="HoSo" asp-action="" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Quản Lí Ứng Tuyển</span>
+                    </a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <a>Dashboard</a>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-shopping-cart"></i>
-                    <a>Đơn Hàng</a>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-envelope"></i>
-                    <a>Cấu Hình Email</a>
+                    <a asp-controller="HoSo" asp-action="" class="menu-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn Hàng</span>
+                    </a>
                 </div>
             </div>
 
             <div class="footer-sidebar">
                 <div>Version V2.74.39</div>
-                <div>© 2024 BOWO. All Rights Reserved.</div>
+                <div>© 2025 HUNO. All Rights Reserved.</div>
             </div>
         </div>
         <div class="main-content">
@@ -104,14 +99,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Kinh nghiệm</label>
-                            <select asp-for="sKinhNghiem" class="form-select">
-                                <option value="">Chọn </option>
-                                <option>2-3 năm</option>
-                                <option>0-1 năm</option>
-                                <option>3-5 năm</option>
-                                <option>Trên 5 năm</option>
+                            <label class="form-label">Kỹ năng</label>
+                            <select asp-for="sKyNang" class="form-select">
+                                <option value="">Chọn</option>
+                                <option>Giao tiếp</option>
+                                <option>Giảng dạy</option>
+                                <option>Ngoại ngữ</option>
                             </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">Kinh nghiệm</label>
+                            <input asp-for="sKinhNghiem" type="text" class="form-input" placeholder="Vui lòng nhập">
                         </div>
 
                         <div class="form-group">
@@ -126,18 +124,17 @@
                         </div>
 
                         
-                        <div class="form-group">
-                            <label class="form-label">Kỹ năng</label>
-                            <select asp-for="sKyNang" class="form-select">
-                                <option value="">Chọn</option>
-                                <option>Giao tiếp</option>
-                                <option>Giảng dạy</option>
-                                <option>Ngoại ngữ</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label class="form-label">Ghi chú</label>
-                            <textarea rows="4" cols="50" type="type" class="form-input" placeholder="Vui lòng nhập"></textarea>
+                       
+                        <div class="form-group" >
+                            <label class="form-label">Upload bằng cấp</label>
+                            <div class="cccd-upload" id="cccd-upload">
+                                <span>📎 Tải ảnh CCCD</span>
+                            </div>
+                            <input type="file" id="cccd-input" asp-for="formAnhBC" style="display: none;" accept="image/*" required>
+                            <small id="cccd-error" style="color: red;"></small>
+                            <div style="margin-top:10px;">
+                                <img id="cccd-preview" src="" alt="Ảnh CCCD" style="display: none; max-width: 250px; border-radius: 10px;">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -326,11 +323,52 @@
               }
           });
 
+
           // Nút upload
           uploadBtn.addEventListener('click', function () {
               openFileDialog();
           });
 
+              // Xử lý upload ảnh CCCD
+          const cccdInput = document.getElementById('cccd-input');
+          const cccdUpload = document.getElementById('cccd-upload');
+          const cccdError = document.getElementById('cccd-error');
+          //const cccdError = document.getElementById('cccd-error');
+          const cccdPreview = document.getElementById('cccd-preview');
+
+          cccdUpload.addEventListener('click', function () {
+              cccdInput.click();
+          });
+
+          cccdInput.addEventListener('change', function () {
+              if (this.files && this.files[0]) {
+                  const file = this.files[0];
+                  const validTypes = ['image/jpeg', 'image/png'];
+                  const maxSize = 5 * 1024 * 1024; // 5MB
+
+                  if (!validTypes.includes(file.type)) {
+                      cccdError.textContent = 'Chỉ chấp nhận file ảnh (JPEG, PNG)';
+                      this.value = '';
+                      return;
+                  }
+
+                  if (file.size > maxSize) {
+                      cccdError.textContent = 'File ảnh không được vượt quá 5MB';
+                      this.value = '';
+                      return;
+                  }
+
+                  cccdError.textContent = '';
+                  cccdUpload.innerHTML = `<span>📎 ${file.name}</span>`;
+                  // 👇 Hiển thị ảnh preview
+                  const reader = new FileReader();
+                  reader.onload = function (e) {
+                      cccdPreview.src = e.target.result;
+                      cccdPreview.style.display = 'block';
+                  };
+                  reader.readAsDataURL(file);
+              }
+          });
           // Nút submit (bạn có thể thêm validate ở đây nếu muốn)
           submitBtn?.addEventListener('click', function () {
               // validate nếu cần

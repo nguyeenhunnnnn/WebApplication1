@@ -16,41 +16,36 @@
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-
             <div class="menu">
-                <div class="menu-item ">
-                    <i class="fas fa-file-alt"></i>
-                    <a>Tìm hồ sơ</a>
-                </div>
                 <div class="menu-item active">
-                    <i class="fas fa-file-alt"></i>
-                    <a >Đăng Tin</a>
+                    <a asp-controller="baiDang" asp-action="DangTin" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Đăng tin</span>
+                    </a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-tasks"></i>
-                    <a asp-action="Index" asp-controller="baiDang">Quản Lí Tin Đăng</a>
+                    <a asp-controller="baiDang" asp-action="Index" class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Quản Lí Tin Đăng</span>
+                    </a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <a>Quản Lí Ứng Viên</a>
+                    <a asp-controller="baiDang" asp-action="" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Quản Lí Ứng Tuyển</span>
+                    </a>
                 </div>
                 <div class="menu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <a asp-action="Index" asp-controller="HoSo">Hồ Sơ</a>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-shopping-cart"></i>
-                    <a>Đơn Hàng</a>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-envelope"></i>
-                    <a>Cấu Hình Email</a>
+                    <a asp-controller="baiDang" asp-action="" class="menu-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn Hàng</span>
+                    </a>
                 </div>
             </div>
 
             <div class="footer-sidebar">
                 <div>Version V2.74.39</div>
-                <div>© 2024 BOWO. All Rights Reserved.</div>
+                <div>© 2025 HUNO. All Rights Reserved.</div>
             </div>
         </div>
 

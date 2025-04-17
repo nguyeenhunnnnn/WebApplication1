@@ -20,6 +20,8 @@ namespace WebApplication1.Services
        // Task<bool> UpdateChangesAsync();
         Task<List<HoSoViewModel>> GetAllHoSoByTaiKhoanId(string taiKhoanId);
         Task<HoSoViewModel> GetHoSoById(int id);
+        Task<List<HoSoViewModel>> GetAllHoSoByTrangThai(string trangthai);
+        Task<bool> PheDuyetHSAsync(int id);
 
     }
     public class HoSoService : IHoSoService
@@ -41,6 +43,7 @@ namespace WebApplication1.Services
         }
         public async Task<bool> CreateHoSoAsync(HoSoViewModel model,string id)
         {
+            
             var hoSo = new HoSo
             {
                 FK_iMaTK = id,
@@ -48,6 +51,8 @@ namespace WebApplication1.Services
                 sBangCap = model.sBangCap,
                 sKyNang = model.sKyNang,
                 sTieuDe = model.sTieuDe,
+                sTrangThai = model.sTrangThai,
+                sDuongDanTepBC = model.sDuongDanTepBC,
                 sDuongDanTep = model.sDuongDanTep // Lưu đường dẫn tệp vào cơ sở dữ liệu
             };
             try
@@ -73,8 +78,10 @@ namespace WebApplication1.Services
                 sKinhNghiem = b.sKinhNghiem,
                 sBangCap = b.sBangCap,
                 sKyNang = b.sKyNang,
+                sTrangThai = b.sTrangThai,
                 sTieuDe = b.sTieuDe,
                 sDuongDanTep=b.sDuongDanTep,
+                sDuongDanTepBC = b.sDuongDanTepBC,
                 HoTen = b.TaiKhoan.UserName, // nếu có liên kết navigation property
                 SoDienThoai = b.TaiKhoan.PhoneNumber,
                 Email = b.TaiKhoan.Email,
@@ -95,8 +102,10 @@ namespace WebApplication1.Services
                 sBangCap = hoSo.sBangCap,
                 sKyNang = hoSo.sKyNang,
                 sTieuDe=hoSo.sTieuDe,
-                anhDaiDien=hoSo.TaiKhoan.FileAvata,
-                sDuongDanTep=hoSo.sDuongDanTep,
+                sTrangThai = hoSo.sTrangThai,
+                anhDaiDien =hoSo.TaiKhoan.FileAvata,
+                sDuongDanTepBC = hoSo.sDuongDanTepBC,
+                sDuongDanTep =hoSo.sDuongDanTep,
                 HoTen = hoSo.TaiKhoan.UserName, // nếu có liên kết navigation property
                 SoDienThoai = hoSo.TaiKhoan.PhoneNumber,
                 Email = hoSo.TaiKhoan.Email,
@@ -106,6 +115,33 @@ namespace WebApplication1.Services
         public async Task<bool> DeleteChangesAsync(int id)
         {
             return await _HoSoRepository.DeleteChangesAsync(id);
+        }
+        public async Task<List<HoSoViewModel>> GetAllHoSoByTrangThai(string trangthai)
+        {
+            var hoSoList = await _HoSoRepository.GetAllHoSoByTrangThai(trangthai);
+            return hoSoList.Select(b => new HoSoViewModel
+            {
+                iMaHS = b.iMaHS,
+                FK_iMaTK = b.FK_iMaTK,
+                sKinhNghiem = b.sKinhNghiem,
+                sBangCap = b.sBangCap,
+                sKyNang = b.sKyNang,
+                sTrangThai = b.sTrangThai,
+                sTieuDe = b.sTieuDe,
+                sDuongDanTep = b.sDuongDanTep,
+                sDuongDanTepBC = b.sDuongDanTepBC,
+                HoTen = b.TaiKhoan.UserName, // nếu có liên kết navigation property
+                SoDienThoai = b.TaiKhoan.PhoneNumber,
+                Email = b.TaiKhoan.Email,
+                DiaChi = b.TaiKhoan.DiaChi
+            }).ToList();
+        }
+        public async Task<bool> PheDuyetHSAsync(int id)
+        {
+            var baiDang = await _HoSoRepository.GetHoSoById(id);
+            if (baiDang == null) return false;
+
+            return await _HoSoRepository.UpdateTrangThaiHS(id, "Đã duyệt");
         }
     }
 }

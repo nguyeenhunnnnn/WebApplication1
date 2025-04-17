@@ -5,6 +5,7 @@ using WebApplication1.Data;
 using WebApplication1.Models.Entities;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
+using static System.Net.Mime.MediaTypeNames;
 
 
 
@@ -59,7 +60,9 @@ builder.Services.AddScoped<IHoSoService, HoSoService>();
 
 // Add Repository
 builder.Services.AddScoped<IHoSoRepository, HoSoRepository>();
-
+//add vaitro claim
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<TaiKhoan>, AppClaimsPrincipalFactory>();
+builder.Services.AddHttpContextAccessor();
 // Add Session (for TempData)
 builder.Services.AddSession(options =>
 {
@@ -92,8 +95,48 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Admin}/{action=Index}/{id?}")
+    pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<TaiKhoan>>();
 
+    string adminEmail = "admin@example.com";
+    string adminPassword = "Admin@123";
+
+    var admin = await userManager.FindByEmailAsync(adminEmail);
+    if (admin == null)
+    {
+        var newAdmin = new TaiKhoan
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = false,
+            PhoneNumber= "0123456789",
+            VaiTro = "Admin",
+            TrangThai = "HoatDong",
+            CCCD = "123456789999",
+            FileAvata = "/uploads/images/avatar_6.png"
+        }
+    ;
+
+        var result = await userManager.CreateAsync(newAdmin, adminPassword);
+        if (result.Succeeded)
+        {
+            Console.WriteLine("✅ Admin created successfully.");
+        }
+        else
+        {
+            Console.WriteLine("❌ Failed to create admin:");
+            foreach (var error in result.Errors)
+                Console.WriteLine($" - {error.Description}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("✅ Admin already exists.");
+    }
+}
 app.Run();

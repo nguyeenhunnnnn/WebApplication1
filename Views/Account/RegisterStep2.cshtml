@@ -65,17 +65,17 @@
         <div class="form-row">
             <div class="form-col">
                 <label for="city">Tỉnh/Thành phố *</label>
-                <select id="city" name="TinhThanh" required>
+                <select id="city" asp-for="DiaChi" required>
                     <option value="" disabled selected>Chọn thành phố</option>
-                    <option value="hanoi">Hà Nội</option>
-                    <option value="hcm">TP. Hồ Chí Minh</option>
-                    <option value="danang">Đà Nẵng</option>
-                    <option value="other">Khác</option>
+                    <option >Hà Nội</option>
+                    <option >Hồ Chí Minh</option>
+                    <option >Đà Nẵng</option>
+                   
                 </select>
             </div>
             <div class="form-col">
                 <label for="address">Địa chỉ chi tiết *</label>
-                <input type="text" id="address" asp-for="DiaChi" placeholder="Vui lòng nhập" required>
+                <input type="text" id="address"  placeholder="Vui lòng nhập" required>
             </div>
         </div>
 

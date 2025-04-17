@@ -17,5 +17,7 @@
         public List<BaiDang> BaiDangs { get; set; } = new List<BaiDang>();
 
         public string sKinhNghiem { get; set; }
+        public string sTrangThai { get; set; } 
+        public string? sDuongDanTepBC { get; set; } // Đường dẫn đến ảnh bằng cấp
     }
 }

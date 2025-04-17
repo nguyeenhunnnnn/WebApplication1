@@ -7,7 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/styleNav.css" asp-append-version="true" />
-   
+
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -36,22 +36,22 @@
     <header>
         <div class="logo">
             <a asp-area="" asp-controller="Home" asp-action="Index">
-              <div class="logo-icon">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <rect width="40" height="40" rx="5" fill="#a3a3ff" />
-                    <path d="M10 15H30V25H10V15Z" fill="#1a1a2e" />
-                    <circle cx="15" cy="20" r="3" fill="#a3a3ff" />
-                    <circle cx="25" cy="20" r="3" fill="#a3a3ff" />
-                </svg>
-            </div>
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <rect width="40" height="40" rx="5" fill="#a3a3ff" />
+                        <path d="M10 15H30V25H10V15Z" fill="#1a1a2e" />
+                        <circle cx="15" cy="20" r="3" fill="#a3a3ff" />
+                        <circle cx="25" cy="20" r="3" fill="#a3a3ff" />
+                    </svg>
+                </div>
             </a>
             <span class="logo-text">HUNO</span>
         </div>
 
         <nav class="nav-menu">
-            <a asp-controller="Home" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" >Trang Chủ</a>
+            <a asp-controller="Home" asp-action="Index" class="nav-item active">Trang Chủ</a>
             <a href="#" class="nav-item">Bảng Tin</a>
-            <a asp-controller="baiDang" asp-action="DangTin" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoSo" ? "active" : "")">Ứng tuyển</a>
+            <a asp-controller="baiDang" asp-action="DangTin" class="nav-item">Ứng tuyển</a>
             <a href="#" class="nav-item">Sản Phẩm Và Dịch Vụ</a>
         </nav>
 
@@ -69,26 +69,42 @@
                 </svg>
             </div>
 
-            <button class="btn btn-outline">Đăng kí</button>
-            <button class="btn btn-primary">Đăng nhập</button>
+            <div class="user-profile">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var avatar = User.FindFirst("Avatar")?.Value ?? Url.Content("~/images/avatar-default.png");
+                    <img src="@($"{avatar}?v={DateTime.Now.Ticks}")" alt="User Avatar" class="rounded-circle" width="32" height="32" />
 
+                }
+                else
+                {
+                    <img src="~/images/avatar-default.png" alt="User Avatar" class="rounded-circle" width="32" height="32" />
+                }
+
+            </div>
+
+            <div class="coins-container">
+                <span class="crown-icon">👑</span>
+                <span>2000</span>
+            </div>
         </div>
     </header>
     <div class="container">
-       
+        
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
- <!--   <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - WebApplication1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>-->
+    <!--   <footer class="border-top footer text-muted">
+           <div class="container">
+               &copy; 2025 - WebApplication1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+           </div>
+       </footer>-->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

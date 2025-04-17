@@ -15,6 +15,8 @@ namespace WebApplication1.Repositories
       //  Task<bool> UpdateChangesAsync();
         Task<List<HoSo>> GetAllHoSoByTaiKhoanId(string taiKhoanId);
         Task<HoSo> GetHoSoById(int id);
+        Task<List<HoSo>> GetAllHoSoByTrangThai(string trangthai);
+        Task<bool> UpdateTrangThaiHS(int id, string trangThai);
 
 
     }
@@ -62,6 +64,22 @@ namespace WebApplication1.Repositories
             if(result==null)
             { return  false; }
             _context.HoSos.Remove(result);
+            return await SaveChangesAsync();
+        }
+        public async Task<List<HoSo>> GetAllHoSoByTrangThai(string trangthai)
+        {
+            var query = _context.HoSos
+            .Where(b => b.sTrangThai == trangthai)
+            .Include(h => h.TaiKhoan);
+            // Lọc theo TaiKhoanId
+            return await query.ToListAsync();
+        }
+        public async Task<bool> UpdateTrangThaiHS(int id, string trangThai)
+        {
+            var hs = await _context.HoSos.FindAsync(id);
+            if (hs == null) return false;
+
+            hs.sTrangThai = trangThai;
             return await SaveChangesAsync();
         }
 

@@ -8,6 +8,7 @@ using WebApplication1.Services;
 using WebApplication1.Repositories;
 using WebApplication1.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WebApplication1.Controllers
 {
@@ -53,13 +54,40 @@ namespace WebApplication1.Controllers
                 bool result = await _accountService.login(model);
                 if (result)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
+                    // Sau khi đăng nhập thành công, tải lại user từ DB để đảm bảo claims mới nhất
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+
+                    // Refresh user từ DB (rất quan trọng nếu bạn có thay đổi avatar ở đâu đó)
+                    await _userManager.UpdateAsync(user); // nếu cần cập nhật gì nữa
+
+                    await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    //var user = await _userManager.FindByEmailAsync(model.Email);
+                     var vaiTro = user.VaiTro;
+                    // ✅ Thêm vào đây để refresh Claims
+                    //await HttpContext.SignOutAsync();
+                    // await _signInManager.SignInAsync(user, isPersistent: false);
+                    //await _signInManager.RefreshSignInAsync(user);
+                    // Sign-out cũ
+                    await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+
+                    // Đăng nhập lại với claims mới
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    if (vaiTro == "Admin")
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else if (vaiTro == "PhuHuynh")
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else if (vaiTro == "GiaSu")
+                    {
+                        return RedirectToAction("Index", "GiaSu");
+                    }
+
+                    return RedirectToAction("Index", "Home"); // fallback
                 }
             }
             return View(model);
@@ -222,7 +250,7 @@ namespace WebApplication1.Controllers
                     string avatarPath = model.sFile_Avata != null
                         ? await UploadFile(model.sFile_Avata, "avatars")
                         : null;
-                    // 👉 Gán vào model để truyền vào RegisterAsync
+                    //  Gán vào model để truyền vào RegisterAsync
                     model.sFile_CCCD_Path = cccdPath;
                     model.sFile_Avata_Path = avatarPath;
                     _logger.LogError($" + {model.sFile_CCCD_Path.ToString()} + {model.sFile_Avata_Path.ToString()}");

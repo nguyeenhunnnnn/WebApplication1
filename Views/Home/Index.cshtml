@@ -323,7 +323,7 @@
             });
 
             // Add pagination functionality
-            const pageItems = document.querySelectorAll('.page-item');
+          /*  const pageItems = document.querySelectorAll('.page-item');
             pageItems.forEach(item => {
                 item.addEventListener('click', function() {
                     // Remove active class from all
@@ -333,17 +333,21 @@
                         this.classList.add('active');
                     }
                 });
-            });
+            });*/
 
-            // Add nav item active state
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
+                    const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                // Chỉ prevent nếu href="#" (không điều hướng thật)
+                if (this.getAttribute('href') === "#") {
                     e.preventDefault();
-                    navItems.forEach(ni => ni.classList.remove('active'));
-                    this.classList.add('active');
-                });
+                }
+
+                navItems.forEach(ni => ni.classList.remove('active'));
+                this.classList.add('active');
             });
+        });
+
         });
     </script>
 </body>

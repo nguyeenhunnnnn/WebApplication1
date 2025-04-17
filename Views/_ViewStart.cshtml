@@ -1,3 +1,22 @@
 ﻿@{
-    Layout = "_Layout";
+    var path = Context.Request.Path.ToString().ToLower();
+
+    // Danh sách các trang không phân layout theo vai trò
+    var excludePaths = new[] { "/Login", "/Account/Login", "/RegisterStep1", "/Account/RegisterStep1", "/RegisterStep2", "/Account/RegisterStep2" };
+
+    var user = Context.User;
+    Layout = "~/Views/Shared/_Layout.cshtml"; // mặc định
+
+    if (!excludePaths.Any(p => path.Contains(p)) && user.Identity.IsAuthenticated)
+    {
+        var vaiTro = user.Claims.FirstOrDefault(c => c.Type == "VaiTro")?.Value?.ToLower();
+
+        Layout = vaiTro switch
+        {
+            "admin" => "~/Views/Shared/_LayoutAdmin.cshtml",
+            "phuhuynh" => "~/Views/Shared/_LayoutPhuHuynh.cshtml",
+            "giasu" => "~/Views/Shared/_LayoutGiaSu.cshtml",
+            _ => "~/Views/Shared/_Layout.cshtml"
+        };
+    }
 }

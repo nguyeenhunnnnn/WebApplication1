@@ -82,36 +82,41 @@ namespace WebApplication1.Controllers
 
             // Xử lý tệp tải lên
             string filePath = null;
-            if (model.formFile != null && model.formFile.Length > 0)
+            if (model.formFile != null && model.formFile.Length > 0 )
             {
                 // Kiểm tra kích thước tệp (giới hạn 5MB)
-                if (model.formFile.Length > 5 * 1024 * 1024)
+                if (model.formFile.Length > 5 * 1024 * 1024 )
                 {
                     ModelState.AddModelError("", "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.");
                     return View(model);
                 }
-
-                // Lấy tên tệp và mở rộng tệp
-                var fileName = Path.GetFileName(model.formFile.FileName);
-                var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "hoso");
-
-                // Tạo thư mục nếu chưa có
-                if (!Directory.Exists(uploadDirectory))
-                {
-                    Directory.CreateDirectory(uploadDirectory);
-                }
-
-                // Đường dẫn đầy đủ để lưu tệp
-                filePath = Path.Combine(uploadDirectory, fileName);
-
-                // Lưu tệp vào thư mục
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.formFile.CopyToAsync(fileStream);
-                }
+                 filePath = model.formFile != null
+                    ? await UploadFile(model.formFile, "hoso")
+                    : null;
 
             }
             model.sDuongDanTep = filePath;
+            string filePathBC = null;
+            if (model.formAnhBC != null && model.formAnhBC.Length > 0)
+            {
+                // Kiểm tra kích thước tệp (giới hạn 5MB)
+                if (model.formAnhBC != null && model.formAnhBC.Length > 0)
+                {
+                    // Kiểm tra kích thước tệp (giới hạn 5MB)
+                    if (model.formAnhBC.Length > 5 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("", "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.");
+                        return View(model);
+                    }
+                    filePathBC = model.formAnhBC != null
+                    ? await UploadFile(model.formAnhBC, "bangcap")
+                    : null;
+                }
+
+            }
+            model.sDuongDanTepBC = filePathBC;
+            string trangthai = "Đang chờ duyệt";
+            model.sTrangThai = trangthai;
             /*
             // Tạo đối tượng hồ sơ mới
             var hoSo = new HoSo
@@ -202,6 +207,40 @@ namespace WebApplication1.Controllers
             }
             return View("Index", hoSoList);
 
+        }
+        private async Task<string> UploadFile(IFormFile file, string folderName)
+        {
+            //kiem tra xem file có tồn tại hay không 
+            if (file == null || file.Length == 0)
+                return null;
+            //tạo đường dẫn thư mục 
+            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", folderName);
+            //kiểm tra xem đường dẫn có tồn tại hay không 
+            if (!Directory.Exists(uploadsFolder))
+                //nếu không tồn tại tạo thư mục mới 
+                Directory.CreateDirectory(uploadsFolder);
+            //tạo tên file riêng , tránh trùng lặp 
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            //kết nối, tạo đường dẫn 
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            //lưu file vào trong đường dẫn đấy 
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            _logger.LogInformation($"Uploaded file to: {filePath}");
+            // trả lại đường dẫn /uploads/cccd/avd.png 
+            return Path.Combine("/uploads", folderName, uniqueFileName);
+        }
+        [HttpGet]
+        public async Task<IActionResult> MoCV(int id)
+        {
+            var hs = await _hoSoService.GetHoSoById(id);
+            if (hs == null)
+            {
+                return NotFound();
+            }
+            return View(hs);
         }
 
     }

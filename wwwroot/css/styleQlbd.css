@@ -4,7 +4,13 @@
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
+.ellipsis {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
     .content-container {
       background-color: #f5f5ff;
       padding: 20px;

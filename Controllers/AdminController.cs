@@ -24,6 +24,7 @@ namespace WebApplication1.Controllers
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly SignInManager<TaiKhoan> _signInManager;
         private readonly IDangTinService _dangTinService;
+        private readonly IHoSoService _hoSoService;
 
         public AdminController(ILogger<AdminController> logger,
             IWebHostEnvironment webHostEnvironment,
@@ -31,7 +32,8 @@ namespace WebApplication1.Controllers
             IConfiguration configuration,
             UserManager<TaiKhoan> userManager,
             SignInManager<TaiKhoan> signInManager,
-            IDangTinService dangTinService
+            IDangTinService dangTinService,
+            IHoSoService hoSoService
             )
         {
             _logger = logger;
@@ -41,6 +43,7 @@ namespace WebApplication1.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _dangTinService = dangTinService;
+            _hoSoService = hoSoService;
         }
         public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
@@ -136,6 +139,146 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> DSHS(string trangthai = "Đang chờ duyệt")
+        {
+            var hoSoList = await _hoSoService.GetAllHoSoByTrangThai(trangthai);
+
+            return View(hoSoList);
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetHS(int Primakey)
+        {
+            var hs = await _hoSoService.GetHoSoById(Primakey);
+            if (hs == null)
+            {
+                return NotFound();
+            }
+            return View(hs);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteHS(int id)
+        {
+            var result = await _hoSoService.DeleteChangesAsync(id);
+            if (result)
+            {
+                TempData["Success"] = "Xóa tin thành công!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["Error"] = "Xóa tin không thành công!";
+                return RedirectToAction("Index");
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> PheDuyetHS(int pd)
+        {
+            var result = await _hoSoService.PheDuyetHSAsync(pd);
+            if (result)
+            {
+                TempData["Message"] = "Phê duyệt thành công";
+            }
+            else
+            {
+                TempData["Error"] = "Không thể phê duyệt";
+            }
+            return RedirectToAction("DSHS");
+        }
+        [HttpPost]
+        public async Task<IActionResult> SearchHSA(string kynang, string kinhnghiem, string tieude, string trangthai)
+        {
+            // Nếu không có trạng thái thì mặc định là 'Đang chờ duyệt'
+
+            trangthai = string.IsNullOrEmpty(trangthai) ? "Đang chờ duyệt" : trangthai;
+
+            var HSList = new List<HoSoViewModel>();
+            HSList = await _hoSoService.GetAllHoSoByTrangThai(trangthai);
+
+            if (!string.IsNullOrEmpty(kynang))
+            {
+                HSList = HSList.Where(bd => bd.sKyNang.Contains(kynang)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(kinhnghiem))
+            {
+                HSList = HSList.Where(bd => bd.sKinhNghiem.Contains(kinhnghiem)).ToList();
+            }
+            if (!string.IsNullOrEmpty(tieude))
+            {
+                HSList = HSList.Where(bd => bd.sTieuDe.Contains(tieude)).ToList();
+            }
+            return View("Index", HSList);
+        }
+        [HttpGet]
+        public async Task<IActionResult> MoCVA(int id)
+        {
+            var hs = await _hoSoService.GetHoSoById(id);
+            if (hs == null)
+            {
+                return NotFound();
+            }
+            return View(hs);
+        }
+        public async Task<IActionResult> DanhSachUser()
+        {
+            var users = await _userManager.Users
+                .Select(u => new TaiKhoanViewModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserName = u.UserName,
+                    PhoneNumber = u.PhoneNumber,
+                    DiaChi = u.DiaChi,
+                    VaiTro=u.VaiTro,
+                    CCCD = u.CCCD
+
+                }).ToListAsync();
+
+            return View(users);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteTK(string Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Xoá tài khoản thành công.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Xoá tài khoản thất bại.";
+            }
+
+            return RedirectToAction("DanhSachUser");
+        }
+        [HttpPost]
+        public async Task<IActionResult> SearchTK(string nguoidang)
+        {
+
+                    var TKList = await _context.Users
+                   .Where(t => t.UserName == nguoidang)
+                   .Select(t => new TaiKhoanViewModel
+                   {
+                       Id = t.Id,
+                       UserName = t.UserName,
+                       Email = t.Email,
+                       PhoneNumber=t.PhoneNumber,
+                       CCCD = t.CCCD,
+                       VaiTro = t.VaiTro,
+                       // Thêm các trường khác nếu cần
+                   })
+               .ToListAsync();
+            return View("DanhSachUser", TKList);
+
+        }
+
 
     }
 }

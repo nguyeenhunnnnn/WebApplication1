@@ -3,7 +3,7 @@
 @using WebApplication1.Models
 
 @{
-    ViewData["Title"] = "Hồ Sơ ";
+    ViewData["Title"] = "Ho So ";
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -19,38 +19,29 @@
 <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
+
         <div class="menu">
-            <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="CreateHoSo"
-                   class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Đăng tin</span>
-                </a>
+            <div class="menu-item ">
+                <i class="fas fa-file-alt"></i>
+                <span>Tìm hồ sơ</span>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="Index"
-                   class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Quản lý tin đăng</span>
-                </a>
+                <i class="fas fa-tasks"></i>
+                <span>Quản Lí Tin Đăng</span>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Quản Lí Ứng Tuyển</span>
-                </a>
+                <i class="fas fa-users"></i>
+                <span>Quản Lí Hồ Sơ</span>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="" class="menu-item">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Đơn Hàng</span>
-                </a>
+                <i class="fas fa-shopping-cart"></i>
+                <span> Quản lý Tài Khoản</span>
             </div>
         </div>
 
         <div class="footer-sidebar">
             <div>Version V2.74.39</div>
-            <div>© 2025 HUNO. All Rights Reserved.</div>
+            <div>© 2024 BOWO. All Rights Reserved.</div>
         </div>
     </div>
 
@@ -61,11 +52,14 @@
         <div class="content" style="width:140%">
 
             <div class="search-container">
+
                 <div class="section-title">
-                    <a asp-action="CreateHoSo">Tạo hồ sơ</a>
-                    <a asp-action="Index">Hồ sơ đã tạo</a>
+                    <form action="DSHS" method="get">
+                        <a href="?trangthai=Đang chờ duyệt">Hồ Sơ chờ duyệt</a>
+                        <a href="?trangthai=Đã duyệt">Hồ Sơ đã duyệt</a>
+                    </form>
                 </div>
-                <form method="post" asp-action="SearchHS" >
+                <form method="post" asp-action="SearchHSA">
                     <div class="search-row">
 
                         <div class="search-field">
@@ -77,22 +71,12 @@
                                 <option>Ngoại ngữ</option>
                             </select>
                         </div>
-                        <div class="search-field">
-                            <label class="search-label">Học vấn</label>
-                            <select name="hocvan" class="search-select">
-                                <option value="" selected>Chọn</option>
-                                <option>Sau Đại học</option>
-                                <option>Đại học</option>
-                                <option>Cao đẳng</option>
-                                <option>Trung cấp</option>
-                            </select>
-                        </div>
                        
                     </div>
 
                     <div class="search-row">
                         <div class="search-field">
-                            <label class="search-label">Tiêu đề</label>
+                            <label class="search-label">Tên ứng viên </label>
                             <input name="tieude" type="text" class="search-input" placeholder="Nhập từ khóa">
                         </div>
                         <button class="search-btn" type="submit">
@@ -127,14 +111,14 @@
                                 <td>@item.sTieuDe</td>
                                 <td class="ellipsis">@item.sKinhNghiem</td>
                                 <td>@item.sBangCap</td>
-                                <td>@item.sKyNang</td>
+                                <td>@item.sTrangThai</td>
                                 <td class="action-cell">
-                                    <form asp-action="Get" asp-controller="HoSo" method="get">
+                                    <form asp-action="GetHS" method="get">
                                         <button type="submit" class="action-btn" name="Primakey" value="@item.iMaHS">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.0007 12C15.0007 13.6569 13.6576 15 12.0007 15C10.3439 15 9.00073 13.6569 9.00073 12C9.00073 10.3431 10.3439 9 12.0007 9C13.6576 9 15.0007 10.3431 15.0007 12Z" stroke="#8b3dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12.0012 5C7.52354 5 3.73326 7.94288 2.45898 12C3.73324 16.0571 7.52354 19 12.0012 19C16.4788 19 20.2691 16.0571 21.5434 12C20.2691 7.94291 16.4788 5 12.0012 5Z" stroke="#8b3dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                                         </button>
                                     </form>
-                                    <form asp-action="Delete" asp-controller="HoSo" method="get">
+                                    <form asp-action="DeleteHS" method="get">
                                         <button class="action-btn" type="submit" name="Id" value="@item.iMaHS">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -142,7 +126,14 @@
                                             </svg>
                                         </button>
                                     </form>
-
+                                    @if (item.sTrangThai != "Đã duyệt")
+                                    {
+                                        <form asp-action="PheDuyetHS" method="get">
+                                            <button class="action-btn" type="submit" name="pd" value="@item.iMaHS">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#8b3dff" stroke-width="1.5"></path> <path d="M8.5 12.5L10.5 14.5L15.5 9.5" stroke="#8b3dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                            </button>
+                                        </form>
+                                    }
                                 </td>
                             </tr>
 
@@ -156,14 +147,14 @@
 </div>
 <script>
     // Tab switching functionality
-  /*  const tabs = document.querySelectorAll('.tab');
+    const tabs = document.querySelectorAll('.tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
       });
     });
-    /*/
+
 
 
     // Search button functionality
@@ -199,4 +190,5 @@
     });
 </script>
 </html>
+
 

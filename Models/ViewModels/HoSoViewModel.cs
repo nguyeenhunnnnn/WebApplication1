@@ -17,5 +17,8 @@
         public string anhDaiDien { get; set; } // Đường dẫn đến ảnh đại diện
         // Quan hệ với BaiDang (1-n, mỗi hồ sơ có thể có nhiều bài đăng)
         public List<BaiDangViewModel> BaiDangs { get; set; } = new List<BaiDangViewModel>();
+        public string sTrangThai { get; set; }
+        public IFormFile formAnhBC { get; set; }
+        public string sDuongDanTepBC { get; set; } // Đường dẫn đến ảnh bằng cấp
     }
 }
