@@ -92,7 +92,7 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=HoSo}/{action=Index}/{id?}")
+    pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 

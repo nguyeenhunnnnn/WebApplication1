@@ -95,8 +95,8 @@ namespace WebApplication1.Services
                 sBangCap = hoSo.sBangCap,
                 sKyNang = hoSo.sKyNang,
                 sTieuDe=hoSo.sTieuDe,
+                anhDaiDien=hoSo.TaiKhoan.FileAvata,
                 sDuongDanTep=hoSo.sDuongDanTep,
-
                 HoTen = hoSo.TaiKhoan.UserName, // nếu có liên kết navigation property
                 SoDienThoai = hoSo.TaiKhoan.PhoneNumber,
                 Email = hoSo.TaiKhoan.Email,

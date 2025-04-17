@@ -14,6 +14,7 @@
         public string sKyNang { get; set; } 
         public string sDuongDanTep { get; set; } // Tùy chọn (nullable)
         public IFormFile formFile { get; set; }
+        public string anhDaiDien { get; set; } // Đường dẫn đến ảnh đại diện
         // Quan hệ với BaiDang (1-n, mỗi hồ sơ có thể có nhiều bài đăng)
         public List<BaiDangViewModel> BaiDangs { get; set; } = new List<BaiDangViewModel>();
     }

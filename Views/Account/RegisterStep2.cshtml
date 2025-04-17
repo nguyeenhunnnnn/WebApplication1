@@ -3,6 +3,16 @@
 @{
     ViewData["Title"] = "Đăng ký - Bước 2";
 }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/styleTTCN.css">
+    <link rel="stylesheet" href="~/css/styleNav.css">
+    <title>BOWO - Nền tảng tuyển dụng</title>
+
+</head>
 <div class="container">
     <h1>Thông Tin Cá Nhân</h1>
     <p class="subtitle">Chỉ một bước nữa thôi, bạn đã có thể đăng tin tuyển dụng tìm kiếm gia sư phù hợp</p>
@@ -84,20 +94,22 @@
                 <div style="margin-top:10px;">
                     <img id="cccd-preview" src="" alt="Ảnh CCCD" style="display: none; max-width: 250px; border-radius: 10px;">
                 </div>
-            </div>
-
+                 </div>
+         </div>
+        <div class="form-row">
             <div class="checkbox-container">
                 <input type="checkbox" id="terms" name="DongYDieuKhoan" required>
                 <label for="terms">Bằng việc đăng ký, tôi đã đọc và đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của web *</label>
             </div>
-
+        </div>
+        <div class="form-row">
             <button type="submit" class="submit-btn" id="submit-btn">Đăng ký</button>
             <div style="display:none;">
                 <p>Email từ TempData: @TempData["Email"]</p>
                 <p>Mật khẩu từ TempData: @TempData["MatKhau"]</p>
                 <p>Vaitro từ TempData: @TempData["VaiTro"]</p>
             </div>
-
+        </div>
     </form>
 </div>
 @section Scripts {
@@ -210,4 +222,4 @@
 
     });
 </script>
-
+</html>

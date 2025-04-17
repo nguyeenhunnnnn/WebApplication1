@@ -1,5 +1,244 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model WebApplication1.Models.ViewModels.HoSoViewModel
+
+@using WebApplication1.Models
+
 @{
+    ViewData["Title"] = "Ho So ";
 }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link href="~/css/styleCTHS.css" rel="stylesheet" />
+    <title>HUNO - Chi Tiet Ho So</title>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+            <div class="menu">
+                <div class="menu-item ">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Tìm hồ sơ</span>
+                </div>
+                <div class="menu-item active">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Đăng Tin</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Quản Lí Tin Đăng</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Quản Lí Ứng Viên</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Đơn Hàng</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Cấu Hình Email</span>
+                </div>
+            </div>
+
+            <div class="footer-sidebar">
+                <div>Version V2.74.39</div>
+                <div>© 2024 BOWO. All Rights Reserved.</div>
+            </div>
+        </div>
+        <!-- Main Content -->
+
+        <div class="main-content">
+            <div class="tab-header">
+                <a href="#">Hồ Sơ Ứng Tuyển</a>
+                <a href="#">Hồ Sơ Đang Theo Dõi</a>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-container">
+                <div class="profile-left">
+                    <div class="profile-image">
+                        <img src="@Model.anhDaiDien" alt="Profile Image">
+                    </div>
+                    <div class="profile-title">
+                        <h3>@Model.HoTen</h3>
+                        <p>@Model.sTieuDe</p>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-outline">Theo dõi</button>
+                        <button class="btn btn-primary">Liên hệ</button>
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <div class="tab-nav">
+                        <div class="tab-nav-item active">CV</div>
+                        <div class="tab-nav-item">Portfolio</div>
+                    </div>
+
+                    <div class="cv-action">
+                        <button class="cv-btn">Mở CV</button>
+                    </div>
+
+                    <div class="personal-info">
+                        <h2>Thông tin cá nhân</h2>
+
+                        <div class="info-item">
+                            <div class="info-icon">&#9993;</div>
+                            <div class="info-label">Email</div>
+                            <div class="info-value">@Model.Email</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">&#9742;</div>
+                            <div class="info-label">Số điện thoại</div>
+                            <div class="info-value">@Model.SoDienThoai</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">&#127968;</div>
+                            <div class="info-label">Địa chỉ</div>
+                            <div class="info-value">@Model.DiaChi</div>
+                        </div>
+                    </div>
+
+                    <div class="bio-section">
+                        <h2>Hi, I'm @Model.HoTen!</h2>
+                        <p class="bio-text">
+                           @Model.sTieuDe
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experience Section 
+            <div class="profile-container">
+                <div class="experience-section">
+                    <h2>Kinh nghiệm</h2>
+
+                    <div class="experience-item">
+                        <div class="experience-left">
+                            <div class="experience-title">Freelancer Video Editor</div>
+                            <div class="experience-company">Adobe</div>
+                            <div class="experience-period">05/2023 - Hiện tại</div>
+                            <div class="experience-duration">1 năm 2 tháng</div>
+                        </div>
+
+                        <div class="experience-right">
+                            <div class="project-list">
+                                <div class="project-item">
+                                    <p>Biên tập và sản xuất video hướng dẫn sử dụng các công cụ trong Adobe Creative Cloud, bao gồm Premiere Pro, After Effects, và Photoshop.</p>
+                                </div>
+                                <div class="project-item">
+                                    <p>Các video này đã giúp người dùng nâng cao kỹ năng sử dụng phần mềm, thu hút hàng triệu lượt xem và tăng cường sự hài lòng của khách hàng.</p>
+                                </div>
+                            </div>
+
+                            <div class="achievement-title">Thành tích:</div>
+                            <div class="project-list">
+                                <div class="project-item">
+                                    <p>Phát triển khóa học trực tuyến: Đóng góp vào việc phát triển các khóa học video trực tuyến cho Adobe, giúp hàng ngàn người dùng học hỏi và phát triển kỹ năng.</p>
+                                </div>
+                                <div class="project-item">
+                                    <p>Tham gia vào các dự án sáng tạo: Làm việc với các nhóm sáng tạo để phát triển nội dung quảng cáo và truyền thông cho Adobe, góp phần nâng cao thương hiệu và sự gắn kết của khách hàng.</p>
+                                </div>
+                                <div class="project-item">
+                                    <p>Đạt giải thưởng nội bộ: Được công nhận trong các giải thưởng nội bộ của Adobe cho sự sáng tạo và hiệu quả trong công việc chỉnh sửa video.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="experience-left">
+                            <div class="experience-title">Content Creator</div>
+                            <div class="experience-company">Youtube</div>
+                            <div class="experience-period">09/2020 - Hiện tại</div>
+                            <div class="experience-duration">4 năm</div>
+                        </div>
+
+                        <div class="experience-right">
+                            <div class="project-list">
+                                <div class="project-item">
+                                    <p>Nội dung: Tạo và xuất bản các video về cuộc sống hàng ngày, vlog du lịch, chia sẻ kinh nghiệm sống, chăm sóc sức khỏe, và các mẹo về quản lý thời gian.</p>
+                                </div>
+                                <div class="project-item">
+                                    <p>Kết quả: Kênh đạt hơn 200,000 người đăng ký trong vòng 2 năm, với các video nổi bật đạt từ 100,000 đến 500,000 lượt xem.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+
+            <!-- Status Section 
+            <div class="profile-container">
+               
+                <div class="profile-left" style="width: 30%;">
+                    <h3 class="section-title">Trạng thái</h3>
+                    <select class="status-select">
+                        <option selected>Chưa quyết định</option>
+                        <option>Đã phê duyệt</option>
+                        <option>Đã từ chối</option>
+                    </select>
+   
+                </div>
+               
+
+                <div class="profile-right">
+                    <div class="contact-info-section">
+                        <h3 class="section-title">Thông tin liên hệ</h3>
+
+                        <div class="contact-item">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value">xxxxxxxxxx@xxxxx.com</div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-label">Số điện thoại</div>
+                            <div class="contact-value">**********</div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-label">Mạng xã hội</div>
+                            <div class="contact-value">
+                                <div class="social-media-item">
+                                    <div class="social-icon">f</div>
+                                    <div>xxxxxxxxxxx</div>
+                                </div>
+                                <div class="social-media-item">
+                                    <div class="social-icon">t</div>
+                                    <div>xxxxxxxxxxx</div>
+                                </div>
+                                <div class="social-media-item">
+                                    <div class="social-icon">B</div>
+                                    <div>xxxxxxxxxxx</div>
+                                </div>
+                                <div class="social-media-item">
+                                    <div class="social-icon">IG</div>
+                                    <div>xxxxxxxxxxx</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</body>
+</html>
+
