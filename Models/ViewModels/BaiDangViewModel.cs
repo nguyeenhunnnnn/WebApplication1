@@ -21,6 +21,7 @@ namespace WebApplication1.Models.ViewModels
         public DateTime dNgayTao { get; set; }
         public DateTime dThoiGianHetHan { get; set; } // Tùy chọn
 
+        public string Nguoitao { get; set; } 
         //cột mới 
         public string sMonday { get; set; }
         public string sYCau { get; set; }

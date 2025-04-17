@@ -24,6 +24,8 @@ namespace WebApplication1.Repositories
         Task<bool> DangTinExistsByTitleAsync(string title);
         Task<List<BaiDang>> GetAllBaiDangByTaiKhoanId(string taiKhoanId,string trangthai);
         Task<BaiDang> GetBaiDangById(int id);
+        Task<List<BaiDang>> GetAllBaiDangByTrangthai(string trangthai);
+        Task<bool> UpdateTrangThaiBaiDang(int id, string trangThai);
 
 
 
@@ -85,6 +87,7 @@ namespace WebApplication1.Repositories
         public async Task<List<BaiDang>> GetAllBaiDangByTaiKhoanId(string taiKhoanId,string trangthai)
         {
             var query = _context.BaiDangs
+                .Include(b => b.TaiKhoan)
             .Where(b => b.FK_iMaTK == taiKhoanId); // Lọc theo TaiKhoanId
 
             if (!string.IsNullOrEmpty(trangthai)) // Nếu trạng thái được truyền vào, lọc thêm theo trạng thái
@@ -93,12 +96,29 @@ namespace WebApplication1.Repositories
             }
             return await query.ToListAsync();
         }
-       
-          public async Task<BaiDang> GetBaiDangById(int id)
+        public async Task<List<BaiDang>> GetAllBaiDangByTrangthai(string trangthai)
+        {
+
+            return await  _context.BaiDangs
+                .Include(b => b.TaiKhoan)
+            .Where(b => b.sTrangThai == trangthai).ToListAsync(); // Lọc theo Trang thai
+        
+        }
+        public async Task<BaiDang> GetBaiDangById(int id)
           {
              
-              return await _context.BaiDangs.FirstOrDefaultAsync(bd => bd.PK_iMaBaiDang==id) ;
+              return await _context.BaiDangs
+                 .Include(b => b.TaiKhoan)
+                .FirstOrDefaultAsync(bd => bd.PK_iMaBaiDang==id) ;
               
           }
+        public async Task<bool> UpdateTrangThaiBaiDang(int id, string trangThai)
+        {
+            var baiDang = await _context.BaiDangs.FindAsync(id);
+            if (baiDang == null) return false;
+
+            baiDang.sTrangThai = trangThai;
+            return await SaveChangesAsync();
+        }
     }
 }

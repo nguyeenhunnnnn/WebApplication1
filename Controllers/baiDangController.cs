@@ -135,7 +135,7 @@ namespace WebApplication1.Controllers
             return View(baidangList);
         }
         [HttpPost]
-        public async Task<IActionResult> SearchDB(string MonDay, string Diadiem, string ThoiGian, string TuKhoa)
+        public async Task<IActionResult> SearchDB(string MonDay, string Diadiem, string ThoiGian, string TuKhoa,string nguoidang)
         { string trangthai = "Đang chờ duyệt";
             var userId = _userManager.GetUserId(User);
             if (userId == null)
@@ -148,6 +148,10 @@ namespace WebApplication1.Controllers
             {
                 baiDangList = baiDangList.Where(bd => bd.sMonday.Contains(MonDay)).ToList();
             }
+            if (!string.IsNullOrEmpty(nguoidang))
+            {
+                baiDangList = baiDangList.Where(bd => bd.Nguoitao.Contains(nguoidang)).ToList();
+            }
             if (!string.IsNullOrEmpty(Diadiem))
             {
                 baiDangList = baiDangList.Where(bd => bd.sDiaDiem.Contains(Diadiem)).ToList();
@@ -157,7 +161,7 @@ namespace WebApplication1.Controllers
                 DateTime dateTime;
                 if (DateTime.TryParse(ThoiGian, out dateTime))
                 {
-                    baiDangList = baiDangList.Where(bd => bd.dThoiGianHetHan.Date == dateTime.Date).ToList();
+                    baiDangList = baiDangList.Where(bd => bd.dNgayTao.Date == dateTime.Date).ToList();
                 }
             }
             if (!string.IsNullOrEmpty(TuKhoa))

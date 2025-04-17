@@ -31,7 +31,8 @@ namespace WebApplication1.Services
         Task<bool> DangTinExistsByTitleAsync(string title);
         Task<List<BaiDangViewModel>> GetAllBaiDangByTaiKhoanId(string taiKhoanId,string trangthai);
         Task<BaiDangViewModel> GetBaiDangById(int id);
-
+        Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthai(string trangthai);
+        Task<bool> PheDuyetBaiDangAsync(int id);
     }
     public class DangTinService : IDangTinService
     {
@@ -144,7 +145,8 @@ namespace WebApplication1.Services
            return baiDangs.Select(b=>new BaiDangViewModel
                 {
                     PK_iMaBaiDang = b.PK_iMaBaiDang,
-                    sMonday =b.sMonday,
+                    Nguoitao = b.TaiKhoan.UserName,
+                     sMonday =b.sMonday,
                     sBangCap=b.sBangCap,
                     sGioiTinh=b.sGioiTinh,
                     sKinhNghiem=b.sKinhNghiem,
@@ -161,7 +163,32 @@ namespace WebApplication1.Services
                 .ToList();
           
         }
-       
+        public async Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthai( string trangthai)
+        {
+            var baiDangs = await _dangTinRepository.GetAllBaiDangByTrangthai( trangthai);
+
+            return baiDangs.Select(b => new BaiDangViewModel
+            {
+                PK_iMaBaiDang = b.PK_iMaBaiDang,
+                Nguoitao = b.TaiKhoan.UserName,
+                sMonday = b.sMonday,
+                sBangCap = b.sBangCap,
+                sGioiTinh = b.sGioiTinh,
+                sKinhNghiem = b.sKinhNghiem,
+                sTuoi = b.sTuoi,
+                sYCau = b.sYCau,
+                sTieuDe = b.sTieuDe,
+                sMoTa = b.sMoTa,
+                sDiaDiem = b.sDiaDiem,
+                fMucLuong = b.fMucLuong ?? 0,
+                sTrangThai = b.sTrangThai,
+                dNgayTao = b.dNgayTao,
+                dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue
+            })
+                 .ToList();
+
+        }
+
         public async Task<BaiDangViewModel> GetBaiDangById(int id)
         {
 
@@ -173,6 +200,7 @@ namespace WebApplication1.Services
             return new BaiDangViewModel
             {
                 PK_iMaBaiDang = bd.PK_iMaBaiDang,
+                Nguoitao = bd.TaiKhoan.UserName,
                 sMonday = bd.sMonday,
                 sBangCap = bd.sBangCap,
                 sGioiTinh = bd.sGioiTinh,
@@ -190,6 +218,13 @@ namespace WebApplication1.Services
 
 
         }
-        
+        public async Task<bool> PheDuyetBaiDangAsync(int id)
+        {
+            var baiDang = await _dangTinRepository.GetDangTinById(id);
+            if (baiDang == null) return false;
+
+            return await _dangTinRepository.UpdateTrangThaiBaiDang(id, "Đã duyệt");
+        }
+
     }
 }
