@@ -43,7 +43,7 @@ namespace WebApplication1.Controllers
            
             return View();
         }
-        [HttpPost("/login/")]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
@@ -274,7 +274,7 @@ namespace WebApplication1.Controllers
                     TempData.Remove("Email");
                     TempData.Remove("MatKhau");
 
-                    return RedirectToAction(nameof(RegisterSuccess));
+                    return RedirectToAction(nameof(Login));
 
                 
             }
@@ -288,13 +288,37 @@ namespace WebApplication1.Controllers
 
             }
             }
-        
-            
-            public IActionResult RegisterSuccess()
-            {
-                return View();
-            }
 
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(); // Xoá cookie xác thực
+            return RedirectToAction("Login", "Account"); // Chuyển về trang chủ hoặc trang đăng nhập
+        }
+
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login");
+
+            var model = new ProfileViewModel
+            {
+                VaiTro = user.VaiTro,
+                Email = user.Email,
+                MatKhau = user.PasswordHash,
+                CCCD = user.CCCD,
+                SDT = user.PhoneNumber,
+                HoTen = user.UserName,
+                DiaChi = user.DiaChi,
+                sFile_Avata_Path = user.FileAvata,
+                sFile_CCCD_Path = user.FileCCCD,
+                sFile_Avata = null,
+                sFile_CCCD = null,
+            };
+           
+
+            return View(model);
+        }
         private void KeepStep1Data()
         {
             TempData.Keep("Email");

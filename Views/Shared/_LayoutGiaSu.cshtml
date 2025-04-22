@@ -52,7 +52,7 @@
             <a asp-controller="Home" asp-action="Index" class="nav-item active">Trang Chủ</a>
             <a href="#" class="nav-item">Bảng Tin</a>
             <a href="#" class="nav-item">Tìm việc</a>
-            <a asp-controller="HoSo" asp-action="Index" class="nav-item">Ứng tuyển</a>
+            <a asp-controller="HoSo" asp-action="Index" class="nav-item">Quản Lý</a>
             <a href="#" class="nav-item">Sản Phẩm Và Dịch Vụ</a>
         </nav>
 
@@ -74,7 +74,13 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     var avatar = User.FindFirst("Avatar")?.Value ?? Url.Content("~/images/avatar-default.png");
-                    <img src="@($"{avatar}?v={DateTime.Now.Ticks}")" alt="User Avatar" class="rounded-circle" width="32" height="32" />
+                    <a asp-controller="Account" asp-action="Profile" title="Thông tin cá nhân">
+                        <img src="@($"{avatar}?v={DateTime.Now.Ticks}")"
+                             alt="User Avatar"
+                             class="rounded-circle"
+                             width="32" height="32"
+                             style="cursor: pointer;" />
+                    </a>
 
                 }
                 else

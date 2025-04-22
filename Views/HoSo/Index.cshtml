@@ -21,27 +21,27 @@
     <div class="sidebar">
         <div class="menu">
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="CreateHoSo"
+                <a asp-controller="HoSo" asp-action="CreateHoSo" style="text-decoration:none; padding:0px 10px"
                    class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
                     <i class="fas fa-file-alt"></i>
                     <span>Đăng tin</span>
                 </a>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="Index"
+                <a asp-controller="HoSo" asp-action="Index" style="text-decoration:none; padding:0px 10px"
                    class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
                     <i class="fas fa-file-alt"></i>
                     <span>Quản lý tin đăng</span>
                 </a>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="" class="menu-item">
+                <a  class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>Quản Lí Ứng Tuyển</span>
                 </a>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="" class="menu-item">
+                <a  class="menu-item">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Đơn Hàng</span>
                 </a>
@@ -63,7 +63,11 @@
             <div class="search-container">
                 <div class="section-title">
                     <a asp-action="CreateHoSo">Tạo hồ sơ</a>
-                    <a asp-action="Index">Hồ sơ đã tạo</a>
+                    <form action="Index" method="get">
+                        <a href="?trangthai=Đang chờ duyệt">Hồ Sơ chờ duyệt</a>
+                        <a href="?trangthai=Đã duyệt">Hồ Sơ đã duyệt</a>
+                    </form>
+                   
                 </div>
                 <form method="post" asp-action="SearchHS" >
                     <div class="search-row">

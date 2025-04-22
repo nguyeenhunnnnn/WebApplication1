@@ -1,8 +1,7 @@
-﻿@model WebApplication1.Models.ViewModels.RegisterStep2ViewModel
+﻿@model WebApplication1.Models.ViewModels.ProfileViewModel
 
 @{
-    ViewData["Title"] = "Đăng ký - Bước 2";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Thông tin cá nhân";
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -16,102 +15,75 @@
 </head>
 <div class="container">
     <h1>Thông Tin Cá Nhân</h1>
-    <p class="subtitle">Chỉ một bước nữa thôi, bạn đã có thể đăng tin tuyển dụng tìm kiếm gia sư phù hợp</p>
 
-    <form id="registerForm" asp-action="RegisterStep2" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="VaiTro" />
-        <input type="hidden" asp-for="Email" />
-        <input type="hidden" asp-for="MatKhau" />
         <!-- Ảnh đại diện -->
         <div class="profile-pic-container">
             <div class="profile-pic">
-                <img id="profile-image" src="" alt="" style="display: none;">
-                <span id="upload-icon">📷</span>
-            </div>
-            <button type="button" class="upload-btn" id="choose-photo">Chọn ảnh</button>
-            <input type="file" id="photo-input" asp-for="sFile_Avata" style="display: none;" accept="image/*">
-            <small id="avatar-error" style="color: red;"></small>
+            <img id="profile-image" src="@(!string.IsNullOrEmpty(Model.sFile_Avata_Path) ? Model.sFile_Avata_Path : Url.Content("~/images/avatar-default.png"))" alt="Avatar" />
+
+               
+            </div>  
         </div>
 
         <!-- Thông tin cá nhân -->
         <div class="form-group">
             <label for="fullname">Họ và tên *</label>
-            <input type="text" id="fullname" asp-for="HoTen" placeholder="Vui lòng nhập" required>
+            <input type="text" id="fullname" asp-for="HoTen" placeholder="Vui lòng nhập" >
         </div>
 
         <div class="form-row">
             <div class="form-col">
-                <label for="birthday">Ngày sinh *</label>
-                <div class="input-icon">
-                    <input type="date" id="birthday" name="NgaySinh" placeholder="Vui lòng chọn" required>
-                    <span class="calendar-icon">📅</span>
-                </div>
-            </div>
-            <div class="form-col">
                 <label for="phone">Số điện thoại *</label>
-                <input type="tel" id="phone" asp-for="SDT" placeholder="Vui lòng nhập" required>
+                <input type="tel" id="phone" asp-for="SDT" placeholder="Vui lòng nhập" >
             </div>
             <div class="form-col">
                 <label for="email">Email *</label>
-                <input type="email" id="email" asp-for="Email" placeholder="Vui lòng nhập" required>
+                <input type="email" id="email" asp-for="Email" placeholder="Vui lòng nhập" >
             </div>
         </div>
 
         <div class="form-group">
             <label for="id-number">Số định danh cá nhân (CCCD/CMT) *</label>
-            <input type="text" id="id-number" asp-for="CCCD" placeholder="Vui lòng nhập" required>
+            <input type="text" id="id-number" asp-for="CCCD" placeholder="Vui lòng nhập" >
         </div>
 
         <div class="form-row">
             <div class="form-col">
                 <label for="city">Tỉnh/Thành phố *</label>
-                <select id="city" asp-for="DiaChi" required>
+                <select id="city" asp-for="DiaChi" >
                     <option value="" disabled selected>Chọn thành phố</option>
-                    <option >Hà Nội</option>
-                    <option >Hồ Chí Minh</option>
-                    <option >Đà Nẵng</option>
-                   
+                    <option>Hà Nội</option>
+                    <option>Hồ Chí Minh</option>
+                    <option>Đà Nẵng</option>
+
                 </select>
             </div>
-            <div class="form-col">
-                <label for="address">Địa chỉ chi tiết *</label>
-                <input type="text" id="address"  placeholder="Vui lòng nhập" required>
-            </div>
+            
         </div>
 
         <div class="form-row">
+           
             <div class="form-col">
-                <label for="bio">Mô tả bản thân</label>
-                <textarea id="bio" name="MoTa" placeholder="Vui lòng nhập"></textarea>
+                <label> Ảnh CCCD </label>
+
+            <div style="margin-top:10px;">
+                <img id="cccd-preview"
+                     src="@(!string.IsNullOrEmpty(Model.sFile_CCCD_Path) ? Model.sFile_CCCD_Path : "")"
+                     alt="Ảnh CCCD"
+                     style="@(string.IsNullOrEmpty(Model.sFile_CCCD_Path) ? "display:none;" : "") max-width: 250px; border-radius: 10px;">
             </div>
-            <div class="form-col">
-                <label>Tải ảnh CCCD *</label>
-                <div class="cccd-upload" id="cccd-upload">
-                    <span>📎 Tải ảnh CCCD</span>
-                </div>
-                <input type="file" id="cccd-input" asp-for="sFile_CCCD" style="display: none;" accept="image/*" required>
-                <small id="cccd-error" style="color: red;"></small>
-                <div style="margin-top:10px;">
-                    <img id="cccd-preview" src="" alt="Ảnh CCCD" style="display: none; max-width: 250px; border-radius: 10px;">
-                </div>
-                 </div>
-         </div>
-        <div class="form-row">
-            <div class="checkbox-container">
-                <input type="checkbox" id="terms" name="DongYDieuKhoan" required>
-                <label for="terms">Bằng việc đăng ký, tôi đã đọc và đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của web *</label>
             </div>
         </div>
+        
         <div class="form-row">
-            <button type="submit" class="submit-btn" id="submit-btn">Đăng ký</button>
-            <div style="display:none;">
-                <p>Email từ TempData: @TempData["Email"]</p>
-                <p>Mật khẩu từ TempData: @TempData["MatKhau"]</p>
-                <p>Vaitro từ TempData: @TempData["VaiTro"]</p>
-            </div>
+        <form asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="submit-btn" id="submit-btn">Đăng xuất</button>
+        </form>
+          
         </div>
-    </form>
+   
 </div>
 @section Scripts {
     @{
@@ -224,3 +196,4 @@
     });
 </script>
 </html>
+

@@ -11,9 +11,10 @@ namespace WebApplication1.Repositories
     {
         Task<bool> SaveChangesAsync();
         Task<bool> CreateHoSoAsync(HoSo hoSo);
-        Task<bool> DeleteChangesAsync(int id);      
-      //  Task<bool> UpdateChangesAsync();
-        Task<List<HoSo>> GetAllHoSoByTaiKhoanId(string taiKhoanId);
+        Task<bool> DeleteChangesAsync(int id);
+        //  Task<bool> UpdateChangesAsync();
+        Task<List<HoSo>> GetAllHoSoByTaiKhoanId(string taiKhoanId, string trangthai);
+        
         Task<HoSo> GetHoSoById(int id);
         Task<List<HoSo>> GetAllHoSoByTrangThai(string trangthai);
         Task<bool> UpdateTrangThaiHS(int id, string trangThai);
@@ -44,14 +45,15 @@ namespace WebApplication1.Repositories
             await _context.HoSos.AddAsync(hoSo);
             return await SaveChangesAsync();
         }
-        public async Task<List<HoSo>> GetAllHoSoByTaiKhoanId(string taiKhoanId)
+        public async Task<List<HoSo>> GetAllHoSoByTaiKhoanId(string taiKhoanId, string trangthai)
         {
             var query = _context.HoSos
-            .Where(b => b.FK_iMaTK == taiKhoanId)
-            .Include(h => h.TaiKhoan);
-             // Lọc theo TaiKhoanId
+        .Where(h => h.sTrangThai == trangthai && h.FK_iMaTK == taiKhoanId)
+        .Include(h => h.TaiKhoan);
+            // Lọc theo TaiKhoanId
             return await query.ToListAsync();
         }
+        
         public async Task<HoSo> GetHoSoById(int id)
         {
             return await _context.HoSos

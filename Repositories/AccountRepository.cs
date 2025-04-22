@@ -50,6 +50,10 @@ namespace WebApplication1.Repositories
         {
             var result = await _userManager.CreateAsync(taiKhoan,mk);
             return result.Succeeded;
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine($"Code: {error.Code}, Description: {error.Description}");
+            }
         }
         public async Task<bool> login(TaiKhoan taiKhoan, string pass)
         {

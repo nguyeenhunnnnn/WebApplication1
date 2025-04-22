@@ -33,13 +33,13 @@
                 </a>
             </div>
             <div class="menu-item">
-                <a asp-controller="baiDang" asp-action="" class="menu-item">
+                <a  class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>Quản Lí Ứng Tuyển</span>
                 </a>
             </div>
             <div class="menu-item">
-                <a asp-controller="baiDang" asp-action="" class="menu-item">
+                <a  class="menu-item">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Đơn Hàng</span>
                 </a>
@@ -60,8 +60,10 @@
            
             <div class="search-container">
                 <div class="section-title">
-                    <a>Tin đã đăng</a>
-                    <a asp-action="Index">Tin chờ duyệt</a>
+                    <form action="Index" method="get">
+                        <a href="?trangthai=Đang chờ duyệt">Tin chờ duyệt</a>
+                        <a href="?trangthai=Đã duyệt">Tin đã duyệt</a>
+                    </form>
                 </div>
                 <form method="post" asp-action="SearchDB">
                     <div class="search-row">
@@ -73,7 +75,10 @@
                                 <option value="Toán học">Toán Học</option>
                                 <option value="Ngữ Văn">Ngữ Văn</option>
                                 <option value="Tiếng Anh">Tiếng Anh</option>
-                                <option value="Vật Lý">Vật Lý</option>
+                                <option>Vật Lý</option>
+                                <option>Tiếng Nhật</option>
+                                <option>Tiếng Nga</option>
+
                             </select>
                         </div>
                         <div class="search-field">

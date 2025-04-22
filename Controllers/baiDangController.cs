@@ -72,12 +72,12 @@ namespace WebApplication1.Controllers
 
             //var dangTin = new BaiDang();
 
-            bool isExist = await _dangTinService.DangTinExistsByTitleAsync(model.sTieuDe);
-            if (isExist)
-            {
-                ModelState.AddModelError("", "Tiêu đề đã tồn tại!");
-                return View(model);
-            }
+          //  bool isExist = await _dangTinService.DangTinExistsByTitleAsync(model.sTieuDe);
+            //if (isExist)
+           // {
+            //    ModelState.AddModelError("", "Tiêu đề đã tồn tại!");
+           //     return View(model);
+           // }
             /*  dangTin.sMonday = model.sMonday;
               dangTin.sYCau = model.sYCau;
               dangTin.sGioiTinh = model.sGioiTinh;
@@ -96,7 +96,7 @@ namespace WebApplication1.Controllers
             if (result)
             {
                 TempData["Success"] = "Đăng tin thành công!";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
             }
             else
             {
@@ -105,9 +105,10 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Index()
+        
+        public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
-            string trangthai = "Đang chờ duyệt";
+           
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {

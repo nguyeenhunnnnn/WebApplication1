@@ -44,14 +44,15 @@ namespace WebApplication1.Controllers
             _signInManager = signInManager;
             _hoSoService = hoSoService;
         }
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-            var hoSoList = await _hoSoService.GetAllHoSoByTaiKhoanId(userId);
+            var hoSoList = await _hoSoService.GetAllHoSoByTaiKhoanId(userId,trangthai);
 
             return View(hoSoList);
 
@@ -179,14 +180,15 @@ namespace WebApplication1.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> SearchHS(string kynang,string tieude, string hocvan, string kinhnghiem)
+        public async Task<IActionResult> SearchHS(string kynang,string tieude, string hocvan, string kinhnghiem, string trangthai)
         {
+            trangthai = string.IsNullOrEmpty(trangthai) ? "Đang chờ duyệt" : trangthai;
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-            var hoSoList = await _hoSoService.GetAllHoSoByTaiKhoanId(userId);
+            var hoSoList = await _hoSoService.GetAllHoSoByTaiKhoanId(userId, trangthai);
             if (!string.IsNullOrEmpty(kynang))
             {
                 hoSoList = hoSoList.Where(bd => bd.sKyNang.Contains(kynang)).ToList();

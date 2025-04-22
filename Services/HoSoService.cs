@@ -16,9 +16,10 @@ namespace WebApplication1.Services
     {
         Task<bool> CreateHoSoAsync(HoSoViewModel hoSo,string id);
         Task<bool> DeleteChangesAsync(int id);
-       // Task<bool> GetChangesAsync();
-       // Task<bool> UpdateChangesAsync();
-        Task<List<HoSoViewModel>> GetAllHoSoByTaiKhoanId(string taiKhoanId);
+        // Task<bool> GetChangesAsync();
+        // Task<bool> UpdateChangesAsync();
+        Task<List<HoSoViewModel>> GetAllHoSoByTaiKhoanId(string taiKhoanId, string trangthai);
+      
         Task<HoSoViewModel> GetHoSoById(int id);
         Task<List<HoSoViewModel>> GetAllHoSoByTrangThai(string trangthai);
         Task<bool> PheDuyetHSAsync(int id);
@@ -68,9 +69,9 @@ namespace WebApplication1.Services
             }
 
         }
-        public async Task<List<HoSoViewModel>> GetAllHoSoByTaiKhoanId(string taiKhoanId)
+        public async Task<List<HoSoViewModel>> GetAllHoSoByTaiKhoanId(string taiKhoanId, string trangthai)
         {
-            var hoSoList=await _HoSoRepository.GetAllHoSoByTaiKhoanId(taiKhoanId);
+            var hoSoList=await _HoSoRepository.GetAllHoSoByTaiKhoanId(taiKhoanId,trangthai);
             return hoSoList.Select(b => new HoSoViewModel
             {
                 iMaHS = b.iMaHS,
@@ -89,6 +90,7 @@ namespace WebApplication1.Services
             }).ToList();
 
         }
+       
         public async Task<HoSoViewModel> GetHoSoById(int id)
         {
             var hoSo=await _HoSoRepository.GetHoSoById(id);
