@@ -20,7 +20,10 @@ namespace WebApplication1.Data
         }
       //  public DbSet<TaiKhoan> TaiKhoans { get; set; }
         public DbSet<BaiDang> BaiDangs { get; set; } 
-        public DbSet<HoSo> HoSos { get; set; } 
+        public DbSet<HoSo> HoSos { get; set; }
+        public DbSet<UngTuyen> UngTuyen { get; set; }
+        public DbSet<TinNhan> TinNhans { get; set; }
+        public DbSet<DanhGiaGiaSu> DanhGiaGiaSus { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -79,6 +82,65 @@ namespace WebApplication1.Data
                     .HasForeignKey(hs => hs.FK_iMaTK)
                     .OnDelete(DeleteBehavior.Cascade); // Xóa hồ sơ khi xóa tài khoản
             });
+
+            // Cau hinh cho bang ungtuyen 
+                    modelBuilder.Entity<UngTuyen>()
+            .HasOne(ut => ut.TaiKhoanGiaSu)
+            .WithMany(tk => tk.UngTuyens)
+            .HasForeignKey(ut => ut.FK_iMaTK_GiaSu)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            // Quan hệ giữa UngTuyen và HoSo
+            modelBuilder.Entity<UngTuyen>()
+                .HasOne(u => u.HoSo)
+                .WithMany(h => h.UngTuyens)
+                .HasForeignKey(u => u.FK_iMaHS)
+                .OnDelete(DeleteBehavior.Restrict); // Không xóa khi HoSo bị xóa
+
+            // Quan hệ giữa UngTuyen và BaiDang
+            modelBuilder.Entity<UngTuyen>()
+                .HasOne(u => u.BaiDang)
+                .WithMany(b => b.UngTuyens)
+                .HasForeignKey(u => u.FK_iMaBaiDang)
+                .OnDelete(DeleteBehavior.Restrict);// không xoá khi bài đăng bị xoá 
+
+            // chat 
+            modelBuilder.Entity<TinNhan>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd(); // Tự động tăng
+                entity.HasOne(e => e.NguoiGui)
+                      .WithMany(u => u.TinNhanGui)
+                      .HasForeignKey(e => e.NguoiGuiId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.NguoiNhan)
+                      .WithMany(u => u.TinNhanNhan)
+                      .HasForeignKey(e => e.NguoiNhanId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.BaiDang)
+                      .WithMany(b => b.TinNhans)
+                      .HasForeignKey(e => e.BaiDangId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            //
+            // Quan hệ DanhGiaGiaSu - NguoiDanhGia (Phụ huynh)
+            modelBuilder.Entity<DanhGiaGiaSu>()
+                .HasOne(d => d.NguoiDanhGia)
+                .WithMany(t => t.DanhGiaDaViet)
+                .HasForeignKey(d => d.NguoiDanhGiaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Quan hệ DanhGiaGiaSu - GiaSu
+            modelBuilder.Entity<DanhGiaGiaSu>()
+                .HasOne(d => d.GiaSu)
+                .WithMany(t => t.DanhGiaNhanDuoc)
+                .HasForeignKey(d => d.GiaSuId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 var tableName = entityType.GetTableName();

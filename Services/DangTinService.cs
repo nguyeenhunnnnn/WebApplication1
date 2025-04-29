@@ -33,6 +33,7 @@ namespace WebApplication1.Services
         Task<BaiDangViewModel> GetBaiDangById(int id);
         Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthai(string trangthai);
         Task<bool> PheDuyetBaiDangAsync(int id);
+        Task<bool> CreateDangTinForGiaSuAsync(DangTinGiaSuViewModel model, string userId);
     }
     public class DangTinService : IDangTinService
     {
@@ -42,13 +43,16 @@ namespace WebApplication1.Services
         private readonly IAccountRepository _accountRepository;
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly SignInManager<TaiKhoan> _signInManager;
-        public DangTinService(ApplicationDbContext context, IDangTinRepository dangTinRepository, IAccountRepository accountRepository, UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager)
+        private readonly IHoSoRepository _hoSoRepository;
+        public DangTinService(ApplicationDbContext context, IDangTinRepository dangTinRepository, IAccountRepository accountRepository, UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager, IHoSoRepository hoSoRepository)
         {
             _context = context;
             _dangTinRepository = dangTinRepository;
             _accountRepository = accountRepository;
             _userManager = userManager;
             _signInManager = signInManager;
+            _hoSoRepository = hoSoRepository;
+
         }
         public async Task<bool> CreatDangTin(DangTinViewModel model, string userId)
         {
@@ -158,8 +162,9 @@ namespace WebApplication1.Services
                     fMucLuong = b.fMucLuong ?? 0,
                     sTrangThai = b.sTrangThai,
                     dNgayTao = b.dNgayTao,
-                    dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue
-                })
+                    dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue,
+                    FileCVPath = b.FileCVPath // Gán file CV từ hồ sơ nếu có
+           })
                 .ToList();
           
         }
@@ -183,7 +188,9 @@ namespace WebApplication1.Services
                 fMucLuong = b.fMucLuong ?? 0,
                 sTrangThai = b.sTrangThai,
                 dNgayTao = b.dNgayTao,
-                dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue
+                FileCVPath = b.FileCVPath, // Gán file CV từ hồ sơ nếu có
+                dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue,
+
             })
                  .ToList();
 
@@ -213,7 +220,8 @@ namespace WebApplication1.Services
                 fMucLuong = bd.fMucLuong ?? 0,
                 sTrangThai = bd.sTrangThai,
                 dNgayTao = bd.dNgayTao,
-                dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue
+                dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
+                FileCVPath = bd.FileCVPath // Gán file CV từ hồ sơ nếu có
             };
 
 
@@ -225,6 +233,40 @@ namespace WebApplication1.Services
 
             return await _dangTinRepository.UpdateTrangThaiBaiDang(id, "Đã duyệt");
         }
+        public async Task<bool> CreateDangTinForGiaSuAsync(DangTinGiaSuViewModel model, string userId)
+        {
+
+            
+            var hoSoGiaSu = await _hoSoRepository.LayHoSoMoiNhatCuaGiaSu(userId);
+
+            if (hoSoGiaSu == null || string.IsNullOrEmpty(hoSoGiaSu.sDuongDanTep)) // Kiểm tra nếu không có CV
+            {
+                // Nếu chưa có hồ sơ hoặc chưa có CV, không cho đăng bài
+                return false;
+            }
+
+            var baiDang = new BaiDang
+            {
+                FK_iMaTK = userId,
+                sTieuDe = model.sTieuDe ?? hoSoGiaSu.sTieuDe, // Sử dụng tiêu đề từ hồ sơ nếu không có từ form
+                sMoTa = model.sMoTa,
+                sDiaDiem = model.sDiaDiem,
+                fMucLuong = model.fMucLuong,
+                dNgayTao = DateTime.Now,
+                dThoiGianHetHan = model.dThoiGianHetHan ?? DateTime.MinValue,
+                sTrangThai = "Đang chờ duyệt",
+                sMonday = model.sMonday,
+                sYCau = model.sYCau,
+                sGioiTinh = model.sGioiTinh,
+                sTuoi = model.sTuoi,
+                sKinhNghiem = model.sKinhNghiem ?? hoSoGiaSu.sKinhNghiem, // Lấy từ hồ sơ nếu không có từ form
+                sBangCap = model.sBangCap ?? hoSoGiaSu.sBangCap, // Lấy từ hồ sơ nếu không có từ form
+                FileCVPath = hoSoGiaSu.sDuongDanTep  // Gán file CV từ hồ sơ
+            };
+
+            return await _dangTinRepository.CreatDangTin(baiDang);
+        }
+
 
     }
 }

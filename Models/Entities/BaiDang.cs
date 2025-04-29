@@ -29,5 +29,12 @@ namespace WebApplication1.Models.Entities
         public string sTuoi { get; set; }
         public string sKinhNghiem { get; set; }
         public string sBangCap { get; set; }
+        //quan hệ với UngTuyen (1-n, mỗi bài đăng có thể có nhiều ứng tuyển)
+        public List<UngTuyen> UngTuyens { get; set; } = new List<UngTuyen>();
+        // quan hẹ vơi chat 
+        public virtual ICollection<TinNhan> TinNhans { get; set; } = new List<TinNhan>();
+
+        // cot moi 
+        public string? FileCVPath { get; set; }
     }
 }

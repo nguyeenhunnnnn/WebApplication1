@@ -11,71 +11,319 @@
     <link rel="stylesheet" href="~/css/styleTTCN.css">
     <link rel="stylesheet" href="~/css/styleNav.css">
     <title>BOWO - Nền tảng tuyển dụng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
 
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .reviews-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        /* Form styling */
+        .stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+            .stars label:hover,
+            .stars label:hover ~ label,
+            .stars input:checked ~ label {
+                color: #ffcc00;
+            }
+
+        .rating-summary {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Reviews list styling */
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .review-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .review-item:last-child {
+                border-bottom: none;
+            }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .review-author {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .review-date {
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        .review-stars {
+            color: #ffcc00;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .review-content {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .no-reviews {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .reviews-summary {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .average-rating {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .average-rating-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .rating-bars {
+            flex-grow: 1;
+        }
+
+        .rating-bar-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .rating-bar-label {
+            min-width: 40px;
+        }
+
+        .rating-bar-container {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin: 0 10px;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            background-color: #ffcc00;
+            border-radius: 4px;
+        }
+
+        .rating-bar-count {
+            min-width: 30px;
+            text-align: right;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        .add-review-button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+            .add-review-button:hover {
+                background-color: #e0e0e0;
+            }
+
+     
+    </style>
 </head>
 <div class="container">
     <h1>Thông Tin Cá Nhân</h1>
 
-        @Html.AntiForgeryToken()
-        <!-- Ảnh đại diện -->
-        <div class="profile-pic-container">
-            <div class="profile-pic">
+    @Html.AntiForgeryToken()
+    <!-- Ảnh đại diện -->
+    <div class="profile-pic-container">
+        <div class="profile-pic">
             <img id="profile-image" src="@(!string.IsNullOrEmpty(Model.sFile_Avata_Path) ? Model.sFile_Avata_Path : Url.Content("~/images/avatar-default.png"))" alt="Avatar" />
 
-               
-            </div>  
+
+        </div>  
+    </div>
+
+    <!-- Thông tin cá nhân -->
+    <div class="form-group">
+        <label for="fullname">Họ và tên *</label>
+        <input type="text" id="fullname" asp-for="HoTen" placeholder="Vui lòng nhập" >
+    </div>
+
+    <div class="form-row">
+        <div class="form-col">
+            <label for="phone">Số điện thoại *</label>
+            <input type="tel" id="phone" asp-for="SDT" placeholder="Vui lòng nhập" >
+        </div>
+        <div class="form-col">
+            <label for="email">Email *</label>
+            <input type="email" id="email" asp-for="Email" placeholder="Vui lòng nhập" >
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="id-number">Số định danh cá nhân (CCCD/CMT) *</label>
+        <input type="text" id="id-number" asp-for="CCCD" placeholder="Vui lòng nhập" >
+    </div>
+
+    <div class="form-row">
+        <div class="form-col">
+            <label for="city">Tỉnh/Thành phố *</label>
+            <select id="city" asp-for="DiaChi" >
+                <option value="" disabled selected>Chọn thành phố</option>
+                <option>Hà Nội</option>
+                <option>Hồ Chí Minh</option>
+                <option>Đà Nẵng</option>
+
+            </select>
         </div>
 
-        <!-- Thông tin cá nhân -->
-        <div class="form-group">
-            <label for="fullname">Họ và tên *</label>
-            <input type="text" id="fullname" asp-for="HoTen" placeholder="Vui lòng nhập" >
-        </div>
+    </div>
 
-        <div class="form-row">
-            <div class="form-col">
-                <label for="phone">Số điện thoại *</label>
-                <input type="tel" id="phone" asp-for="SDT" placeholder="Vui lòng nhập" >
-            </div>
-            <div class="form-col">
-                <label for="email">Email *</label>
-                <input type="email" id="email" asp-for="Email" placeholder="Vui lòng nhập" >
-            </div>
-        </div>
+    <div class="form-row">
 
-        <div class="form-group">
-            <label for="id-number">Số định danh cá nhân (CCCD/CMT) *</label>
-            <input type="text" id="id-number" asp-for="CCCD" placeholder="Vui lòng nhập" >
-        </div>
-
-        <div class="form-row">
-            <div class="form-col">
-                <label for="city">Tỉnh/Thành phố *</label>
-                <select id="city" asp-for="DiaChi" >
-                    <option value="" disabled selected>Chọn thành phố</option>
-                    <option>Hà Nội</option>
-                    <option>Hồ Chí Minh</option>
-                    <option>Đà Nẵng</option>
-
-                </select>
-            </div>
-            
-        </div>
-
-        <div class="form-row">
-           
-            <div class="form-col">
-                <label> Ảnh CCCD </label>
+        <div class="form-col">
+            <label> Ảnh CCCD </label>
 
             <div style="margin-top:10px;">
                 <img id="cccd-preview"
-                     src="@(!string.IsNullOrEmpty(Model.sFile_CCCD_Path) ? Model.sFile_CCCD_Path : "")"
-                     alt="Ảnh CCCD"
-                     style="@(string.IsNullOrEmpty(Model.sFile_CCCD_Path) ? "display:none;" : "") max-width: 250px; border-radius: 10px;">
-            </div>
+                src="@(!string.IsNullOrEmpty(Model.sFile_CCCD_Path) ? Model.sFile_CCCD_Path : "")"
+                alt="Ảnh CCCD"
+                style="@(string.IsNullOrEmpty(Model.sFile_CCCD_Path) ? "display:none;" : "") max-width: 250px; border-radius: 10px;">
             </div>
         </div>
-        
+
+    </div>
+
+            @if (Model.VaiTro == "giasu")
+            {
+                <div class="form-row">
+            <div class="reviews-container">
+                <h2>Đánh Giá Từ Phụ Huynh</h2>
+
+                <div class="reviews-summary">
+                    <div class="average-rating">
+                        <div class="average-rating-value">@Model.DiemTrungBinh.ToString("0.0")</div>
+                        <div class="review-stars">
+                            @{
+                                int saoNguyen = (int)Math.Floor(Model.DiemTrungBinh);
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= saoNguyen)
+                                    {
+                                        @:<span style="color: gold;">★</span>
+                                    }
+                                    else
+                                    {
+                                        @:<span style="color: #ddd;">★</span>
+                                    }
+                                }
+                            }
+                        </div>
+                        <div>@Model.TongDanhGia đánh giá</div>
+                    </div>
+
+                    <div class="rating-bars">
+                        @for (int i = 5; i >= 1; i--)
+                        {
+                            var count = Model.DanhGias.Count(d => d.SoSao == i);
+                            var percent = Model.TongDanhGia == 0 ? 0 : (count * 100) / Model.TongDanhGia;
+                            <div class="rating-bar-item">
+                                <div class="rating-bar-label">@i ★</div>
+                                <div class="rating-bar-container">
+                                    <div class="rating-bar-fill" style="width: @percent%;"></div>
+                                </div>
+                                <div class="rating-bar-count">@count</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="review-list">
+                    @foreach (var dg in Model.DanhGias.OrderByDescending(d => d.NgayTao))
+                    {
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="review-author">@dg.NguoiDanhGia.UserName</div>
+                                <div class="review-date">@dg.NgayTao.ToString("dd/MM/yyyy")</div>
+                            </div>
+                            <div class="review-stars">
+                                @{
+                                    for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= dg.SoSao)
+                                        {
+                                            @:<span style="color: gold;">★</span>
+                                        }
+                                        else
+                                        {
+                                            @:<span style="color: #ddd;">★</span>
+                                        }
+                                    }
+                                }
+                            </div>
+                            <div class="review-content">
+                                @dg.NoiDung
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+                </div>
+            }
+
         <div class="form-row">
         <form asp-action="Logout" method="post">
             @Html.AntiForgeryToken()

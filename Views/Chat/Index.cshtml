@@ -1,0 +1,201 @@
+﻿@model WebApplication1.Models.ViewModels.ChatViewModel
+@{
+    ViewData["Title"] = "Chat";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/css/styleTrangChat.css" rel="stylesheet" />
+    <link href="~/css/styleNav.css" rel="stylesheet" />
+    <title>Doan Chat</title>
+   
+</head>
+<div class="chat-container">
+    <!-- Danh sách người dùng 
+    <div class="col-md-3 border-end">
+        <h5>Người dùng</h5>
+        <ul class="list-group">
+
+            @foreach (var user in Model.Users)
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("Index", "Chat", new { receiverId = user.Id, baiDangId = Model.BaiDangId })" class="d-flex align-items-center">
+                        <img src="@user.sFile_Avata_Path" class="rounded-circle me-2" style="width: 40px; height: 40px;" />
+                        <span>@user.UserName</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Doan chat</div>
+            <div class="sidebar-actions">
+                <button class="action-btn">⋯</button>
+                <button class="action-btn">✏️</button>
+            </div>
+        </div>
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" placeholder="Tìm kiếm">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+        <div class="contact-list">
+            @foreach (var user in Model.Users)
+            {
+                <div class="contact active">
+                    <div class="contact-avatar">
+                        <a href="@Url.Action("Trangchat", new { receiverId = user.Id,baiDangId = user.BaiDangId  })" style="display: flex; align-items: center; padding: 10px; text-decoration: none;">
+                            <img src="@user.sFile_Avata_Path">
+                        </a>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">@user.UserName</div>
+                        <div class="contact-preview">@user.BaiDangTieuDe</div>
+                    </div>
+                    <div class="contact-time">14:05</div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <!-- Khung chat -->
+    <div class="chat-main">
+        <div class="chat-header">
+            @if (Model.ReceiverInfo != null)
+            {
+                <div class="chat-header-info">
+                    <div class="chat-header-avatar">
+                        <img src="@Model.ReceiverInfo.sFile_Avata_Path"  alt="HRchannels">
+                    </div>
+                    <div class="chat-header-text">
+                        <h2>@Model.ReceiverInfo.UserName</h2>
+                        <p>Đang hoạt động</p>
+                    </div>
+                </div>
+                <div class="chat-header-info">
+                    <div class="job-title">@Model.BaiDang.sTieuDe</div>
+
+                </div>
+            }
+            <div class="chat-header-actions">
+
+                <button class="header-action-btn">📄</button>
+                <button class="header-action-btn">📹</button>
+                <button class="header-action-btn">📞</button>
+            </div>
+
+        </div>
+       
+
+        <!-- Tin nhắn -->
+        <div id="chatMessages" class="border rounded p-3 mb-3" style="height: 500px; overflow-y: scroll; background-color: #f8f9fa;">
+            @if (Model.BaiDang != null)
+            {
+                <!-- Thông tin bài đăng -->
+                <div class="bg-light p-3 rounded shadow-sm mb-3">
+                    <h5 class="mb-1">@Model.BaiDang.sTieuDe</h5>
+                    <p class="text-muted mb-0">@Model.BaiDang.sMoTa</p>
+                    <small class="text-secondary">Đăng lúc: @Model.BaiDang.dNgayTao.ToString("dd/MM/yyyy")</small>
+                </div>
+            }
+            @foreach (var message in Model.Messages)
+            {
+                <div class="mb-2 @(message.NguoiGuiId == Model.CurrentUserId ? "text-end" : "text-start")">
+                    <span class="badge bg-@(message.NguoiGuiId == Model.CurrentUserId ? "primary" : "secondary")">
+                        @message.NoiDung
+                    </span>
+                    <div><small class="text-muted">@message.ThoiGianGui.ToString("HH:mm dd/MM")</small></div>
+                </div>
+            }
+        </div>
+
+        <!-- Nhập tin nhắn -->
+        <div class="input-group">
+            <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." />
+            <button id="sendButton" class="btn btn-primary">Gửi</button>
+        </div>
+    </div>
+</div>
+
+<!-- SignalR Scripts -->
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        // Khởi tạo kết nối SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        // Kết nối tới Hub
+        connection.start().then(function () {
+            console.log("Kết nối tới Hub thành công");
+        }).catch(function (err) {
+            console.error("Kết nối tới Hub thất bại:", err.toString());
+        });
+
+        // Nhận tin nhắn từ SignalR
+        connection.on("ReceiveMessage", function (senderId, receiverId, baiDangId, message) {
+            const currentUserId = "@Model.CurrentUserId";
+            const isSender = senderId === currentUserId;
+
+            const chatMessages = document.getElementById("chatMessages");
+            const msgDiv = document.createElement("div");
+            msgDiv.className = "mb-2 " + (isSender ? "text-end" : "text-start");
+
+            const badge = document.createElement("span");
+            badge.className = "badge bg-" + (isSender ? "primary" : "secondary");
+            badge.textContent = message;
+
+            msgDiv.appendChild(badge);
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        // Gửi tin nhắn
+        function sendMessage() {
+            const receiverId = "@Model.ReceiverId";
+            const baiDangId = "@Model.BaiDangId";
+            const message = document.getElementById("messageInput").value.trim();
+
+            if (message) {
+                // Gửi tin nhắn qua SignalR
+                connection.invoke("SendMessage", receiverId, baiDangId, message)
+                    .then(function () {
+                        console.log("Tin nhắn đã gửi");
+                        document.getElementById("messageInput").value = ''; // Xóa nội dung sau khi gửi
+                    })
+                    .catch(function (err) {
+                        console.error("Gửi tin nhắn không thành công:", err.toString());
+                    });
+            } else {
+                alert("Vui lòng nhập tin nhắn.");
+            }
+        }
+
+        // Gửi bằng nút
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+
+        // Gửi bằng phím Enter
+        document.getElementById("messageInput").addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Tự động cuộn xuống khi có tin nhắn mới
+        function scrollToBottom() {
+            const chatMessages = document.getElementById("chatMessages");
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Gọi hàm tự động cuộn khi trang tải xong
+        window.onload = scrollToBottom;
+    </script>
+}

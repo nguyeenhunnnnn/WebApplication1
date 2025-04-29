@@ -170,6 +170,9 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("FileCVPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("dNgayTao")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -229,6 +232,40 @@ namespace WebApplication1.Migrations
                     b.HasIndex("FK_iMaTK");
 
                     b.ToTable("BaiDangs");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.DanhGiaGiaSu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GiaSuId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiDanhGiaId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NoiDung")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SoSao")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GiaSuId");
+
+                    b.HasIndex("NguoiDanhGiaId");
+
+                    b.ToTable("DanhGiaGiaSus");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Entities.HoSo", b =>
@@ -368,6 +405,79 @@ namespace WebApplication1.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.Entities.TinNhan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BaiDangId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NguoiGuiId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NguoiNhanId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ThoiGianGui")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BaiDangId");
+
+                    b.HasIndex("NguoiGuiId");
+
+                    b.HasIndex("NguoiNhanId");
+
+                    b.ToTable("TinNhans");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.UngTuyen", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FK_iMaBaiDang")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FK_iMaHS")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FK_iMaTK_GiaSu")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("NgayUngTuyen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TrangThai")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_iMaBaiDang");
+
+                    b.HasIndex("FK_iMaHS");
+
+                    b.HasIndex("FK_iMaTK_GiaSu");
+
+                    b.ToTable("UngTuyen");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -437,6 +547,25 @@ namespace WebApplication1.Migrations
                     b.Navigation("TaiKhoan");
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.Entities.DanhGiaGiaSu", b =>
+                {
+                    b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "GiaSu")
+                        .WithMany("DanhGiaNhanDuoc")
+                        .HasForeignKey("GiaSuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "NguoiDanhGia")
+                        .WithMany("DanhGiaDaViet")
+                        .HasForeignKey("NguoiDanhGiaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("GiaSu");
+
+                    b.Navigation("NguoiDanhGia");
+                });
+
             modelBuilder.Entity("WebApplication1.Models.Entities.HoSo", b =>
                 {
                     b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "TaiKhoan")
@@ -448,16 +577,88 @@ namespace WebApplication1.Migrations
                     b.Navigation("TaiKhoan");
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.Entities.TinNhan", b =>
+                {
+                    b.HasOne("WebApplication1.Models.Entities.BaiDang", "BaiDang")
+                        .WithMany("TinNhans")
+                        .HasForeignKey("BaiDangId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "NguoiGui")
+                        .WithMany("TinNhanGui")
+                        .HasForeignKey("NguoiGuiId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "NguoiNhan")
+                        .WithMany("TinNhanNhan")
+                        .HasForeignKey("NguoiNhanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("BaiDang");
+
+                    b.Navigation("NguoiGui");
+
+                    b.Navigation("NguoiNhan");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.UngTuyen", b =>
+                {
+                    b.HasOne("WebApplication1.Models.Entities.BaiDang", "BaiDang")
+                        .WithMany("UngTuyens")
+                        .HasForeignKey("FK_iMaBaiDang")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.Entities.HoSo", "HoSo")
+                        .WithMany("UngTuyens")
+                        .HasForeignKey("FK_iMaHS")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "TaiKhoanGiaSu")
+                        .WithMany("UngTuyens")
+                        .HasForeignKey("FK_iMaTK_GiaSu")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("BaiDang");
+
+                    b.Navigation("HoSo");
+
+                    b.Navigation("TaiKhoanGiaSu");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.BaiDang", b =>
+                {
+                    b.Navigation("TinNhans");
+
+                    b.Navigation("UngTuyens");
+                });
+
             modelBuilder.Entity("WebApplication1.Models.Entities.HoSo", b =>
                 {
                     b.Navigation("BaiDangs");
+
+                    b.Navigation("UngTuyens");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Entities.TaiKhoan", b =>
                 {
                     b.Navigation("BaiDangs");
 
+                    b.Navigation("DanhGiaDaViet");
+
+                    b.Navigation("DanhGiaNhanDuoc");
+
                     b.Navigation("HoSos");
+
+                    b.Navigation("TinNhanGui");
+
+                    b.Navigation("TinNhanNhan");
+
+                    b.Navigation("UngTuyens");
                 });
 #pragma warning restore 612, 618
         }

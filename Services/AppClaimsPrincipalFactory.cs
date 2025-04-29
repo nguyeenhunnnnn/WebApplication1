@@ -17,6 +17,7 @@ namespace WebApplication1.Services
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(TaiKhoan user)
         {
             var identity = await base.GenerateClaimsAsync(user);
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
             identity.AddClaim(new Claim("VaiTro", user.VaiTro ?? ""));
             identity.AddClaim(new Claim("Avatar", user.FileAvata ?? "/images/avatar-default.png")); // thêm dòng này
             return identity;

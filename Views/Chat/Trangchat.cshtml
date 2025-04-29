@@ -1,0 +1,586 @@
+﻿@model WebApplication1.Models.ViewModels.ChatViewModel
+@{
+    ViewData["Title"] = "Chat";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doan Chat</title>
+    <style>
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        padding: 20px;
+        }
+
+        .chat-container {
+        display: flex;
+        width: 100%;
+        max-width: 1200px;
+        height: 100%;
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+        width: 320px;
+        background-color: #f5f7fb;
+        border-right: 1px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+        }
+
+        .sidebar-header {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        }
+
+        .sidebar-actions {
+        display: flex;
+        gap: 10px;
+        }
+
+        .action-btn {
+        background: none;
+        border: none;
+        color: #777;
+        cursor: pointer;
+        font-size: 18px;
+        }
+
+        .search-container {
+        padding: 10px;
+        }
+
+        .search-box {
+        display: flex;
+        align-items: center;
+        background-color: #eaeef3;
+        border-radius: 20px;
+        padding: 8px 15px;
+        }
+
+        .search-box input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 5px;
+        outline: none;
+        color: #333;
+        }
+
+        .search-icon {
+        color: #666;
+        }
+
+        .contact-list {
+        flex: 1;
+        overflow-y: auto;
+        }
+
+        .contact {
+        display: flex;
+        padding: 10px 15px;
+        align-items: center;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        }
+
+        .contact:hover, .contact.active {
+        background-color: #e9eef8;
+        }
+
+        .contact-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 12px;
+        flex-shrink: 0;
+        }
+
+        .contact-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
+
+        .contact-info {
+        flex: 1;
+        overflow: hidden;
+        }
+
+        .contact-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+        }
+
+        .contact-preview {
+        font-size: 12px;
+        color: #888;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        }
+
+        .contact-time {
+        font-size: 11px;
+        color: #999;
+        margin-left: 5px;
+        }
+
+        .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        }
+
+        .chat-header {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+        background-color: #f5f7fb;
+        }
+
+        .chat-header-info {
+        display: flex;
+        align-items: center;
+        }
+
+        .chat-header-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 12px;
+        }
+
+        .chat-header-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
+
+        .chat-header-text h2 {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 2px;
+        }
+
+        .chat-header-text p {
+        font-size: 12px;
+        color: #888;
+        }
+
+        .chat-header-actions {
+        display: flex;
+        gap: 15px;
+        }
+
+        .header-action-btn {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 18px;
+        }
+
+        .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background-color: #fff;
+        }
+
+        .message {
+        display: flex;
+        margin-bottom: 20px;
+        }
+
+        .message-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 10px;
+        }
+
+        .message-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
+
+        .message-content {
+        max-width: 70%;
+        }
+
+        .message-bubble {
+        padding: 10px 15px;
+        border-radius: 18px;
+        margin-bottom: 5px;
+        display: inline-block;
+        }
+
+        .message.received .message-bubble {
+        background-color: #f0f2f5;
+        color: #333;
+        border-top-left-radius: 5px;
+        }
+
+        .message.sent {
+        flex-direction: row-reverse;
+        }
+
+        .message.sent .message-avatar {
+        margin-right: 0;
+        margin-left: 10px;
+        }
+
+        .message.sent .message-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        }
+
+        .message.sent .message-bubble {
+        background-color: #8a7ef8;
+        color: white;
+        border-top-right-radius: 5px;
+        }
+
+        .message-time {
+        font-size: 11px;
+        color: #999;
+        margin-top: 2px;
+        }
+
+        .document-preview {
+        display: flex;
+        background-color: #f5f7fb;
+        padding: 10px;
+        border-radius: 10px;
+        align-items: center;
+        margin-bottom: 5px;
+        }
+
+        .document-icon {
+        margin-right: 10px;
+        color: #666;
+        }
+
+        .document-info {
+        flex: 1;
+        }
+
+        .document-title {
+        font-weight: 500;
+        font-size: 14px;
+        color: #333;
+        }
+
+        .document-details {
+        font-size: 12px;
+        color: #888;
+        }
+
+        .chat-input {
+        padding: 15px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        }
+
+        .input-actions {
+        display: flex;
+        margin-right: 10px;
+        }
+
+        .input-btn {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 20px;
+        margin-right: 5px;
+        }
+
+        .message-input {
+        flex: 1;
+        border: none;
+        background-color: #f0f2f5;
+        border-radius: 20px;
+        padding: 10px 15px;
+        outline: none;
+        color: #333;
+        }
+
+        .send-btn {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 20px;
+        margin-left: 10px;
+        }
+
+        .job-title {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        }
+
+        .job-posting {
+        font-size: 12px;
+        color: #777;
+        }
+
+        .apply-btn {
+        background-color: #8a7ef8;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        padding: 5px 15px;
+        font-size: 12px;
+        cursor: pointer;
+        }
+
+        .link-preview {
+        color: #555;
+        text-decoration: none;
+        font-size: 14px;
+        display: block;
+        }
+
+        .call-action {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #222;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        }
+
+        .call-action-icon {
+        color: #8a7ef8;
+        }
+
+        .call-action-text {
+        font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Doan chat</div>
+                <div class="sidebar-actions">
+                    <button class="action-btn">⋯</button>
+                    <button class="action-btn">✏️</button>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" placeholder="Tìm kiếm">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+            <div class="contact-list">
+                @foreach (var user in Model.Users)
+                {
+                    <div class="contact active">
+                        <div class="contact-avatar">
+                            <a href="@Url.Action("Trangchat", new { receiverId = user.Id,baiDangId = user.BaiDangId  })" style="display: flex; align-items: center; padding: 10px; text-decoration: none;">
+                                <img src="@user.sFile_Avata_Path" style="width: 40px; height: 40px; border-radius: 10%; object-fit: cover; margin-right: 10px;">
+                                </a>
+                        </div>
+                        <div class="contact-info">
+                            <div class="contact-name">@user.UserName</div>
+                            <div class="contact-preview">@user.BaiDangTieuDe</div>
+                        </div>
+                        <div class="contact-time">14:05</div>
+                    </div>
+                }  
+            </div>
+
+        </div>
+        <div class="chat-main">
+            
+                <div class="chat-header">
+                    @if (Model.ReceiverInfo != null)
+                     {
+                    <div class="chat-header-info">
+                        <div class="chat-header-avatar">
+                            <img src="@Model.ReceiverInfo.sFile_Avata_Path" style="width: 50px; height: 50px; border-radius: 10%; object-fit: cover; margin-right: 15px;" alt="HRchannels">
+                        </div>
+                        <div class="chat-header-text">
+                            <h2>@Model.ReceiverInfo.UserName</h2>
+                            <p>Đang hoạt động</p>
+                        </div>
+                    </div>
+                    <div class="chat-header-info">
+                        <div class="job-title">@Model.BaiDang.sTieuDe</div>
+
+                    </div>
+                    }
+                    <div class="chat-header-actions">
+
+                        <button class="header-action-btn">📄</button>
+                        <button class="header-action-btn">📹</button>
+                        <button class="header-action-btn">📞</button>
+                    </div>
+                    
+                </div>
+                <div class="chat-messages">
+                    <div id="chatMessages" class="border rounded p-3 mb-3" style="height: 900px; overflow-y: scroll; background-color: #f8f9fa;">
+                        @if (Model.BaiDang != null)
+                        {
+                            <!-- Thông tin bài đăng -->
+                            <div class="bg-light p-3 rounded shadow-sm mb-3">
+                                <h5 class="mb-1">@Model.BaiDang.sTieuDe</h5>
+                                <p class="text-muted mb-0">@Model.BaiDang.sMoTa</p>
+                                <small class="text-secondary">Đăng lúc: @Model.BaiDang.dNgayTao.ToString("dd/MM/yyyy")</small>
+                            </div>
+                        }
+                        @foreach (var message in Model.Messages)
+                        {
+                            <div class="mb-2 @(message.NguoiGuiId == Model.CurrentUserId ? "text-end" : "text-start")">
+                                <span class="badge bg-@(message.NguoiGuiId == Model.CurrentUserId ? "primary" : "secondary")">
+                                    @message.NoiDung
+                                </span>
+                                <div><small class="text-muted">@message.ThoiGianGui.ToString("HH:mm dd/MM")</small></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                <!-- Nhập tin nhắn -->
+                <div class="input-group">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." />
+                    <button  id="sendButton" class="btn btn-primary">Gửi</button>
+                </div>
+           
+            
+        </div>
+    </div>
+
+    @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub") // Đảm bảo bạn đã map Hub trong Startup/Program.cs
+            .build();
+
+
+
+            // Kết nối tới Hub
+            connection.start().then(function () {
+                console.log("Kết nối tới Hub thành công");
+            }).catch(function (err) {
+                console.error("Kết nối tới Hub thất bại:", err.toString());
+            });
+              
+        const currentUserId = "@Model.CurrentUserId";
+        const receiverId = "@Model.ReceiverId";
+        const baiDangId = "@Model.BaiDangId";
+
+        // Khi nhận được tin nhắn
+        connection.on("ReceiveMessage", function (senderId, receiverIdParam, message, thoiGian) {
+            if ((senderId === currentUserId && receiverIdParam === receiverId) ||
+                (senderId === receiverId && receiverIdParam === currentUserId)) {
+
+                const messageDiv = document.createElement("div");
+                messageDiv.className = "mb-2 " + (senderId === currentUserId ? "text-end" : "text-start");
+
+                messageDiv.innerHTML = `
+                    <span class="badge bg-${senderId === currentUserId ? "primary" : "secondary"}">
+                        ${message}
+                    </span>
+                    <div><small class="text-muted">${thoiGian}</small></div>
+                `;
+
+                document.getElementById("chatMessages").appendChild(messageDiv);
+                scrollToBottom();
+            }
+        });
+
+
+        // Hàm gửi tin nhắn
+        function sendMessage() {
+                                      // Lấy các giá trị cần thiết
+                    const message = document.getElementById("messageInput").value.trim();
+                                if (message !== "") {
+                    connection.invoke("SendMessage", currentUserId, receiverId, message, baiDangId)
+                        .then(() => {
+                            // Sau khi gửi, xóa nội dung trong input
+                            document.getElementById("messageInput").value = "";
+                        })
+                        .catch(err => {
+                            console.error("Lỗi khi gửi tin nhắn: " + err.toString());
+                        });
+                } else {
+                    alert("Vui lòng nhập tin nhắn.");
+                }
+        }
+
+        // Gửi tin nhắn khi nhấn nút "Gửi"
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+
+        // Gửi tin nhắn khi nhấn phím Enter (không phải Shift+Enter)
+        document.getElementById("messageInput").addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault(); // Ngừng hành vi mặc định của Enter
+                sendMessage(); // Gửi tin nhắn
+            }
+        });
+
+        // Cuộn xuống cuối mỗi khi có tin nhắn mới
+        function scrollToBottom() {
+            const messagesDiv = document.getElementById("chatMessages");
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Khi kết nối SignalR, tự động cuộn xuống dưới
+        connection.start().then(function () {
+            scrollToBottom(); // Khi vào phòng chat, tự động scroll
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+ 
+        </script>
+        }
+</body>
+</html>

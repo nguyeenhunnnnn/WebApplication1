@@ -7,7 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/styleNav.css" asp-append-version="true" />
-    <link href="~/css/StyleSidebar.css" rel="stylesheet" />
+    <!-- <link href="~/css/StyleSidebar.css" rel="stylesheet" /> -->
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -50,7 +50,7 @@
 
         <nav class="nav-menu">
             <a asp-controller="Home" asp-action="Index" class="nav-item active">Trang Chủ</a>
-            <a href="#" class="nav-item">Bảng Tin</a>
+            <a asp-controller="BangTin" asp-action="Index" class="nav-item">Bảng Tin</a>
             <a href="#" class="nav-item">Tìm việc</a>
             <a asp-controller="HoSo" asp-action="Index" class="nav-item">Quản Lý</a>
             <a href="#" class="nav-item">Sản Phẩm Và Dịch Vụ</a>

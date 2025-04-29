@@ -6,6 +6,8 @@ using WebApplication1.Models.Entities;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
 using static System.Net.Mime.MediaTypeNames;
+using WebApplication1.SignalRHub;
+using Microsoft.AspNetCore.SignalR;
 
 
 
@@ -44,6 +46,20 @@ builder.Services.Configure<IdentityOptions>(options => {
     options.SignIn.RequireConfirmedAccount = false;
 
 });
+//add sign
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
+// Add Repository
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+// Add Services
+builder.Services.AddScoped<IChatService, ChatService>();
+
+// Add Repository
+builder.Services.AddScoped<IDanhGiaRepository, DanhGiaRepository>();
+// Add Services
+builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
+
 // Add Repository
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 // Add Services
@@ -54,6 +70,20 @@ builder.Services.AddScoped<IDangTinService, DangTinService>();
 
 // Add Repository
 builder.Services.AddScoped<IDangTinRepository, DangTinRepository>();
+
+
+// Add Services
+builder.Services.AddScoped<IBangTinService, BangTinService>();
+
+// Add Repository
+builder.Services.AddScoped<IBangTinRepository, BangTinRepository>();
+
+
+// Add Services
+builder.Services.AddScoped<IUngTuyenService, UngTuyenService>();
+
+// Add Repository
+builder.Services.AddScoped<IUngTuyenRepository, UngTuyenRepository>();
 
 // Add Services
 builder.Services.AddScoped<IHoSoService, HoSoService>();
@@ -84,20 +114,22 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 app.UseRouting();
-app.UseAuthentication();
+
 
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
-
+app.MapHub<ChatHub>("/chatHub");
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

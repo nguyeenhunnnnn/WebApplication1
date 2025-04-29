@@ -1,0 +1,85 @@
+﻿@model WebApplication1.Models.ViewModels.DanhGiaViewModel
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Đánh Giá</title>
+    <link href="~/css/styleformDG.css" rel="stylesheet" />
+    <link href="~/css/styleNav.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="rating-container">
+        <h2>Đánh Giá Dịch Vụ</h2>
+
+        <form id="ratingForm" asp-action="TaoDanhGia" method="post">
+            <input type="hidden" asp-for="@Model.GiaSuId" name="giaSuId" />
+            <div class="form-group">
+                <label>Số sao đánh giá:</label>
+                <div class="stars">
+                    <input type="radio" id="star5" name="soSao" value="5">
+                    <label for="star5">★</label>
+                    <input type="radio" id="star4" name="soSao" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star3" name="soSao" value="3">
+                    <label for="star3">★</label>
+                    <input type="radio" id="star2" name="soSao" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star1" name="soSao" value="1">
+                    <label for="star1">★</label>
+                </div>
+                <div class="rating-summary">Bạn chưa chọn đánh giá</div>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Nội dung đánh giá:</label>
+                <textarea id="comment" name="noiDung" placeholder="Xin hãy chia sẻ trải nghiệm của bạn..."></textarea>
+            </div>
+
+            <button type="submit">Gửi Đánh Giá</button>
+        </form>
+
+        <div class="thankyou-message" id="thankYouMessage">
+            <h3>Cám ơn bạn đã đánh giá!</h3>
+            <p>Đánh giá của bạn đã được gửi thành công.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const starLabels = document.querySelectorAll('.stars label');
+            const ratingInputs = document.querySelectorAll('.stars input');
+            const ratingForm = document.getElementById('ratingForm');
+            const thankYouMessage = document.getElementById('thankYouMessage');
+            const ratingSummary = document.querySelector('.rating-summary');
+
+            // Cập nhật hiển thị xếp hạng khi người dùng chọn sao
+            ratingInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const rating = this.value;
+                    ratingSummary.textContent = `Bạn đã chọn ${rating} sao`;
+                });
+            });
+
+            // Xử lý khi form được gửi
+            ratingForm.addEventListener('submit', function(e) {
+               
+
+                // Lấy giá trị đánh giá
+                const rating = document.querySelector('input[name="rating"]:checked');
+                const comment = document.getElementById('comment').value;
+
+               
+
+                // Ở đây bạn có thể thêm code để gửi đánh giá đến server
+                console.log('Đánh giá:', rating.value, 'sao');
+                console.log('Nội dung:', comment);
+
+                // Hiển thị thông báo cảm ơn
+                ratingForm.style.display = 'none';
+                thankYouMessage.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

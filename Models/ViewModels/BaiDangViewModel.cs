@@ -29,5 +29,8 @@ namespace WebApplication1.Models.ViewModels
         public string sTuoi { get; set; }
         public string sKinhNghiem { get; set; }
         public string sBangCap { get; set; }
+        public string sfileAvata { get; set; }
+        public string? Vaitro { get; set; } 
+        public string? FileCVPath { get; set; }
     }
 }

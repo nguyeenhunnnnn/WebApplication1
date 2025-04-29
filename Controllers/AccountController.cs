@@ -22,7 +22,8 @@ namespace WebApplication1.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AccountController> _logger;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        public AccountController(UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager, IAccountService accountService,IAccountRepository accountRepository, ApplicationDbContext applicationDbContext, ILogger<AccountController> logger, IWebHostEnvironment hostEnvironment)
+        private readonly IDanhGiaService _danhGiaService;
+        public AccountController(UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager, IAccountService accountService,IAccountRepository accountRepository, ApplicationDbContext applicationDbContext, ILogger<AccountController> logger, IWebHostEnvironment hostEnvironment, IDanhGiaService danhGiaService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -31,6 +32,7 @@ namespace WebApplication1.Controllers
             _context = applicationDbContext;
             _logger = logger;
             _hostingEnvironment = hostEnvironment;
+            _danhGiaService = danhGiaService;
         }
         public IActionResult Index()
         {
@@ -301,6 +303,10 @@ namespace WebApplication1.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login");
 
+            // Lấy danh sách đánh giá
+            var danhGias = await _danhGiaService.GetDanhGiaByGiaSuIdAsync(user.Id);
+            var diemTB = await _danhGiaService.GetAverageRatingAsync(user.Id);
+
             var model = new ProfileViewModel
             {
                 VaiTro = user.VaiTro,
@@ -314,7 +320,13 @@ namespace WebApplication1.Controllers
                 sFile_CCCD_Path = user.FileCCCD,
                 sFile_Avata = null,
                 sFile_CCCD = null,
+
+                // ➕ Truyền dữ liệu đánh giá vào ViewModel
+                DanhGias = danhGias,
+                DiemTrungBinh = diemTB
             };
+
+
            
 
             return View(model);

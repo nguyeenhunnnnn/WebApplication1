@@ -12,6 +12,7 @@ using WebApplication1.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models.ViewModels;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -25,6 +26,8 @@ namespace WebApplication1.Controllers
         private readonly SignInManager<TaiKhoan> _signInManager;
         private readonly IDangTinService _dangTinService;
         private readonly IDangTinRepository _dangTinRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IUngTuyenService _IUngTuyenService;
 
         public baiDangController(
             ILogger<baiDangController> logger,
@@ -34,6 +37,8 @@ namespace WebApplication1.Controllers
             UserManager<TaiKhoan> userManager,
             SignInManager<TaiKhoan> signInManager,
             IDangTinService dangTinService,
+            IAccountRepository accountRepository,
+            IUngTuyenService IUngTuyenService,
             IDangTinRepository dangTinRepository)
         {
             _logger = logger;
@@ -44,6 +49,8 @@ namespace WebApplication1.Controllers
             _signInManager = signInManager;
             _dangTinService = dangTinService;
             _dangTinRepository = dangTinRepository;
+            _accountRepository = accountRepository;
+            _IUngTuyenService = IUngTuyenService;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -55,6 +62,7 @@ namespace WebApplication1.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> DangTin(DangTinViewModel model)
         {
+           
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
@@ -92,6 +100,7 @@ namespace WebApplication1.Controllers
               dangTin.dNgayTao = DateTime.Now;
               dangTin.sTrangThai = "Đang chờ duyệt";
               dangTin.FK_iMaTK = userId;*/
+           
             bool result = await _dangTinService.CreatDangTin(model, userId);
             if (result)
             {
@@ -109,6 +118,35 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
            
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var baidangList = new List<BaiDangViewModel>();
+            baidangList = await _dangTinService.GetAllBaiDangByTaiKhoanId(userId, trangthai);
+            /* var baiDangList=_context.BaiDangs
+                 .Where(bd => bd.FK_iMaTK ==userId)
+                 .ToList();
+             var baidangList = new List<BaiDangViewModel>();
+             baidangList=baiDangList.Select(bd => new BaiDangViewModel()
+             {
+
+                 sTieuDe = bd.sTieuDe,
+                 sMoTa = bd.sMoTa,
+                 sDiaDiem = bd.sDiaDiem,
+                 fMucLuong = bd.fMucLuong ?? 0,
+                 dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
+                 dNgayTao = bd.dNgayTao,
+                 sTrangThai = bd.sTrangThai,
+
+             }).ToList();*/
+
+            return View(baidangList);
+        }
+        public async Task<IActionResult> IndexGS(string trangthai = "Đang chờ duyệt")
+        {
+
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
@@ -184,6 +222,18 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
             
+            return View(dangTin);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetGS(int Primakey)
+        {
+
+            var dangTin = await _dangTinService.GetBaiDangById(Primakey);
+            if (dangTin == null)
+            {
+                return NotFound();
+            }
+
             return View(dangTin);
         }
         public async Task<IActionResult> Delete(int id)
@@ -263,7 +313,52 @@ namespace WebApplication1.Controllers
 
 
         }
+        public async Task<IActionResult> DanhSachUngVien(string trangthai = "Chờ duyệt")
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var taiKhoan = await _accountRepository.GetTaiKhoanByIdAsync(userId);
+            if (taiKhoan == null)
+                return Unauthorized();
+            if (taiKhoan.VaiTro != "phuhuynh")
+                return Forbid(); // 🚫 Không cho phép nếu không phải Gia Sư
+            var ds = await _IUngTuyenService.LayDanhSachUngVienCuaPhuHuynh(userId, trangthai);
+            return View(ds);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Duyet(int id, string trangThai)
+        {
+            await _IUngTuyenService.DuyetUngVien(id, trangThai);
+            return RedirectToAction("DanhSachUngVien");
+        }
+        // GET: DangTin/Create
+        public IActionResult CreateGS()
+        {
+            return View();
+        }
 
+        // POST: DangTin/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateGS(DangTinGiaSuViewModel model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // Lấy userId từ claims
+
+            
+                var result = await _dangTinService.CreateDangTinForGiaSuAsync(model, userId);
+
+                if (result)
+                {
+                    TempData["Success"] = "Đăng tin thành công!";
+                    return RedirectToAction("Index", "Home");  // Chuyển hướng tới trang chính sau khi đăng bài
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Bạn cần tạo hồ sơ và upload CV trước khi đăng bài.");
+                }
+            
+
+            return View(model);
+        }
 
 
 

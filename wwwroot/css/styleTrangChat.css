@@ -1,0 +1,394 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.chat-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 80px;
+}
+
+.sidebar {
+    width: 320px;
+    background-color: #f5f7fb;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sidebar-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #777;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.search-container {
+    padding: 10px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #eaeef3;
+    border-radius: 20px;
+    padding: 8px 15px;
+}
+
+    .search-box input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 5px;
+        outline: none;
+        color: #333;
+    }
+
+.search-icon {
+    color: #666;
+}
+
+.contact-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.contact {
+    display: flex;
+    padding: 10px 15px;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+    .contact:hover, .contact.active {
+        background-color: #e9eef8;
+    }
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+    .contact-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        
+    }
+
+.contact-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.contact-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.contact-preview {
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-time {
+    font-size: 11px;
+    color: #999;
+    margin-left: 5px;
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.chat-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f5f7fb;
+}
+
+.chat-header-info {
+    display: flex;
+    align-items: center;
+}
+
+.chat-header-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+}
+
+    .chat-header-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.chat-header-text h2 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.chat-header-text p {
+    font-size: 12px;
+    color: #888;
+}
+
+.chat-header-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.header-action-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.message-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+    .message-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.message-content {
+    max-width: 70%;
+}
+
+.message-bubble {
+    padding: 10px 15px;
+    border-radius: 18px;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.message.received .message-bubble {
+    background-color: #f0f2f5;
+    color: #333;
+    border-top-left-radius: 5px;
+}
+
+.message.sent {
+    flex-direction: row-reverse;
+}
+
+    .message.sent .message-avatar {
+        margin-right: 0;
+        margin-left: 10px;
+    }
+
+    .message.sent .message-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .message.sent .message-bubble {
+        background-color: #8a7ef8;
+        color: white;
+        border-top-right-radius: 5px;
+    }
+
+.message-time {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.document-preview {
+    display: flex;
+    background-color: #f5f7fb;
+    padding: 10px;
+    border-radius: 10px;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.document-icon {
+    margin-right: 10px;
+    color: #666;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-title {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+}
+
+.document-details {
+    font-size: 12px;
+    color: #888;
+}
+
+.chat-input {
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+
+.input-actions {
+    display: flex;
+    margin-right: 10px;
+}
+
+.input-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.message-input {
+    flex: 1;
+    border: none;
+    background-color: #f0f2f5;
+    border-radius: 20px;
+    padding: 10px 15px;
+    outline: none;
+    color: #333;
+}
+
+.send-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.job-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+.job-posting {
+    font-size: 12px;
+    color: #777;
+}
+
+.apply-btn {
+    background-color: #8a7ef8;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 15px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.link-preview {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+}
+
+.call-action {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #222;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.call-action-icon {
+    color: #8a7ef8;
+}
+
+.call-action-text {
+    font-size: 14px;
+}

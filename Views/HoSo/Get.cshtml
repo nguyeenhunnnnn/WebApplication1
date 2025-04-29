@@ -25,18 +25,31 @@
                     <a asp-controller="HoSo" asp-action="CreateHoSo" style="text-decoration:none; padding:0px 10px"
                        class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
                         <i class="fas fa-file-alt"></i>
-                        <span>Đăng tin</span>
+                        <span>Tạo Hồ Sơ</span>
                     </a>
                 </div>
+
                 <div class="menu-item">
                     <a asp-controller="HoSo" asp-action="Index" style="text-decoration:none; padding:0px 10px"
                        class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
                         <i class="fas fa-file-alt"></i>
-                        <span>Quản lý tin đăng</span>
+                        <span>Quản Lý Hồ Sơ</span>
+                    </a>
+                </div>
+                <div class="menu-item active">
+                    <a asp-controller="baiDang" asp-action="CreateGS" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Đăng tin</span>
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a asp-controller="HoSo" asp-action="" class="menu-item">
+                    <a asp-controller="baiDang" asp-action="IndexGS" class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Quản Lí Tin Đăng</span>
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a asp-controller="HoSo" asp-action="QuanLyUngTuyen" class="menu-item">
                         <i class="fas fa-users"></i>
                         <span>Quản Lí Ứng Tuyển</span>
                     </a>

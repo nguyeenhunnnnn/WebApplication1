@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 namespace WebApplication1.Controllers
@@ -26,6 +27,8 @@ namespace WebApplication1.Controllers
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly SignInManager<TaiKhoan> _signInManager;
         private readonly IHoSoService _hoSoService;
+        private readonly IUngTuyenService _ungTuyenService;
+        private readonly IAccountRepository _accountRepository;
 
         public HoSoController(ILogger<HoSoController> logger,
             IWebHostEnvironment webHostEnvironment,
@@ -33,7 +36,10 @@ namespace WebApplication1.Controllers
             IConfiguration configuration,
             UserManager<TaiKhoan> userManager,
             SignInManager<TaiKhoan> signInManager,
-            IHoSoService hoSoService
+            IHoSoService hoSoService,
+            IUngTuyenService ungTuyenService,
+            IAccountRepository accountRepository
+
             )
         {
             _logger = logger;
@@ -43,6 +49,8 @@ namespace WebApplication1.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _hoSoService = hoSoService;
+            _ungTuyenService = ungTuyenService;
+            _accountRepository = accountRepository;
         }
         [HttpGet]
         public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
@@ -244,6 +252,19 @@ namespace WebApplication1.Controllers
             }
             return View(hs);
         }
+        public async Task<IActionResult> QuanLyUngTuyen()
+        {
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var taiKhoan = await _accountRepository.GetTaiKhoanByIdAsync(userId);
+            if (taiKhoan == null)
+                return Unauthorized();
+            if (taiKhoan.VaiTro != "giasu")
+                return Forbid(); // 🚫 Không cho phép nếu không phải Gia Sư
+            var list = await _ungTuyenService.LayDanhSachUngTuyenCuaGiaSu(userId);
+            return View(list);
+        }
+
 
     }
  }

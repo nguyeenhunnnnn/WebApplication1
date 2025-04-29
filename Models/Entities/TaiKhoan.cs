@@ -29,7 +29,19 @@ namespace WebApplication1.Models.Entities
 
         // Quan hệ một-nhiều với HoSo
         public List<HoSo>? HoSos { get; set; } = new List<HoSo>();
+        // Quan hệ một-nhiều với UngTuyen
+        public List<UngTuyen> UngTuyens { get; set; } = new List<UngTuyen>();
 
+        //quan hẹ vơi chat 
+        public virtual ICollection<TinNhan> TinNhanGui { get; set; } = new List<TinNhan>();
+        public virtual ICollection<TinNhan> TinNhanNhan { get; set; } = new List<TinNhan>();
+
+        //
+        // 💬 Danh sách đánh giá phụ huynh đã viết
+        public virtual ICollection<DanhGiaGiaSu> DanhGiaDaViet { get; set; } = new List<DanhGiaGiaSu>();
+
+        // ⭐ Danh sách đánh giá gia sư đã nhận
+        public virtual ICollection<DanhGiaGiaSu> DanhGiaNhanDuoc { get; set; } = new List<DanhGiaGiaSu>();
 
     }
 }

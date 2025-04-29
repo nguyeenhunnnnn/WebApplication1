@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApplication1.Models.Entities;
 
 namespace WebApplication1.Models.ViewModels
 {
     public class ProfileViewModel
     {
-       
+      
         public string VaiTro { get; set; }
       
         public string Email { get; set; }
@@ -23,5 +24,16 @@ namespace WebApplication1.Models.ViewModels
         public IFormFile sFile_CCCD { get; set; }
         public string sFile_CCCD_Path { get; set; }
         public string sFile_Avata_Path { get; set; }
+
+        //danh gia
+        public List<DanhGiaGiaSu> DanhGias { get; set; } = new();
+        public double DiemTrungBinh { get; set; }
+        public int TongDanhGia => DanhGias.Count;
+
+        public int SoSao1 => DanhGias.Count(d => d.SoSao == 1);
+        public int SoSao2 => DanhGias.Count(d => d.SoSao == 2);
+        public int SoSao3 => DanhGias.Count(d => d.SoSao == 3);
+        public int SoSao4 => DanhGias.Count(d => d.SoSao == 4);
+        public int SoSao5 => DanhGias.Count(d => d.SoSao == 5);
     }
 }
