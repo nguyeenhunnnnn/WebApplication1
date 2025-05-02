@@ -13,9 +13,10 @@
     <link rel="stylesheet" href="~/css/styleDangTin.css" />
     <link rel="stylesheet" href="~/css/StyleSidebar.css" />
     <link rel="stylesheet" href="~/css/styleQlbd.css" />
+    <link href="~/css/styledanhgia.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/styleCTBD.css" />
     <title>HUNO - Chi Tiet Bai Dang</title>
-
+   
 </head>
 <body>
     <div class="container">
@@ -182,6 +183,82 @@
             </div>
         </div>
 
+        <div class="section">
+            <h3 class="section-title">ĐÁNH GIÁ</h3>
+            <div class="job-description">
+                <div class="reviews-container">
+                    <h2>Đánh Giá Từ Phụ Huynh</h2>
+
+                    <div class="reviews-summary">
+                        <div class="average-rating">
+                            <div class="average-rating-value">@Model.DiemTrungBinh.ToString("0.0")</div>
+                            <div class="review-stars">
+                                @{
+                                    int saoNguyen = (int)Math.Floor(Model.DiemTrungBinh);
+                                    for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= saoNguyen)
+                                        {
+                                            @:<span style="color: gold;">★</span>
+                                        }
+                                        else
+                                        {
+                                            @:<span style="color: #ddd;">★</span>
+                                        }
+                                    }
+                                }
+                            </div>
+                            <div>@Model.TongDanhGia đánh giá</div>
+                        </div>
+
+                        <div class="rating-bars">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                var count = Model.DanhGias.Count(d => d.SoSao == i);
+                                var percent = Model.TongDanhGia == 0 ? 0 : (count * 100) / Model.TongDanhGia;
+                                <div class="rating-bar-item">
+                                    <div class="rating-bar-label">@i ★</div>
+                                    <div class="rating-bar-container">
+                                        <div class="rating-bar-fill" style="width: @percent%;"></div>
+                                    </div>
+                                    <div class="rating-bar-count">@count</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="review-list">
+                        @foreach (var dg in Model.DanhGias.OrderByDescending(d => d.NgayTao))
+                        {
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="review-author">@dg.NguoiDanhGia.UserName</div>
+                                    <div class="review-date">@dg.NgayTao.ToString("dd/MM/yyyy")</div>
+                                </div>
+                                <div class="review-stars">
+                                    @{
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= dg.SoSao)
+                                            {
+                                                @:<span style="color: gold;">★</span>
+                                            }
+                                            else
+                                            {
+                                                @:<span style="color: #ddd;">★</span>
+                                            }
+                                        }
+                                    }
+                                </div>
+                                <div class="review-content">
+                                    @dg.NoiDung
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
 </body>

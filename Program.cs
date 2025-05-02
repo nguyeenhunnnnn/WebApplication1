@@ -8,6 +8,7 @@ using WebApplication1.Services;
 using static System.Net.Mime.MediaTypeNames;
 using WebApplication1.SignalRHub;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 
@@ -46,6 +47,9 @@ builder.Services.Configure<IdentityOptions>(options => {
     options.SignIn.RequireConfirmedAccount = false;
 
 });
+//
+builder.Services.AddScoped<ICustomEmailSender, EmailSender>();
+
 //add sign
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();

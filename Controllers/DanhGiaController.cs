@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models.Entities;
 using WebApplication1.Models.ViewModels;
 using WebApplication1.Services;
+using WebApplication1.Data;
 
 namespace WebApplication1.Controllers
 {
@@ -10,11 +12,12 @@ namespace WebApplication1.Controllers
     {
         private readonly IDanhGiaService _danhGiaService;
         private readonly UserManager<TaiKhoan> _userManager;
-
-        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<TaiKhoan> userManager)
+        private readonly ApplicationDbContext _context;
+        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<TaiKhoan> userManager, ApplicationDbContext context)
         {
             _danhGiaService = danhGiaService;
             _userManager = userManager;
+            _context = context;
         }
         [HttpGet]
         public IActionResult TaoDanhGia(string giaSuId)
@@ -33,6 +36,11 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> TaoDanhGia(string giaSuId, int soSao, string? noiDung)
         {
             var userId = _userManager.GetUserId(User);
+
+            // Kiểm tra đã đánh giá chưa
+            if (await _context.DanhGiaGiaSus.AnyAsync(d => d.NguoiDanhGiaId == userId && d.GiaSuId == giaSuId))
+                return BadRequest("Bạn đã đánh giá gia sư này rồi.");
+
             await _danhGiaService.AddDanhGiaAsync(userId!, giaSuId, soSao, noiDung);
            // return RedirectToAction("ChiTiet", "Profile", new { id = giaSuId });
            return RedirectToAction("Index", "Home");

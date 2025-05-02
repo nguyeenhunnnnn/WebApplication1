@@ -46,6 +46,7 @@ namespace WebApplication1.Repositories
         {
             return await _context.BaiDangs
                 .Include(b => b.TaiKhoan)
+                 .Where(b => b.IsHidden == false)
                 .OrderByDescending(b => b.dNgayTao)
                 .ToListAsync();
         }

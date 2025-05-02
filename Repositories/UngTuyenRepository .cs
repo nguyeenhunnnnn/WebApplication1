@@ -15,6 +15,8 @@ namespace WebApplication1.Repositories
         Task ThemUngTuyenAsync(UngTuyen ungTuyen);
         Task CapNhatTrangThaiAsync(int id, string trangThai);
         Task<List<UngTuyen>> LayDanhSachUngVienCuaPhuHuynh(string phuHuynhId, string trangthai);
+        Task<UngTuyen> GetUngTuyenByIdAsync(int id);
+        Task<List<UngTuyen>> GetUngTuyenByBaiDangId(int baiDangId);
 
     }
     public class UngTuyenRepository : IUngTuyenRepository
@@ -72,6 +74,19 @@ namespace WebApplication1.Repositories
                     .ThenInclude(bd => bd.TaiKhoan) // để truy xuất tác giả bài đăng
                 .Include(ut => ut.HoSo)
                 .Where(ut => ut.BaiDang.FK_iMaTK == phuHuynhId && ut.TrangThai == trangthai)
+                .ToListAsync();
+        }
+        public async Task<UngTuyen> GetUngTuyenByIdAsync(int id)
+        {
+            return await _context.UngTuyen
+                .Include(u => u.TaiKhoanGiaSu) // để lấy email
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+        public async Task<List<UngTuyen>> GetUngTuyenByBaiDangId(int baiDangId)
+        {
+            return await _context.UngTuyen
+                .Include(u => u.TaiKhoanGiaSu) // để lấy email của từng ứng viên
+                .Where(u => u.FK_iMaBaiDang == baiDangId)
                 .ToListAsync();
         }
     }

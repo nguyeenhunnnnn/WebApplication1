@@ -57,6 +57,7 @@ namespace WebApplication1.Services
                 TrangThai = u.TrangThai,
                 NgayUngTuyen = u.NgayUngTuyen,
                 fileCV = u.HoSo.sDuongDanTep,
+                ishidden = u.BaiDang.IsHidden,
                 MaBaiDang = u.FK_iMaBaiDang
             }).ToList();
         }
@@ -96,6 +97,7 @@ namespace WebApplication1.Services
                 TieuDeHoSo = ut.HoSo.sTieuDe,
                 TieuDeBaiDang = ut.BaiDang.sTieuDe,
                 NgayUngTuyen = ut.NgayUngTuyen,
+                ishidden = ut.BaiDang.IsHidden,
                 TrangThai = ut.TrangThai
             }).ToList();
         }

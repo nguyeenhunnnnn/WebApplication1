@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models.ViewModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace WebApplication1.Controllers
 {
@@ -28,6 +29,8 @@ namespace WebApplication1.Controllers
         private readonly IDangTinRepository _dangTinRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IUngTuyenService _IUngTuyenService;
+        private readonly ICustomEmailSender _emailSender;
+        private readonly IUngTuyenRepository _ungTuyenRepo;
 
         public baiDangController(
             ILogger<baiDangController> logger,
@@ -39,7 +42,10 @@ namespace WebApplication1.Controllers
             IDangTinService dangTinService,
             IAccountRepository accountRepository,
             IUngTuyenService IUngTuyenService,
-            IDangTinRepository dangTinRepository)
+            IDangTinRepository dangTinRepository,
+            ICustomEmailSender emailSender,
+            IUngTuyenRepository ungTuyenRepo
+            )
         {
             _logger = logger;
             _webHostEnvironment = webHostEnvironment;
@@ -51,6 +57,8 @@ namespace WebApplication1.Controllers
             _dangTinRepository = dangTinRepository;
             _accountRepository = accountRepository;
             _IUngTuyenService = IUngTuyenService;
+            _emailSender = emailSender;
+            _ungTuyenRepo = ungTuyenRepo;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -228,7 +236,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetGS(int Primakey)
         {
 
-            var dangTin = await _dangTinService.GetBaiDangById(Primakey);
+            var dangTin = await _dangTinService.GetBaiDangByIdGS(Primakey);
             if (dangTin == null)
             {
                 return NotFound();
@@ -325,9 +333,52 @@ namespace WebApplication1.Controllers
             return View(ds);
         }
         [HttpGet]
-        public async Task<IActionResult> Duyet(int id, string trangThai)
+        public async Task<IActionResult> Duyet(int id,int baiDangId, string trangThai)
         {
+            var email= "nguyeenhuong12345@gmail.com";
+            var ungVien = await _ungTuyenRepo.GetUngTuyenByIdAsync(id);
+            if (ungVien == null) return NotFound();
+
+            // Cập nhật trạng thái người được chọn
             await _IUngTuyenService.DuyetUngVien(id, trangThai);
+
+            if (trangThai == "Chấp nhận")
+            {
+                // Gửi mail chấp nhận
+                await _emailSender.SendEmailAsync(
+                   // ungVien.TaiKhoanGiaSu.Email,
+                   email,
+                    "Chúc mừng bạn đã được nhận!",
+                    "Bạn đã được chấp nhận làm gia sư cho bài đăng này."
+                );
+                
+                // Từ chối các gia sư còn lại
+                var ungViens = await _ungTuyenRepo.GetUngTuyenByBaiDangId(baiDangId);
+                foreach (var uv in ungViens)
+                {
+                    if (uv.Id != id && uv.TrangThai != "Từ chối")
+                    {
+                        await _IUngTuyenService.DuyetUngVien(uv.Id, "Từ chối");
+
+                        await _emailSender.SendEmailAsync(
+                           // uv.TaiKhoanGiaSu.Email,
+                           email,
+                            "Kết quả ứng tuyển",
+                            "Rất tiếc, bạn không được chọn làm gia sư cho bài đăng này."
+                        );
+                    }
+                }
+            }
+            else if (trangThai == "Từ chối")
+            {
+                await _emailSender.SendEmailAsync(
+                    //ungVien.TaiKhoanGiaSu.Email,
+                    email,
+                    "Ứng tuyển không thành công",
+                    "Rất tiếc, bạn đã bị từ chối trong quá trình ứng tuyển."
+                );
+            }
+
             return RedirectToAction("DanhSachUngVien");
         }
         // GET: DangTin/Create
@@ -360,6 +411,14 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
+
+        // Ẩn bài đăng
+        [HttpPost]
+        public async Task<IActionResult> HideBaiDang(int baiDangId, bool Ishidden)
+        {
+            await _dangTinService.HideBaiDang(baiDangId,Ishidden);
+            return RedirectToAction("DanhSachUngVien");
+        }
 
 
 

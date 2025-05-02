@@ -120,5 +120,8 @@ namespace WebApplication1.Repositories
             baiDang.sTrangThai = trangThai;
             return await SaveChangesAsync();
         }
+
+        
+
     }
 }

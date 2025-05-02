@@ -17,5 +17,7 @@
         public int MaBaiDang { get; set; }
         public string TieuDeBaiDang { get; set; }
         public string fileCV { get; set; } // Đường dẫn đến file CV
+
+        public bool ishidden { get; set; } // Để kiểm tra xem bài đăng có bị ẩn hay không
     }
 }

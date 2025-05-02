@@ -36,5 +36,7 @@ namespace WebApplication1.Models.Entities
 
         // cot moi 
         public string? FileCVPath { get; set; }
+        // an 
+        public bool IsHidden { get; set; } = false; // ✅ Thêm trường mới
     }
 }

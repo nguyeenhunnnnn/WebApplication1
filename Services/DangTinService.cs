@@ -34,6 +34,8 @@ namespace WebApplication1.Services
         Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthai(string trangthai);
         Task<bool> PheDuyetBaiDangAsync(int id);
         Task<bool> CreateDangTinForGiaSuAsync(DangTinGiaSuViewModel model, string userId);
+        Task<BaiDangViewModel> GetBaiDangByIdGS(int id);
+        Task HideBaiDang(int baiDangId, bool isHidden);
     }
     public class DangTinService : IDangTinService
     {
@@ -44,7 +46,8 @@ namespace WebApplication1.Services
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly SignInManager<TaiKhoan> _signInManager;
         private readonly IHoSoRepository _hoSoRepository;
-        public DangTinService(ApplicationDbContext context, IDangTinRepository dangTinRepository, IAccountRepository accountRepository, UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager, IHoSoRepository hoSoRepository)
+        private readonly IDanhGiaService _danhGiaService;
+        public DangTinService(ApplicationDbContext context, IDangTinRepository dangTinRepository, IAccountRepository accountRepository, UserManager<TaiKhoan> userManager, SignInManager<TaiKhoan> signInManager, IHoSoRepository hoSoRepository, IDanhGiaService danhGiaService)
         {
             _context = context;
             _dangTinRepository = dangTinRepository;
@@ -52,6 +55,7 @@ namespace WebApplication1.Services
             _userManager = userManager;
             _signInManager = signInManager;
             _hoSoRepository = hoSoRepository;
+            _danhGiaService = danhGiaService;
 
         }
         public async Task<bool> CreatDangTin(DangTinViewModel model, string userId)
@@ -200,6 +204,7 @@ namespace WebApplication1.Services
         {
 
            var bd = await _dangTinRepository.GetBaiDangById(id);
+
             if (bd == null)
             {
                 return null; // Hoặc xử lý lỗi theo cách bạn muốn
@@ -222,6 +227,52 @@ namespace WebApplication1.Services
                 dNgayTao = bd.dNgayTao,
                 dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
                 FileCVPath = bd.FileCVPath // Gán file CV từ hồ sơ nếu có
+            };
+
+
+        }
+        public async Task<BaiDangViewModel> GetBaiDangByIdGS(int id)
+        {
+
+            var bd = await _dangTinRepository.GetBaiDangById(id);
+            
+
+
+            if (bd == null)
+            {
+                return null; // Hoặc xử lý lỗi theo cách bạn muốn
+            }
+            if (string.IsNullOrEmpty(bd.FK_iMaTK))
+            {
+                return null; // hoặc xử lý hợp lý
+            }
+
+           
+            var danhGias = await _danhGiaService.GetDanhGiaByGiaSuIdAsync(bd.TaiKhoan.Id);
+            var diemTB = await _danhGiaService.GetAverageRatingAsync(bd.TaiKhoan.Id);
+            return new BaiDangViewModel
+            {
+                PK_iMaBaiDang = bd.PK_iMaBaiDang,
+                Nguoitao = bd.TaiKhoan.UserName,
+                sMonday = bd.sMonday,
+                sBangCap = bd.sBangCap,
+                sGioiTinh = bd.sGioiTinh,
+                sKinhNghiem = bd.sKinhNghiem,
+                sTuoi = bd.sTuoi,
+                sYCau = bd.sYCau,
+                sTieuDe = bd.sTieuDe,
+                sMoTa = bd.sMoTa,
+                sDiaDiem = bd.sDiaDiem,
+                fMucLuong = bd.fMucLuong ?? 0,
+                sTrangThai = bd.sTrangThai,
+                dNgayTao = bd.dNgayTao,
+                dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
+                FileCVPath = bd.FileCVPath, // Gán file CV từ hồ sơ nếu có
+
+                // thêm danh gia
+                // ➕ Truyền dữ liệu đánh giá vào ViewModel
+                DanhGias = danhGias,
+                DiemTrungBinh = diemTB
             };
 
 
@@ -265,6 +316,15 @@ namespace WebApplication1.Services
             };
 
             return await _dangTinRepository.CreatDangTin(baiDang);
+        }
+        public async Task HideBaiDang(int baiDangId, bool isHidden)
+        {
+            var baiDang = await _dangTinRepository.GetBaiDangById(baiDangId);
+            if (baiDang != null)
+            {
+                baiDang.IsHidden = isHidden;
+                await _dangTinRepository.UpdateDangTin(baiDang);
+            }
         }
 
 
