@@ -12,7 +12,7 @@ namespace WebApplication1.Services
         Task UngTuyenAsync(string maTK, int maBaiDang);
         Task<List<UngTuyenViewModel>> LayDanhSachUngVien(int maBaiDang);
         Task DuyetUngVien(int id, string trangThai);
-        Task<List<UngTuyenViewModel>> LayDanhSachUngTuyenCuaGiaSu(string maTK);
+        Task<List<UngTuyenViewModel>> LayDanhSachUngTuyenCuaGiaSu(string maTK, string trangthai);
         Task<List<UngTuyenViewModel>> LayDanhSachUngVienCuaPhuHuynh(string phuHuynhId, string trangthai);
     }
     public class UngTuyenService : IUngTuyenService
@@ -65,9 +65,9 @@ namespace WebApplication1.Services
         public async Task DuyetUngVien(int id, string trangThai)
             => await _repo.CapNhatTrangThaiAsync(id, trangThai);
 
-        public async Task<List<UngTuyenViewModel>> LayDanhSachUngTuyenCuaGiaSu(string maTK)
+        public async Task<List<UngTuyenViewModel>> LayDanhSachUngTuyenCuaGiaSu(string maTK, string trangthai)
         {
-            var list = await _repo.LayUngTuyenCuaGiaSu(maTK);
+            var list = await _repo.LayUngTuyenCuaGiaSu(maTK,trangthai);
             return list.Select(u => new UngTuyenViewModel
             {
                 Id = u.Id,

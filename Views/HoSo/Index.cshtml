@@ -21,15 +21,15 @@
     <div class="sidebar">
         <div class="menu">
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="CreateHoSo" style="text-decoration:none; padding:0px 10px"
-                   class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
+                <a asp-controller="HoSo" asp-action="CreateHoSo" 
+                   class="menu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Tạo Hồ Sơ</span>
                 </a>
             </div>
             <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="Index" style="text-decoration:none; padding:0px 10px"
-                   class="@(ViewContext.RouteData.Values["action"]?.ToString() == "CreateHoSo" ? "active" : "")">
+                <a asp-controller="HoSo" asp-action="Index" 
+                   class="menu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Quản Lý Hồ Sơ</span>
                 </a>

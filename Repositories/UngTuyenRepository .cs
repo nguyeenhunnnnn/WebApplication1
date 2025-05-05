@@ -11,7 +11,7 @@ namespace WebApplication1.Repositories
     public interface IUngTuyenRepository
     {
         Task<List<UngTuyen>> LayUngVienTheoBaiDang(int maBaiDang);
-        Task<List<UngTuyen>> LayUngTuyenCuaGiaSu(string maTaiKhoan);
+        Task<List<UngTuyen>> LayUngTuyenCuaGiaSu(string maTaiKhoan, string trangthai);
         Task ThemUngTuyenAsync(UngTuyen ungTuyen);
         Task CapNhatTrangThaiAsync(int id, string trangThai);
         Task<List<UngTuyen>> LayDanhSachUngVienCuaPhuHuynh(string phuHuynhId, string trangthai);
@@ -41,13 +41,13 @@ namespace WebApplication1.Repositories
             .Where(u => u.FK_iMaBaiDang == maBaiDang)
             .ToListAsync();
 
-        public async Task<List<UngTuyen>> LayUngTuyenCuaGiaSu(string maTK)
+        public async Task<List<UngTuyen>> LayUngTuyenCuaGiaSu(string maTK,string trangthai)
         {
             return await _context.UngTuyen
                 .Include(u => u.BaiDang)
                     .ThenInclude(bd => bd.TaiKhoan) // lấy thông tin phụ huynh
                 .Include(u => u.HoSo)
-                .Where(u => u.FK_iMaTK_GiaSu == maTK)
+                .Where(u => u.FK_iMaTK_GiaSu == maTK && u.TrangThai==trangthai)
                 .ToListAsync();
         }
 

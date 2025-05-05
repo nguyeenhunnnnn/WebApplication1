@@ -1,0 +1,249 @@
+﻿@model IEnumerable<WebApplication1.Models.ViewModels.BaiDangViewModel>
+
+@using WebApplication1.Models
+
+@{
+    ViewData["Title"] = "Bang Tin Tim Viec";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm kiếm công việc gia sư mới nhất hôm nay</title>
+    <link rel="stylesheet" href="~/css/styleTV.css">
+    <link rel="stylesheet" href="~/css/styleNav.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tìm kiếm <span>công việc gia sư mới nhất</span> hôm nay</h1>
+            <p>Tiếp cận 40,000+ tin tuyển dụng gia sư mỗi ngày từ hàng nghìn phụ huynh uy tín tại Việt Nam</p>
+        </div>
+        <form method="get" asp-action="Search">
+        <div class="search-box">
+                <input type="text" class="search-input" name="Keyword" placeholder="Môn dạy, kỹ năng, môn dạy,...">
+            <button class="search-btn">Tìm</button>
+        </div>
+
+        <div class="filters">
+            <div class="filter">
+                <select name="MonHoc" >
+                    <option value=""> Môn học</option>
+                        <option value="Toán Học">Toán Học</option>
+                        <option value="Ngữ Văn">Ngữ Văn</option>
+                </select>
+            </div>
+            <div class="filter">
+                <select name="diadiem">
+                    <option value="">Tất cả tỉnh thành</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Hồ Chí Minh">TP. HCM</option>
+                </select>
+            </div>
+            <div class="filter">
+                <select name="MucLuong">
+                    <option value="">Mức lương</option>
+                    <option value="Duoi1tr">Dưới 1 triệu</option>
+                    <option value="1-3tr">1 - 3 triệu</option>
+                    <option value="Tren3tr">Trên 3 triệu</option>
+                </select>
+            </div>
+            <div class="filter">
+                <select name="KinhNghiem">
+                    <option value="">Kinh Nghiệm</option>
+                    <option value="0">Chưa có kinh nghiệm</option>
+                    <option value="1-2">1 - 2 năm</option>
+                    <option value="3-5">3 - 5 năm</option>
+                </select>
+            </div>
+            
+        </div>
+        </form>
+        <div class="banner">
+            <div class="banner-content">
+                <h2>Chương trình kết nối trẻ nhỏ 1025</h2>
+                <p>Chương trình tuyển dụng và đào tạo tài năng trẻ nhỏ mang ký năng sống</p>
+                <button class="banner-btn">Tham Khảo</button>
+            </div>
+            <div class="banner-image">
+                <!-- Here we'd place the banner image, using a placeholder for now -->
+                <img src="~/uploads/hinhanh/bannerTV3.jpg" alt="VNG Cloud Sales Trainee">
+            </div>
+        </div>
+
+        <div class="jobs-container">
+            <div class="job-list">
+                @foreach (var item in Model)
+                {
+                    <div class="job-card">
+                        <div class="job-logo">
+                            <img src="@item.sfileAvata" alt="OTIS">
+                        </div>
+                        <div class="job-info">
+                            <h3 class="job-title">@item.sTieuDe</h3>
+                            <div class="job-company">@item.Nguoitao</div>
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    @item.fMucLuong
+                                </div>
+                                <div class="job-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    @item.sDiaDiem
+                                </div>
+                                <div class="job-detail">
+                                    <i class="fas fa-briefcase"></i>
+                                    @item.sKinhNghiem
+                                </div>
+                            </div>
+                            <div class="job-deadline"> @GetRelativeTime(item.dThoiGianHetHan) </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Môn dạy được tìm kiếm nhiều nhất</h3>
+                    <div class="popular-searches">
+                        <div class="search-tag">Toán Học</div>
+                        <div class="search-tag">Ngữ Văn</div>
+                        <div class="search-tag">Tiếng Anh</div>
+                        <div class="search-tag">Vật lý</div>
+                        <div class="search-tag">Hoá Học</div>
+                        <div class="search-tag">Tiếng Trung</div>
+                        <div class="search-tag">Tiếng Nhật</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Công ty nổi bật</h3>
+                    <div class="featured-companies">
+                        @foreach (var item in Model)
+                        {
+                            <div class="company-item">
+                                <div class="company-logo">
+                                    <img src="@item.sfileAvata" alt="Company 1">
+                                </div>
+                                <div class="company-info">
+                                    <div class="company-name">@item.Nguoitao</div>
+                                    <div class="company-type">@item.sMonday</div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add FontAwesome for icons
+        const fontAwesome = document.createElement('link');
+        fontAwesome.rel = 'stylesheet';
+        fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+        document.head.appendChild(fontAwesome);
+
+        // JavaScript for some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle bookmark icons
+            const bookmarkIcons = document.querySelectorAll('.job-bookmark');
+            bookmarkIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const iconElement = this.querySelector('i');
+                    if (iconElement.classList.contains('far')) {
+                        iconElement.classList.remove('far');
+                        iconElement.classList.add('fas');
+                    } else {
+                        iconElement.classList.remove('fas');
+                        iconElement.classList.add('far');
+                    }
+                });
+            });
+
+            // Filter dropdowns
+            const filters = document.querySelectorAll('.filter');
+            filters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Here you would show a dropdown menu
+                    console.log('Filter clicked:', this.innerText.trim());
+                });
+            });
+
+            // Search function
+            const searchBtn = document.querySelector('.search-btn');
+            searchBtn.addEventListener('click', function() {
+                const searchInput = document.querySelector('.search-input').value;
+                console.log('Searching for:', searchInput);
+                // Here you would implement the search functionality
+            });
+
+            // Popular search tags
+            const searchTags = document.querySelectorAll('.search-tag');
+            searchTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    if (this.innerText === 'Xem Thêm') {
+                        console.log('Show more popular searches');
+                    } else {
+                        console.log('Search by tag:', this.innerText);
+                        // Here you would implement the tag search functionality
+                    }
+                });
+            });
+
+            // Company follow buttons
+            const followBtns = document.querySelectorAll('.follow-btn');
+            followBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const companyName = this.previousElementSibling.querySelector('.company-name').innerText;
+                    console.log('Following company:', companyName);
+                    // Here you would implement the follow functionality
+                    this.innerHTML = '<i class="fas fa-check"></i> Đã theo dõi';
+                    this.style.background = '#e6f7ff';
+                    this.style.color = '#1890ff';
+                });
+            });
+        });
+    </script>
+
+    @functions {
+        public string GetRelativeTime(DateTime endTime)
+        {
+            var now = DateTime.Now;
+            var timeLeft = endTime - now;
+
+            if (timeLeft.TotalSeconds <= 0)
+            {
+                return "Đã hết hạn";
+            }
+            else if (timeLeft.TotalMinutes < 1)
+            {
+                return "Sắp hết hạn";
+            }
+            else if (timeLeft.TotalMinutes < 60)
+            {
+                return $"Còn {(int)timeLeft.TotalMinutes} phút để ứng tuyển";
+            }
+            else if (timeLeft.TotalHours < 24)
+            {
+                return $"Còn {(int)timeLeft.TotalHours} giờ để ứng tuyển";
+            }
+            else if (timeLeft.TotalDays < 30)
+            {
+                return $"Còn {(int)timeLeft.TotalDays} ngày để ứng tuyển";
+            }
+            else
+            {
+                return $"Đến hạn: {endTime:dd/MM/yyyy}";
+            }
+        }
+    }
+
+
+</body>
+</html>

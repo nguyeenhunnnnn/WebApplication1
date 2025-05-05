@@ -27,7 +27,8 @@ namespace WebApplication1.Repositories
         Task<List<BaiDang>> GetAllBaiDangByTrangthai(string trangthai);
         Task<bool> UpdateTrangThaiBaiDang(int id, string trangThai);
 
-
+        Task<List<BaiDang>> GetAllBaiDangByVaiTroPhuHuynh();
+        IQueryable<BaiDang> GetAll();
 
     }
     public class DangTinRepository : IDangTinRepository
@@ -120,8 +121,23 @@ namespace WebApplication1.Repositories
             baiDang.sTrangThai = trangThai;
             return await SaveChangesAsync();
         }
+        public async Task<List<BaiDang>> GetAllBaiDangByVaiTroPhuHuynh()
+        {
 
-        
+            return await _context.BaiDangs
+             .Include(b => b.TaiKhoan)
+             .Where(b => b.sTrangThai == "Đã duyệt"
+                      && b.TaiKhoan.VaiTro == "phuhuynh"
+                      && !b.IsHidden)
+             .ToListAsync();
+        }
+        public IQueryable<BaiDang> GetAll()
+        {
+            return _context.BaiDangs.AsQueryable();
+        }
+
+
+
 
     }
 }

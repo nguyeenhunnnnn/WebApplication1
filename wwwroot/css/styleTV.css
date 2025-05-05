@@ -10,10 +10,15 @@ body {
     background-color: #f5f5fa;
 }
 
+select {
+    color: #333;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
 .container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    margin-top:90px;
 }
 
 .header {

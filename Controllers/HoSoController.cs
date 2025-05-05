@@ -252,7 +252,7 @@ namespace WebApplication1.Controllers
             }
             return View(hs);
         }
-        public async Task<IActionResult> QuanLyUngTuyen()
+        public async Task<IActionResult> QuanLyUngTuyen(string trangthai = "Chờ duyệt")
         {
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -261,7 +261,7 @@ namespace WebApplication1.Controllers
                 return Unauthorized();
             if (taiKhoan.VaiTro != "giasu")
                 return Forbid(); // 🚫 Không cho phép nếu không phải Gia Sư
-            var list = await _ungTuyenService.LayDanhSachUngTuyenCuaGiaSu(userId);
+            var list = await _ungTuyenService.LayDanhSachUngTuyenCuaGiaSu(userId,trangthai);
             return View(list);
         }
 
