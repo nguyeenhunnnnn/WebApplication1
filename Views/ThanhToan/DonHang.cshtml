@@ -1,0 +1,72 @@
+﻿@model List< WebApplication1.Models.ViewModels.LichSuTTViewModel>
+@using WebApplication1.Models
+
+@{
+    ViewData["Title"] = "Don Hang";
+    ViewData["UserRole"] = User.FindFirst("VaiTro")?.Value;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/StyleDH.css" />
+    <title>HUNO - Chon goi</title>
+
+</head>
+<body>
+    <!-- Quan lý đơn hàng -->
+    <div class="container">
+        <!-- Sidebar -->
+        @await Html.PartialAsync("_SidebarPartial", new
+            {
+                Controller = ViewContext.RouteData.Values["controller"]?.ToString(),
+                Action = ViewContext.RouteData.Values["action"]?.ToString(),
+                VaiTro = User.FindFirst("VaiTro")?.Value
+            })
+        <!-- Main Content -->
+        <div class="main-content">
+            @if (Model.Any())
+            {
+                <div class="results-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tiêu đề bài đăng</th>
+                                <th>Ngày đăng</th>
+                                <th>Tên gói</th>
+                                <th>Số tiền</th>
+                                <th>Ngày thanh toán</th>
+                                <th>Ưu tiên đến</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.TieuDeBaiDang</td>
+                                    <td>@item.NgayDang.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.TenGoi</td>
+                                    <td>@item.SoTien</td>
+                                    <td>@item.NgayThanhToan.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.DayUuTienDen?.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.TrangThaiGD</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>Chưa có giao dịch nào.</p>
+            }
+        </div>
+    </div>
+</body>
+</html>
+
+

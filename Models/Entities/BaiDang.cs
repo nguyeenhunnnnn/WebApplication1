@@ -38,5 +38,11 @@ namespace WebApplication1.Models.Entities
         public string? FileCVPath { get; set; }
         // an 
         public bool IsHidden { get; set; } = false; // ✅ Thêm trường mới
+
+        // cot lien qua den thanh toan
+        public string sTrangThaiGD { get; set; }
+        public DateTime? dUuTienDen { get; set; }
+
+        public virtual ICollection<ThanhToan> ThanhToans { get; set; } = new List<ThanhToan>();
     }
 }

@@ -45,9 +45,16 @@ namespace WebApplication1.Services
         public async Task<BaiDangPageViewModel> GetAllBaiDangsAsync(string currentUserId)
         {
             var baiDangs = await _bangTinRepository.GetAllAsync();
-            var currentUser = await _bangTinRepository.GetByIdAsync(currentUserId);
+            TaiKhoan currentUser = null;
 
-            var dsBaiDangViewModel = baiDangs.Select(b => new BaiDangViewModel
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                currentUser = await _bangTinRepository.GetByIdAsync(currentUserId);
+            }
+
+            var dsBaiDangViewModel = baiDangs
+                .OrderByDescending(b => b.dUuTienDen > DateTime.Now ? b.dUuTienDen : b.dNgayTao)
+                .Select(b => new BaiDangViewModel
             {
                 PK_iMaBaiDang = b.PK_iMaBaiDang,
                 sTieuDe = b.sTieuDe,
@@ -66,16 +73,23 @@ namespace WebApplication1.Services
                 sKinhNghiem = b.sKinhNghiem,
                 Vaitro=b.TaiKhoan.VaiTro,
                 FileCVPath = b.FileCVPath,
-                sBangCap = b.sBangCap
-            }).ToList();
+                
+                sBangCap = b.sBangCap,
+                    // cot trang thai giao dich thnah toan
+                    sTrangThaiGD = b.sTrangThaiGD
+                }).ToList();
+            var thongTinNguoiDungVm = new ThongTinNguoiDungViewModel();
 
-            var thongTinNguoiDungVm = new ThongTinNguoiDungViewModel
+            if (currentUser != null)
             {
-                HoTen = currentUser.UserName,
-                Email = currentUser.Email,
-                VaiTroND = currentUser.VaiTro,
-                AvatarUrl = currentUser.FileAvata
-            };
+                thongTinNguoiDungVm.HoTen = currentUser.UserName;
+                thongTinNguoiDungVm.Email = currentUser.Email;
+                thongTinNguoiDungVm.VaiTroND = currentUser.VaiTro;
+                thongTinNguoiDungVm.mondaygiasu = currentUser.BaiDangs.Select(b => b.sMonday).FirstOrDefault() ?? "";
+                thongTinNguoiDungVm.GoiCuoc = currentUser.GoiCuoc;
+                thongTinNguoiDungVm.AvatarUrl = currentUser.FileAvata;
+            }
+
 
             return new BaiDangPageViewModel
             {

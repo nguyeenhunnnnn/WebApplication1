@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@{
+    var tittle = TempData["Tittle"] as string;
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var warningMessage = TempData["WarningMessage"] as string;  
+}
+
+
+@if (!string.IsNullOrEmpty(successMessage) )
+{
+    <div class="notification-success notification-alert">
+        <div class="notification-icon">
+            <svg viewBox="0 0 24 24" class="check-icon">
+                <circle cx="12" cy="12" r="11" class="check-circle"></circle>
+                <path class="check-mark" d="M7 13l3 3 7-7"></path>
+            </svg>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">@tittle</div>
+            <div class="notification-message">@successMessage</div>
+        </div>
+    </div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="notification-error notification-alert">
+        <div class="notification-icon">
+            <svg viewBox="0 0 24 24" class="error-icon">
+                <circle cx="12" cy="12" r="11" class="error-circle"></circle>
+                <path class="error-mark" d="M15 9l-6 6M9 9l6 6"></path>
+            </svg>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">@tittle</div>
+            <div class="notification-message">@errorMessage</div>
+        </div>
+    </div>
+}
+else if (!string.IsNullOrEmpty(warningMessage))
+{
+    <div class="notification-warning notification-alert">
+        <div class="notification-icon">
+            <svg viewBox="0 0 24 24" class="warning-icon">
+                <path class="warning-triangle" d="M12 3L2 20h20L12 3z"></path>
+                <path class="warning-mark" d="M12 14v-4M12 17v-1"></path>
+            </svg>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">@tittle</div>
+            <div class="notification-message">@warningMessage</div>
+        </div>
+    </div>
+}

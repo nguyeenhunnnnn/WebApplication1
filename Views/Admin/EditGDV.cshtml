@@ -1,0 +1,93 @@
+﻿@model WebApplication1.Models.ViewModels.ChonGoiViewModel
+@using WebApplication1.Models
+
+@{
+    ViewData["Title"] = "Sửa thông tin gói dịch vụ";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/StyleGDV.css" />
+    <title>HUNO - Quản lý gói dịch vụ</title>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar
+            <div class="sidebar">
+
+                <div class="menu">
+                    <div class="menu-item ">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Tìm hồ sơ</span>
+                    </div>
+                    <div class="menu-item active">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Đăng Tin</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Quản Lí Tin Đăng</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Quản Lí Ứng Viên</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Dashboard</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn Hàng</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Cấu Hình Email</span>
+                    </div>
+                </div>
+
+                <div class="footer-sidebar">
+                    <div>Version V2.74.39</div>
+                    <div>© 2024 BOWO. All Rights Reserved.</div>
+                </div>
+            </div>
+        -->
+        <!-- Main Content -->
+        <div class="main-content">
+            <form asp-action="EditGDV" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="TenGoi" class="form-label">Tên gói</label>
+                    <input asp-for="TenGoi" class="form-control" />
+                    <span asp-validation-for="TenGoi" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MoTa" class="form-label">Mô tả</label>
+                    <textarea asp-for="MoTa" class="form-control"></textarea>
+                    <span asp-validation-for="MoTa" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Gia" class="form-label">Giá gói</label>
+                    <input asp-for="Gia" class="form-control" />
+                    <span asp-validation-for="Gia" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SoNgayHieuLuc" class="form-label">Số ngày hiệu lực</label>
+                    <input asp-for="SoNgayHieuLuc" class="form-control" />
+                    <span asp-validation-for="SoNgayHieuLuc" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a asp-action="QuanLyGoi" class="btn btn-secondary">Huỷ</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

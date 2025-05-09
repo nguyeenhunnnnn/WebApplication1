@@ -1,0 +1,92 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var role = ViewData["UserRole"]?.ToString(); // lấy vai trò người dùng
+}
+@if (role == "phuhuynh")
+{
+    <div class="sidebar">
+        <div class="menu">
+            <div class="menu-item @(currentController == "baiDang" && currentAction == "DangTin" ? "active" : "") ">
+                <a asp-controller="baiDang" asp-action="DangTin" class="menu-item ">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Đăng tin</span>
+                </a>
+            </div>
+            <div class="menu-item @(currentController == "baiDang" && currentAction == "Index" ? "active" : "")">
+                <a asp-controller="baiDang" asp-action="Index" class="menu-item ">
+                    <i class="fas fa-tasks"></i>
+                    <span>Quản Lí Tin Đăng</span>
+                </a>
+            </div>
+            <div class="menu-item @(currentController == "baiDang" && currentAction == "DanhSachUngVien" ? "active" : "")">
+                <a asp-controller="baiDang" asp-action="DanhSachUngVien" class="menu-item ">
+                    <i class="fas fa-users"></i>
+                    <span>Quản Lí Ứng Tuyển</span>
+                </a>
+            </div>
+            <div class="menu-item" @(currentController == "ThanhToan" && currentAction == "DonHang" ? "active" : "")>
+                <a asp-controller="ThanhToan" asp-action="DonHang" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Đơn Hàng</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-sidebar">
+            <div>Version V2.74.39</div>
+            <div>© 2025 HUNO. All Rights Reserved.</div>
+        </div>
+    </div>
+}
+
+@if (role == "giasu")
+{
+    <div class="sidebar">
+        <div class="menu">
+            <div class="menu-item @(currentController == "HoSo" && currentAction == "CreateHoSo" ? "active" : "")">
+                <a asp-controller="HoSo" asp-action="CreateHoSo"
+                   class="menu-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Tạo Hồ Sơ</span>
+                </a>
+            </div>
+            <div class="menu-item @(currentController == "HoSo" && currentAction == "Index" ? "active" : "")">
+                <a asp-controller="HoSo" asp-action="Index"
+                   class="menu-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Quản Lý Hồ Sơ</span>
+                </a>
+            </div>
+            <div class="menu-item @(currentController == "baiDang" && currentAction == "CreateGS" ? "active" : "")">
+                <a asp-controller="baiDang" asp-action="CreateGS" class="menu-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Đăng tin</span>
+                </a>
+            </div>
+            <div class="menu-item @(currentController == "baiDang" && currentAction == "IndexGS" ? "active" : "")">
+                <a asp-controller="baiDang" asp-action="IndexGS" class="menu-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Quản Lí Tin Đăng</span>
+                </a>
+            </div>
+            <div class="menu-item @(currentController == "HoSo" && currentAction == "QuanLyUngTuyen" ? "active" : "")">
+                <a asp-controller="HoSo" asp-action="QuanLyUngTuyen" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Quản Lí Ứng Tuyển</span>
+                </a>
+            </div>
+            <div class="menu-item" @(currentController == "ThanhToan" && currentAction == "DonHang" ? "active" : "")>
+                <a asp-controller="ThanhToan" asp-action="DonHang" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Đơn Hàng</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-sidebar">
+            <div>Version V2.74.39</div>
+            <div>© 2025 HUNO. All Rights Reserved.</div>
+        </div>
+    </div>
+}

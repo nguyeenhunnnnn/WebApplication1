@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //Identity
@@ -47,7 +47,17 @@ builder.Services.Configure<IdentityOptions>(options => {
     options.SignIn.RequireConfirmedAccount = false;
 
 });
-//
+//thanh toan
+// Add Repository
+builder.Services.AddScoped<IThanhToanRepository, ThanhToanRepository>();
+// Add Services
+builder.Services.AddScoped<IThanhToanService, ThanhToanService>();
+// goi dich vu
+// Add Repository
+builder.Services.AddScoped<IGoiDichVuRepository, GoiDichVuRepository>();
+// Add Services
+builder.Services.AddScoped<IGoiDichVuService, GoiDichVuService>();
+//add emailsender
 builder.Services.AddScoped<ICustomEmailSender, EmailSender>();
 
 //add sign
@@ -120,12 +130,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
 
 app.MapStaticAssets();
-app.UseRouting();
+
 
 
 

@@ -9,6 +9,7 @@ using WebApplication1.Repositories;
 using WebApplication1.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Hosting;
 
 namespace WebApplication1.Controllers
 {
@@ -78,14 +79,18 @@ namespace WebApplication1.Controllers
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     if (vaiTro == "Admin")
                     {
+                       
                         return RedirectToAction("Index", "Admin");
                     }
                     else if (vaiTro == "PhuHuynh")
                     {
+                        
                         return RedirectToAction("Index", "Home");
                     }
                     else if (vaiTro == "GiaSu")
                     {
+                       
+                        
                         return RedirectToAction("Index", "GiaSu");
                     }
 
@@ -302,34 +307,91 @@ namespace WebApplication1.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login");
-
+           
             // Lấy danh sách đánh giá
             var danhGias = await _danhGiaService.GetDanhGiaByGiaSuIdAsync(user.Id);
             var diemTB = await _danhGiaService.GetAverageRatingAsync(user.Id);
 
-            var model = new ProfileViewModel
+            if (user.VaiTro == "giasu" )
             {
-                VaiTro = user.VaiTro,
-                Email = user.Email,
-                MatKhau = user.PasswordHash,
-                CCCD = user.CCCD,
-                SDT = user.PhoneNumber,
-                HoTen = user.UserName,
-                DiaChi = user.DiaChi,
-                sFile_Avata_Path = user.FileAvata,
-                sFile_CCCD_Path = user.FileCCCD,
-                sFile_Avata = null,
-                sFile_CCCD = null,
+                var hoso = _context.HoSos.FirstOrDefault(hoso => hoso.FK_iMaTK == user.Id); 
+                if(hoso == null)
+                {
+                    var model = new ProfileViewModel
+                    {
+                        VaiTro = user.VaiTro,
+                        Email = user.Email,
+                        MatKhau = user.PasswordHash,
+                        CCCD = user.CCCD,
+                        SDT = user.PhoneNumber,
+                        HoTen = user.UserName,
+                        DiaChi = user.DiaChi,
+                        sFile_Avata_Path = user.FileAvata,
+                        sFile_CCCD_Path = user.FileCCCD,
+                        sFile_Avata = null,
+                        sFile_CCCD = null,
+                        // hien thị goi cuoc cua nguoi dung
+                       //THEM
+                        //THEM
 
-                // ➕ Truyền dữ liệu đánh giá vào ViewModel
-                DanhGias = danhGias,
-                DiemTrungBinh = diemTB
-            };
+                        // ➕ Truyền dữ liệu đánh giá vào ViewModel
+                        DanhGias = danhGias,
+                        DiemTrungBinh = diemTB
+                    };
+                    return View(model);
+                }
+                else {
+                    // them
+                    var model = new ProfileViewModel
+                    {
+                        VaiTro = user.VaiTro,
+                        Email = user.Email,
+                        MatKhau = user.PasswordHash,
+                        CCCD = user.CCCD,
+                        SDT = user.PhoneNumber,
+                        HoTen = user.UserName,
+                        DiaChi = user.DiaChi,
+                        sFile_Avata_Path = user.FileAvata,
+                        sFile_CCCD_Path = user.FileCCCD,
+                        sFile_Avata = null,
+                        sFile_CCCD = null,
+                        // hien thị goi cuoc cua nguoi dung
+                        GoiCuoc = user.GoiCuoc,//THEM
+                        TieuDeCV = hoso.sTieuDe,
+                        // ➕ Truyền dữ liệu đánh giá vào ViewModel
+                        DanhGias = danhGias,
+                        DiemTrungBinh = diemTB
+                    };
+                    return View(model);
+                }
+               
+            }
+            if(user.VaiTro=="phuhuynh")
+            {
+                var model = new ProfileViewModel
+                {
+                    VaiTro = user.VaiTro,
+                    Email = user.Email,
+                    MatKhau = user.PasswordHash,
+                    CCCD = user.CCCD,
+                    SDT = user.PhoneNumber,
+                    HoTen = user.UserName,
+                    DiaChi = user.DiaChi,
+                    sFile_Avata_Path = user.FileAvata,
+                    sFile_CCCD_Path = user.FileCCCD,
+                    sFile_Avata = null,
+                    sFile_CCCD = null,
+                    // hien thị goi cuoc cua nguoi dung
+                    GoiCuoc = user.GoiCuoc,
+                    //tengoi=user.ThanhToans.FirstOrDefault()?.GoiDichVu.TenGoi, //THEM
+                    // ➕ Truyền dữ liệu đánh giá vào ViewModel
+                    DanhGias = danhGias,
+                    DiemTrungBinh = diemTB
+                };
+                return View(model);
+            }
 
-
-           
-
-            return View(model);
+                return View();
         }
         private void KeepStep1Data()
         {

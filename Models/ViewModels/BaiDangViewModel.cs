@@ -34,8 +34,10 @@ namespace WebApplication1.Models.ViewModels
         public string? Vaitro { get; set; } 
         public string? FileCVPath { get; set; }
 
-        //
-      
+        //// lien ke voi thanh toan
+        public string sTrangThaiGD { get; set; }
+        public DateTime dUuTienDen { get; set; }
+
         public List<DanhGiaGiaSu> DanhGias { get; set; } = new();
         public double DiemTrungBinh { get; set; }
         public int TongDanhGia => DanhGias.Count;
@@ -45,5 +47,8 @@ namespace WebApplication1.Models.ViewModels
         public int SoSao3 => DanhGias.Count(d => d.SoSao == 3);
         public int SoSao4 => DanhGias.Count(d => d.SoSao == 4);
         public int SoSao5 => DanhGias.Count(d => d.SoSao == 5);
+
+
+        
     }
 }

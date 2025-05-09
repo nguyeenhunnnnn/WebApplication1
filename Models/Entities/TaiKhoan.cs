@@ -43,5 +43,10 @@ namespace WebApplication1.Models.Entities
         // ⭐ Danh sách đánh giá gia sư đã nhận
         public virtual ICollection<DanhGiaGiaSu> DanhGiaNhanDuoc { get; set; } = new List<DanhGiaGiaSu>();
 
+        //thanh toán
+        public bool GoiCuoc { get; set; } = false;
+        public virtual ICollection<ThanhToan> ThanhToans { get; set; } = new List<ThanhToan>();
+
+
     }
 }

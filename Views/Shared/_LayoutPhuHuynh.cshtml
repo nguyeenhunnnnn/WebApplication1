@@ -7,7 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/styleNav.css" asp-append-version="true" />
-
+   
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -49,10 +49,14 @@
         </div>
 
         <nav class="nav-menu">
-            <a asp-controller="Home" asp-action="Index" class="nav-item active">Trang Chủ</a>
-            <a asp-controller="BangTin" asp-action="Index" class="nav-item">Bảng Tin</a>
-            <a asp-controller="baiDang" asp-action="DangTin" class="nav-item">Quản Lý</a>
-            <a href="#" class="nav-item">Sản Phẩm Và Dịch Vụ</a>
+            @{
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+            }
+            <a asp-controller="Home" asp-action="Index" class="nav-item @(currentController == "Home" ? "active" : "")">Trang Chủ</a>
+            <a asp-controller="BangTin" asp-action="Index" class="nav-item @(currentController == "BangTin" ? "active" : "")">Bảng Tin</a>
+            <a asp-controller="baiDang" asp-action="DangTin"  class="nav-item @(currentController == "baiDang" ? "active" : "") ">Quản Lý</a>
+            <a asp-controller="SPDV" asp-action="Index" class="nav-item @(currentController == "SPDV" ? "active" : "")">Sản Phẩm Và Dịch Vụ</a>
         </nav>
 
         <div class="header-right">
@@ -80,7 +84,7 @@
                              width="32" height="32"
                              style="cursor: pointer;" />
                     </a>
-
+                   
                 }
                 else
                 {
@@ -88,16 +92,25 @@
                 }
 
             </div>
-
-            <div class="coins-container">
-                <span class="crown-icon">👑</span>
-                <span>2000</span>
-            </div>
+            @if (User.Identity.IsAuthenticated)
+                {
+                    // hien thi icon crown neu dang su dung goi cuoc
+                    var goiCuoc = User.FindFirst("GoiCuoc")?.Value ?? "false";//check
+                    bool dangSuDungGoiCuoc = goiCuoc.ToLower() == "true";
+                    @if (@dangSuDungGoiCuoc)
+                    {
+                        <div class="coins-container">
+                            <span class="crown-icon">👑</span>
+                        <span>Premium</span>
+                        </div>
+                    }
+                }
         </div>
     </header>
     <div class="container">
         
         <main role="main" class="pb-3">
+           
             @RenderBody()
         </main>
     </div>

@@ -42,6 +42,7 @@ namespace WebApplication1.Services
 
         Task<List<BaiDangViewModel>> GetAllBaiDangByVaiTroPhuHuynh();
         Task<List<BaiDangViewModel>> TimKiemBaiDangAsync(string Keyword, string MonHoc, string diadiem, string MucLuong, string KinhNghiem);
+        Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthaiGD(string trangthai);
     }
     public class DangTinService : IDangTinService
     {
@@ -80,6 +81,7 @@ namespace WebApplication1.Services
             dangTin.sMoTa = model.sMoTa;
             dangTin.dNgayTao = DateTime.Now;
             dangTin.sTrangThai = "Đang chờ duyệt";
+            dangTin.sTrangThaiGD = "Chưa có";
             dangTin.FK_iMaTK = userId;
             try
             {
@@ -173,7 +175,10 @@ namespace WebApplication1.Services
                     sTrangThai = b.sTrangThai,
                     dNgayTao = b.dNgayTao,
                     dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue,
-                    FileCVPath = b.FileCVPath // Gán file CV từ hồ sơ nếu có
+               //thanh toan
+                   sTrangThaiGD = b.sTrangThaiGD,
+                   dUuTienDen = b.dUuTienDen ?? DateTime.MinValue,
+                   FileCVPath = b.FileCVPath // Gán file CV từ hồ sơ nếu có
            })
                 .ToList();
           
@@ -200,6 +205,9 @@ namespace WebApplication1.Services
                 dNgayTao = b.dNgayTao,
                 FileCVPath = b.FileCVPath, // Gán file CV từ hồ sơ nếu có
                 dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue,
+              
+                dUuTienDen = b.dUuTienDen ?? DateTime.MinValue,
+                sTrangThaiGD = b.sTrangThaiGD
 
             })
                  .ToList();
@@ -232,6 +240,8 @@ namespace WebApplication1.Services
                 sTrangThai = bd.sTrangThai,
                 dNgayTao = bd.dNgayTao,
                 dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
+                sTrangThaiGD = bd.sTrangThaiGD,
+                dUuTienDen = bd.dUuTienDen ?? DateTime.MinValue,
                 FileCVPath = bd.FileCVPath // Gán file CV từ hồ sơ nếu có
             };
 
@@ -274,7 +284,8 @@ namespace WebApplication1.Services
                 dNgayTao = bd.dNgayTao,
                 dThoiGianHetHan = bd.dThoiGianHetHan ?? DateTime.MinValue,
                 FileCVPath = bd.FileCVPath, // Gán file CV từ hồ sơ nếu có
-
+                sTrangThaiGD = bd.sTrangThaiGD,
+                dUuTienDen = bd.dUuTienDen ?? DateTime.MinValue,
                 // thêm danh gia
                 // ➕ Truyền dữ liệu đánh giá vào ViewModel
                 DanhGias = danhGias,
@@ -312,6 +323,7 @@ namespace WebApplication1.Services
                 dNgayTao = DateTime.Now,
                 dThoiGianHetHan = model.dThoiGianHetHan ?? DateTime.MinValue,
                 sTrangThai = "Đang chờ duyệt",
+               sTrangThaiGD = "Chưa có",
                 sMonday = model.sMonday,
                 sYCau = model.sYCau,
                 sGioiTinh = model.sGioiTinh,
@@ -392,7 +404,7 @@ namespace WebApplication1.Services
                 var keywordNormalized = RemoveDiacritics(Keyword);
                 data = data.Where(x =>
                     RemoveDiacritics(x.sTieuDe).Contains(keywordNormalized) ||
-                    RemoveDiacritics(x.sMoTa).Contains(keywordNormalized) ||
+                    //RemoveDiacritics(x.sMoTa).Contains(keywordNormalized) ||
                     RemoveDiacritics(x.sMonday).Contains(keywordNormalized)).ToList();
             }
 
@@ -464,6 +476,36 @@ namespace WebApplication1.Services
 
             return ketqua;
         }
+
+        public async Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthaiGD(string trangthai)
+        {
+            var baiDangs = await _dangTinRepository.GetAllBaiDangByTrangthaiGD(trangthai);
+
+            return baiDangs.Select(b => new BaiDangViewModel
+            {
+                PK_iMaBaiDang = b.PK_iMaBaiDang,
+                Nguoitao = b.TaiKhoan.UserName,
+                sMonday = b.sMonday,
+                sBangCap = b.sBangCap,
+                sGioiTinh = b.sGioiTinh,
+                sKinhNghiem = b.sKinhNghiem,
+                sTuoi = b.sTuoi,
+                sYCau = b.sYCau,
+                sTieuDe = b.sTieuDe,
+                sMoTa = b.sMoTa,
+                sDiaDiem = b.sDiaDiem,
+                fMucLuong = b.fMucLuong ?? 0,
+                sTrangThai = b.sTrangThai,
+                dNgayTao = b.dNgayTao,
+                sTrangThaiGD = b.sTrangThaiGD,
+                FileCVPath = b.FileCVPath, // Gán file CV từ hồ sơ nếu có
+                dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue,
+
+            })
+                 .ToList();
+
+        }
+
 
     }
 }

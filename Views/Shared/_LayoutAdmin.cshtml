@@ -49,10 +49,15 @@
         </div>
 
         <nav class="nav-menu">
-            <a asp-controller="Home" asp-action="Index" class="nav-item active">Trang Chủ</a>
-            <a href="#" class="nav-item">Bảng Tin</a>
-            <a asp-controller="Admin" asp-action="Index" class="nav-item">Quản Lý</a>
-            <a href="#" class="nav-item">Sản Phẩm Và Dịch Vụ</a>
+            @{
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+            }
+            <a asp-controller="Home" asp-action="Index" class="nav-item @(currentController == "Home" ? "active" : "")">Trang Chủ</a>
+            <a asp-controller="BangTin" asp-action="Index" class="nav-item @(currentController == "BangTin" ? "active" : "")">Bảng Tin</a>
+            <a asp-controller="Admin" asp-action="Index" class="nav-item @(currentController == "Admin" ? "active" : "")">Quản Lý</a>
+            <a asp-controller="SPDV" asp-action="Index" class="nav-item @(currentController == "SPDV" ? "active" : "")">Sản Phẩm Và Dịch Vụ</a>
+
         </nav>
 
         <div class="header-right">
@@ -116,6 +121,18 @@
                     <a asp-controller="Admin" asp-action="DanhSachUser" class="menu-item">
                         <i class="fas fa-shopping-cart"></i>
                         <span> Quản lý Tài Khoản</span>
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a asp-controller="Admin" asp-action="QuanLyGD" class="menu-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span> Quản lý Giao dịch</span>
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a asp-controller="Admin" asp-action="QuanLyGoi" class="menu-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span> Quản lý Gói dịch vụ</span>
                     </a>
                 </div>
             </div>

@@ -112,12 +112,15 @@ namespace WebApplication1.Controllers
             bool result = await _dangTinService.CreatDangTin(model, userId);
             if (result)
             {
-                TempData["Success"] = "Đăng tin thành công!";
+                TempData["Tittle"] = "Bài đăng của bạn đang chờ duyệt";
+                TempData["SuccessMessage"] = "Đăng tin thành công!";
                 return RedirectToAction("Index");
             }
             else
             {
-                ModelState.AddModelError("", "Đăng tin không thành công!");
+                TempData["Tittle"] = "Vui lòng điền đầy đủ thông tin";
+                TempData["ErrorMessage"] = "Đăng tin thất bại!";
+                //ModelState.AddModelError("", "Đăng tin không thành công!");
             }
             return View(model);
         }
@@ -249,12 +252,14 @@ namespace WebApplication1.Controllers
             var result = await _dangTinService.DeleteDangTin(id);
             if (result)
             {
-                TempData["Success"] = "Xóa tin thành công!";
+                TempData["Tittle"] = "Bài đăng của bạn đã xoá";
+                TempData["SuccessMessage"] = "Xoá tin thành công!";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["Error"] = "Xóa tin không thành công!";
+                TempData["Tittle"] = "Bài đăng của bạn chưa xoá";
+                TempData["ErrorMessage"] = "Xoá tin thất bại!";
                 return RedirectToAction("Index");
             }
         }
@@ -306,10 +311,12 @@ namespace WebApplication1.Controllers
                 bool result = await _dangTinService.UpdateDangTin(model);
                 if (result)
                 {
-                    TempData["Success"] = "Cập nhật tin thành công!";
+                    TempData["Tittle"] = "Bài đăng của bạn đã được cập nhật";
+                    TempData["SuccessMessage"] = "Cập nhật tin thành công!";
                     return RedirectToAction("Index");
                 }
-
+                TempData["Tittle"] = "Bài đăng của bạn không được cập nhật cập nhật";
+                TempData["ErrorMessage"] = "Cập nhật tin thất bại!";
                 ModelState.AddModelError("", "Cập nhật không thành công!");
             }
             catch (Exception ex)
@@ -399,12 +406,15 @@ namespace WebApplication1.Controllers
 
                 if (result)
                 {
-                    TempData["Success"] = "Đăng tin thành công!";
-                    return RedirectToAction("Index", "Home");  // Chuyển hướng tới trang chính sau khi đăng bài
+                TempData["Tittle"] = "Bài đăng của bạn đang chờ duyệt";
+                TempData["SuccessMessage"] = "Đăng tin thành công!";
+                return RedirectToAction("IndexGS");  // Chuyển hướng tới trang chính sau khi đăng bài
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Bạn cần tạo hồ sơ và upload CV trước khi đăng bài.");
+                TempData["Tittle"] = "Bạn cần tạo hồ sơ và upload CV trước khi đăng bài";
+                TempData["ErrorMessage"] = "Đăng bài thất bại !";
+                ModelState.AddModelError("", "Bạn cần tạo hồ sơ và upload CV trước khi đăng bài.");
                 }
             
 

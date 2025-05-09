@@ -24,6 +24,9 @@ namespace WebApplication1.Data
         public DbSet<UngTuyen> UngTuyen { get; set; }
         public DbSet<TinNhan> TinNhans { get; set; }
         public DbSet<DanhGiaGiaSu> DanhGiaGiaSus { get; set; }
+        public DbSet<GoiDichVu> GoiDichVus { get; set; }
+        public DbSet<ThanhToan> ThanhToans { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -103,6 +106,42 @@ namespace WebApplication1.Data
                 .WithMany(b => b.UngTuyens)
                 .HasForeignKey(u => u.FK_iMaBaiDang)
                 .OnDelete(DeleteBehavior.Restrict);// không xoá khi bài đăng bị xoá 
+
+            // goi dich vu
+            modelBuilder.Entity<GoiDichVu>(entity =>
+            {
+                entity.ToTable("tbl_GoiDichVu");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.TenGoi).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.MoTa).HasMaxLength(255);
+                entity.Property(e => e.Gia).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.SoNgayHieuLuc).IsRequired();
+            });
+
+            // Thanh toan
+            // Cấu hình bảng ThanhToan
+            modelBuilder.Entity<ThanhToan>(entity =>
+            {
+                entity.ToTable("tbl_ThanhToan");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.NgayThanhToan).IsRequired();
+
+                entity.HasOne(e => e.TaiKhoan)
+                      .WithMany(t => t.ThanhToans)
+                      .HasForeignKey(e => e.TaiKhoanId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.GoiDichVu)
+                      .WithMany(g => g.ThanhToans)
+                      .HasForeignKey(e => e.GoiDichVuId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.BaiDang)
+                      .WithMany(b => b.ThanhToans)
+                      .HasForeignKey(e => e.BaiDangId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
 
             // chat 
             modelBuilder.Entity<TinNhan>(entity =>

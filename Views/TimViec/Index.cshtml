@@ -76,12 +76,17 @@
             <div class="job-list">
                 @foreach (var item in Model)
                 {
+                    
                     <div class="job-card">
                         <div class="job-logo">
                             <img src="@item.sfileAvata" alt="OTIS">
                         </div>
                         <div class="job-info">
-                            <h3 class="job-title">@item.sTieuDe</h3>
+
+                            <a asp-controller="baiDang" asp-action="Get" asp-route-Primakey="@item.PK_iMaBaiDang" style="text-decoration:none">
+                                <h3 class="job-title">@item.sTieuDe</h3>
+                            </a>
+                            
                             <div class="job-company">@item.Nguoitao</div>
                             <div class="job-details">
                                 <div class="job-detail">
@@ -120,7 +125,7 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <h3 class="sidebar-title">Công ty nổi bật</h3>
+                    <h3 class="sidebar-title">Phụ huynh nổi bật</h3>
                     <div class="featured-companies">
                         @foreach (var item in Model)
                         {

@@ -184,6 +184,9 @@ namespace WebApplication1.Migrations
                     b.Property<DateTime?>("dThoiGianHetHan")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("dUuTienDen")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal?>("fMucLuong")
                         .HasColumnType("DECIMAL(10,2)");
 
@@ -219,6 +222,10 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("sTrangThaiGD")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("sTuoi")
                         .IsRequired()
@@ -269,6 +276,35 @@ namespace WebApplication1.Migrations
                     b.HasIndex("NguoiDanhGiaId");
 
                     b.ToTable("DanhGiaGiaSus");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.GoiDichVu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Gia")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("MoTa")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("SoNgayHieuLuc")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TenGoi")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_GoiDichVu", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Entities.HoSo", b =>
@@ -352,6 +388,9 @@ namespace WebApplication1.Migrations
                     b.Property<string>("FileCCCD")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("GoiCuoc")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -406,6 +445,41 @@ namespace WebApplication1.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.ThanhToan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BaiDangId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoiDichVuId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDuyet")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("NgayThanhToan")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TaiKhoanId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BaiDangId");
+
+                    b.HasIndex("GoiDichVuId");
+
+                    b.HasIndex("TaiKhoanId");
+
+                    b.ToTable("tbl_ThanhToan", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Entities.TinNhan", b =>
@@ -580,6 +654,32 @@ namespace WebApplication1.Migrations
                     b.Navigation("TaiKhoan");
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.Entities.ThanhToan", b =>
+                {
+                    b.HasOne("WebApplication1.Models.Entities.BaiDang", "BaiDang")
+                        .WithMany("ThanhToans")
+                        .HasForeignKey("BaiDangId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WebApplication1.Models.Entities.GoiDichVu", "GoiDichVu")
+                        .WithMany("ThanhToans")
+                        .HasForeignKey("GoiDichVuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.Entities.TaiKhoan", "TaiKhoan")
+                        .WithMany("ThanhToans")
+                        .HasForeignKey("TaiKhoanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("BaiDang");
+
+                    b.Navigation("GoiDichVu");
+
+                    b.Navigation("TaiKhoan");
+                });
+
             modelBuilder.Entity("WebApplication1.Models.Entities.TinNhan", b =>
                 {
                     b.HasOne("WebApplication1.Models.Entities.BaiDang", "BaiDang")
@@ -635,9 +735,16 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Entities.BaiDang", b =>
                 {
+                    b.Navigation("ThanhToans");
+
                     b.Navigation("TinNhans");
 
                     b.Navigation("UngTuyens");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Entities.GoiDichVu", b =>
+                {
+                    b.Navigation("ThanhToans");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Entities.HoSo", b =>
@@ -656,6 +763,8 @@ namespace WebApplication1.Migrations
                     b.Navigation("DanhGiaNhanDuoc");
 
                     b.Navigation("HoSos");
+
+                    b.Navigation("ThanhToans");
 
                     b.Navigation("TinNhanGui");
 

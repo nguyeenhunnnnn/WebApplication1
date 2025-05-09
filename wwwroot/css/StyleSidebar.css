@@ -62,11 +62,20 @@
     text-decoration: none;
 }
 
-    .menu-item a.active {
+    .menu-item.active {
         background-color: rgba(255, 255, 255, 0.1);
-        color: white;
-        border-left: 3px solid var(--primary-color);
     }
+
+        .menu-item.active a {
+            color: white;
+            border-left: 3px solid var(--primary-color);
+        }
+
+            .menu-item.active a i,
+            .menu-item.active a span {
+                color: white;
+            }
+
 
     .menu-item i {
         margin-right: 15px;

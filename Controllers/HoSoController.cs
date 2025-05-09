@@ -114,6 +114,8 @@ namespace WebApplication1.Controllers
                     // Kiểm tra kích thước tệp (giới hạn 5MB)
                     if (model.formAnhBC.Length > 5 * 1024 * 1024)
                     {
+                        TempData["Tittle"] = "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.";
+                        TempData["ErrorMessage"] = " Vui lòng chọn lại tệp!";
                         ModelState.AddModelError("", "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.");
                         return View(model);
                     }
@@ -147,11 +149,14 @@ namespace WebApplication1.Controllers
             bool result = await _hoSoService.CreateHoSoAsync(model, user.Id);
             if (result)
             {
-                TempData["Success"] = "Đăng tin thành công!";
+                TempData["Tittle"] = "Hồ sơ của bạn đang chờ duyệt";
+                TempData["SuccessMessage"] = "Tạo hồ sơ thành công!";
                 return RedirectToAction("Index");// chuyển hướng trang danh sách 
             }
             else
             {
+                TempData["Tittle"] = "Hồ sơ của bạn chưa đủ thông tin";
+                TempData["ErrorMessage"] = "Tạo hồ sơ thất bại!";
                 ModelState.AddModelError("", "Đăng tin không thành công!");
             }
 
@@ -178,12 +183,14 @@ namespace WebApplication1.Controllers
             var result=await _hoSoService.DeleteChangesAsync(id);
             if (result)
             {
-                TempData["Success"] = "Xóa tin thành công!";
+                TempData["Tittle"] = "Hồ sơ của bạn đã xoá";
+                TempData["SuccessMessage"] = "Xoá hồ sơ thành công!";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["Error"] = "Xóa tin không thành công!";
+                TempData["Tittle"] = "Hồ sơ của bạn chưa bị xoá";
+                TempData["ErrorMessage"] = "Xoá hồ sơ thất bại!";
                 return RedirectToAction("Index");
             }
         }

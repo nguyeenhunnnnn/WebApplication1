@@ -25,6 +25,8 @@ namespace WebApplication1.Controllers
         private readonly SignInManager<TaiKhoan> _signInManager;
         private readonly IDangTinService _dangTinService;
         private readonly IHoSoService _hoSoService;
+        private readonly IGoiDichVuService _goiService;
+        private readonly IThanhToanService _thanhToanService;
 
         public AdminController(ILogger<AdminController> logger,
             IWebHostEnvironment webHostEnvironment,
@@ -33,6 +35,8 @@ namespace WebApplication1.Controllers
             UserManager<TaiKhoan> userManager,
             SignInManager<TaiKhoan> signInManager,
             IDangTinService dangTinService,
+            IGoiDichVuService goiService,
+             IThanhToanService thanhToanService,
             IHoSoService hoSoService
             )
         {
@@ -44,6 +48,8 @@ namespace WebApplication1.Controllers
             _signInManager = signInManager;
             _dangTinService = dangTinService;
             _hoSoService = hoSoService;
+            _goiService = goiService;
+            _thanhToanService = thanhToanService;
         }
         public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
@@ -279,6 +285,93 @@ namespace WebApplication1.Controllers
 
         }
 
+        // quan ly goi dich vu
+        public IActionResult QuanLyGoi()
+        {
+            var list = _goiService.LayDanhSachGoi();
+            return View(list);
+        }
+
+        public IActionResult CreateGDV()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateGDV(ChonGoiViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Kiểm tra trùng lặp
+                if (_goiService.GoiDaTonTai(model.TenGoi, model.SoNgayHieuLuc))
+                {
+                    ModelState.AddModelError("", "❌ Không được trùng tên gói và số ngày.");
+                    return View(model);
+                }
+                _goiService.AddAsync(model);
+                ModelState.Clear();
+                ViewBag.SuccessMessage = "✅ Đã thêm gói dịch vụ thành công!";
+                return View(new ChonGoiViewModel());
+                /*_goiService.AddAsync(model);
+                return RedirectToAction("QuanLyGoi");*/
+            }
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            foreach (var error in errors)
+            {
+                Console.WriteLine(error.ErrorMessage); // hoặc log ra file
+            }
+            return View(model);
+        }
+
+        public IActionResult EditGDV(int id)
+        {
+            var model = _goiService.LayGoiTheoId(id);
+            if (model == null)
+                return NotFound();
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EditGDV(ChonGoiViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _goiService.UpdateAsync(model);
+                return RedirectToAction("QuanLyGoi");
+            }
+            return View(model);
+        }
+        public IActionResult DeleteGDV(int id)
+        {
+            var model = _goiService.LayGoiTheoId(id);
+            if (model == null)
+                return NotFound();
+            return View(model);
+        }
+
+        // POST: /GoiDichVu/Delete/5
+        [HttpPost, ActionName("DeleteGDV")]
+        public async Task<IActionResult> DeleteGDVConfirmed(int id)
+        {
+            await _goiService.DeleteAsync(id);
+            return RedirectToAction("QuanLyGoi");
+        }
+        // quan ly giao dich
+        public async Task<IActionResult> QuanLyGD(string trangthaiGD)
+        {
+            bool isDuyet = trangthaiGD == "Đã duyệt";
+            var list = await _thanhToanService.GetByTrangThaiAsync(isDuyet);
+            return View(list);
+        }
+
+        // duyet thanh toan
+        [HttpPost]
+        public async Task<IActionResult> Duyet(int id)
+        {
+            await _thanhToanService.DuyetThanhToanAsync(id);
+
+            return RedirectToAction("QuanLyGD", new { trangthaiGD = "Đã duyệt" });
+        }
 
     }
 }

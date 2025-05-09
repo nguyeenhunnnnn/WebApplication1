@@ -18,36 +18,35 @@
 <body>
     <div class="container">
         <!-- Left Sidebar -->
-        <div class="sidebar" style="color:auto">
-            <div class="sidebar-logo">
-                <img src="@Model.ThongTinNguoiDung.AvatarUrl" alt="OTIS Logo">
-            </div>
-            <div class="sidebar-header">@Model.ThongTinNguoiDung.HoTen</div>
-            <div class="sidebar-subheader">@Model.ThongTinNguoiDung.Email</div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="sidebar" style="color:auto">
+                <div class="sidebar-logo">
+                    <img src="@Model.ThongTinNguoiDung.AvatarUrl" alt="OTIS Logo">
+                </div>
+                <div class="sidebar-header">@Model.ThongTinNguoiDung.HoTen</div>
+                <div class="sidebar-subheader">@Model.ThongTinNguoiDung.Email</div>
+                @if (Model.ThongTinNguoiDung.GoiCuoc)
+                {
+                    <div class="premium-btn">
+                        <i class="fas fa-crown"></i> Premium 
+                    </div>
+                }
 
-            <div class="premium-btn">
-                <i class="fas fa-crown"></i> Premium Package
-            </div>
-
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">Nhóm</div>
-                <div class="sidebar-menu-item">Sự Kiện</div>
-                <div class="sidebar-menu-item">Đang Theo Dõi</div>
-                <div class="sidebar-menu-item last">Đã Lưu</div>
-                <div class="view-more">Xem Thêm</div>
-            </div>
         </div>
-
+        }
 
         <!-- Main Content -->
         <div class="content">
             <!-- Search Bar -->
-            <div class="search-bar">
-                <div class="search-input">
+            @if (User.Identity.IsAuthenticated )
+            {
+                <div class="search-bar">
+                    <div class="search-input">
                     <span>@Model.ThongTinNguoiDung.HoTen</span>
 
                     <input type="text" placeholder="Hôm nay bạn muốn chia sẻ gì?" id="searchInput">
-                   
+
                 </div>
                 <div class="search-categories">
                     <div class="search-category">
@@ -58,13 +57,23 @@
                     </div>
                 </div>
             </div>
-
+            }
             @{
+                // var danhSachNguoiTao = Model.DanhSachBaiDang
+                //.GroupBy(x => x.Nguoitao)
+                //.Select(g => g.First()) // Lấy bài viết đầu tiên của mỗi người tạo
+                //.Take(3) // Giới hạn số lượng nếu muốn
+                // .ToList();
                 var danhSachNguoiTao = Model.DanhSachBaiDang
+                .Where(x => x.Vaitro == "phuhuynh")
+                .OrderByDescending(x => x.sTrangThaiGD == "Đã duyệt")
                 .GroupBy(x => x.Nguoitao)
                 .Select(g => g.First()) // Lấy bài viết đầu tiên của mỗi người tạo
-                .Take(3) // Giới hạn số lượng nếu muốn
+                .Take(5) // Giới hạn số lượng nếu muốn
                 .ToList();
+            }
+            @{
+                var mondaygs = Model.ThongTinNguoiDung.mondaygiasu;
             }
 
             <!-- Post VOLIO -->
@@ -73,47 +82,49 @@
                 {
                     var item = Model.DanhSachBaiDang[i];
                     <!-- Post header with user info -->
-                    <div class="post-header">
-                        <div class="post-avatar">
-                            <img src="@item.sfileAvata" alt="User Avatar">
-                        </div>
-                        <div class="post-info">
-                            <div class="post-author">@item.Nguoitao</div>
-                            <div class="post-time">@GetRelativeTime(item.dNgayTao)</div>
-                        </div>
-                        <div class="post-actions">
-                            <div class="post-bookmark"><i class="far fa-bookmark"></i></div>
-                            <div class="post-more">...</div>
-                        </div>
-                    </div>
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <img src="@item.sfileAvata" alt="User Avatar">
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">@item.Nguoitao</div>
+                                    <div class="post-time">@GetRelativeTime(item.dNgayTao)</div>
+                                </div>
+                                <div class="post-actions">
+                                    <div class="post-bookmark"><i class="far fa-bookmark"></i></div>
+                                    <div class="post-more">...</div>
+                                </div>
+                            </div>
 
-                    <!-- Post content -->
-                    <div class="post-content">
-                        <div class="post-title">@item.sTieuDe</div>
-                        <div class="post-description short">@item.sMoTa</div>
-                        <div class="post-description full" style="display:none;">@item.sMoTa</div>
-                        <div class="post-more-link">Xem thêm...</div>
+                            <!-- Post content -->
+                            <div class="post-content">
+                                <div class="post-title">@item.sTieuDe</div>
+                                <div class="post-description short">@item.sMoTa</div>
+                                <div class="post-description full" style="display:none;">@item.sMoTa</div>
+                                <div class="post-more-link">Xem thêm...</div>
 
-                    </div>
+                            </div>
 
-                    @if (item.Vaitro == "giasu")
-                    {
-                        <!-- Post image - VOLIO logo-->
-                        <div class="post-image-container volio-logo-container" style="width: 100%; height: 400px;">
-                            <iframe src="@Url.Content(item.FileCVPath)" width="100%" height="100%" style="border: none;"></iframe>
-                        </div>
-                    }
-                    <!-- Job title section -->
-                    @if (item.Vaitro == "phuhuynh")
-                    {
-                    <div class="job-title-section">
-                        <div class="job-title">@item.sTieuDe</div>
-                        <form asp-action="UngTuyen" method="post">
-                            <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
-                        <button type="submit" class="apply-btn">Ứng tuyển</button>
-                        </form>
-                    </div>
-                    }
+                            @if (item.Vaitro == "giasu")
+                            {
+                                <!-- Post image - VOLIO logo-->
+                                <div class="post-image-container volio-logo-container" style="width: 100%; height: 400px;">
+                                    <iframe src="@Url.Content(item.FileCVPath)" width="100%" height="100%" style="border: none;"></iframe>
+                                </div>
+                            }
+                               <!-- Job title section -->
+                             @if (User.Identity.IsAuthenticated && item.Vaitro == "phuhuynh" && (string.IsNullOrEmpty(mondaygs) || item.sMonday == mondaygs))
+                            {
+                                <div class="job-title-section">
+                            <div class="job-title">@item.sTieuDe</div>
+                                    <form asp-action="UngTuyen" method="post">
+                                        <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
+                                        <button type="submit" class="apply-btn">Ứng tuyển</button>
+                                    </form>
+                                </div>
+
+                            }
+            
                     <!-- Post footer with stats 
                     <div class="post-footer">
                     <div class="post-stats">
@@ -140,101 +151,51 @@
                                         <div class="company-name">@u.Nguoitao</div>
                                         <div class="company-type">@u.sMonday</div>
                                     </div>
-                                    <button class="follow-btn">
-                                        <i class="fas fa-plus"></i> Theo dõi
-                                    </button>
+                                   
                                 </div>
-                                }
-                                <button class="view-more-btn">Xem thêm</button>
-                            
+                            }
+                            <button class="view-more-btn">Xem thêm</button>
+
                         </div>
                     }
-
+                <!-- End of post -->
                 }
-            </div>
+                </div>
+           
 
-            
-          
 
-          
-          
+
+
+
+
         </div>
-        
+
         <!-- Right Sidebar -->
         <div class="right-sidebar">
-            <div class="company-suggestions">
-                <div class="right-sidebar-header">Thêm vào bảng tin</div>
+            <div class="company-suggestions" style="padding:20px">
+                <div class="right-sidebar-header">Top phụ huynh </div>
+                @foreach (var u in Model.DanhSachBaiDang)
+                {
+                    @if (u.Vaitro == "phuhuynh" && u.sTrangThaiGD == "Đã duyệt")
+                    {
+                    <div class="company-item">
+                        <div class="company-logo">
+                            <img src="@u.sfileAvata" alt="Technical Support">
+                        </div>
 
-                <div class="company-item">
-                    <div class="company-logo">
-                        <img src="/api/placeholder/40/40" alt="Technical Support">
+                        <div class="company-info">
+                            <div class="company-name">@u.Nguoitao</div>
+                            <div class="company-type">@u.sMonday</div>
+                        </div>
+                       
                     </div>
-                    <div class="company-info">
-                        <div class="company-name">Technical Support E...</div>
-                        <div class="company-type">Công nghệ</div>
-                    </div>
-                    <button class="follow-btn">
-                        <i class="fas fa-plus"></i> Theo dõi
-                    </button>
-                </div>
-
-                <div class="company-item">
-                    <div class="company-logo">
-                        <img src="/api/placeholder/40/40" alt="Company Logo">
-                    </div>
-                    <div class="company-info">
-                        <div class="company-name">CÔNG TY CỔ PHẦN GR...</div>
-                        <div class="company-type">Công nghệ</div>
-                    </div>
-                    <button class="follow-btn">
-                        <i class="fas fa-plus"></i> Theo dõi
-                    </button>
-                </div>
-
-                <div class="company-item">
-                    <div class="company-logo">
-                        <img src="/api/placeholder/40/40" alt="Acgen Logo">
-                    </div>
-                    <div class="company-info">
-                        <div class="company-name">CTTNHH Acgen</div>
-                        <div class="company-type">Công nghệ</div>
-                    </div>
-                    <button class="follow-btn">
-                        <i class="fas fa-plus"></i> Theo dõi
-                    </button>
-                </div>
-
-                <div class="company-item">
-                    <div class="company-logo">
-                        <img src="/api/placeholder/40/40" alt="CTCP Logo">
-                    </div>
-                    <div class="company-info">
-                        <div class="company-name">CTCP Công nghệ Di...</div>
-                        <div class="company-type">Công nghệ</div>
-                    </div>
-                    <button class="follow-btn">
-                        <i class="fas fa-plus"></i> Theo dõi
-                    </button>
-                </div>
-
-                <div class="company-item">
-                    <div class="company-logo">
-                        <img src="/api/placeholder/40/40" alt="VINATECH Logo">
-                    </div>
-                    <div class="company-info">
-                        <div class="company-name">CTTNHH VINATECH</div>
-                        <div class="company-type">Công nghệ</div>
-                    </div>
-                    <button class="follow-btn">
-                        <i class="fas fa-plus"></i> Theo dõi
-                    </button>
-                </div>
-
-                <div class="view-more-text">Xem Thêm</div>
+                    }
+                }
+                
             </div>
 
             <div class="banner">
-                <img src="/api/placeholder/300/200" alt="Marketing Agency">
+                <img src="~/uploads/hinhanh/BannerBT.jpg"  alt="Marketing Agency">
             </div>
         </div>
     </div>

@@ -1,0 +1,94 @@
+﻿@model List< WebApplication1.Models.ViewModels.ChonGoiViewModel>
+@using WebApplication1.Models
+
+@{
+    ViewData["Title"] = "Quản lý gói dịch vụ";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/StyleDH.css" />
+    <link rel="stylesheet" href="~/css/StyleGDV.css" />
+    <style>
+        td{
+            padding:10px;
+        }
+    </style>
+    <title>HUNO - Quản lý gói dịch vụ</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Content -->
+        <div class="main-content">
+            <a asp-action="CreateGDV" class="btn btn-primary mb-3">Thêm gói mới</a>
+
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Tên gói</th>
+                        <th>Mô tả</th>
+                        <th>Giá</th>
+                        <th>Hiệu lực</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var goi in Model)
+                    {
+                        <tr>
+                            <td>@goi.TenGoi</td>
+                            <td>@goi.MoTa</td>
+                            <td>@goi.Gia.ToString("N0") đ</td>
+                            <td>@goi.SoNgayHieuLuc</td>
+                            <td style="display:flex; gap:10px">
+                                <a asp-action="EditGDV" asp-route-id="@goi.Id" class="btn btn-sm btn-warning">Sửa</a>
+                                <!-- Nút mở modal -->
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-@goi.Id">Xóa</button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteModal-@goi.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@goi.Id" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form asp-action="DeleteGDV" method="post">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" style="text-align=center" id="deleteModalLabel-@goi.Id">Xác nhận xóa</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Bạn có chắc chắn muốn xóa gói "<strong>@goi.TenGoi</strong>"?</p>
+                                                    <ul class="list-unstyled">
+                                                        <li><strong>Mô tả:</strong> @goi.MoTa</li>
+                                                        <li><strong>Giá:</strong> @goi.Gia.ToString("N0") VNĐ</li>
+                                                        <li><strong>Số ngày hiệu lực:</strong> @goi.SoNgayHieuLuc ngày</li>
+                                                    </ul>
+                                                    <input type="hidden" name="id" value="@goi.Id" />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+    </div>
+</body>
+</html>
+
+

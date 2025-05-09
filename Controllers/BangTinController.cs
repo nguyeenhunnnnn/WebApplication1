@@ -31,7 +31,8 @@ namespace WebApplication1.Controllers
         }
         public IActionResult Index()
         { var page = new BaiDangPageViewModel();
-            page = _bangTinService.GetAllBaiDangsAsync(_userManager.GetUserId(User)).Result;
+            var userId = _userManager.GetUserId(User); // sẽ là null nếu chưa đăng nhập
+            page = _bangTinService.GetAllBaiDangsAsync(userId).Result;
             if (page == null)
             {
                 return NotFound();

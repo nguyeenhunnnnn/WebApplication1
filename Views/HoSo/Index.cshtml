@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Hồ Sơ ";
+    ViewData["UserRole"] = User.FindFirst("VaiTro")?.Value; // nếu bạn lưu vai trò bằng claim "VaiTro"
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -13,59 +14,20 @@
     <link rel="stylesheet" href="~/css/styleDangTin.css" />
     <link rel="stylesheet" href="~/css/StyleSidebar.css" />
     <link rel="stylesheet" href="~/css/styleQlbd.css" />
+    <link href="~/css/tb.css" rel="stylesheet" />
     <title>HUNO - Hồ sơ Tuyển Dụng</title>
 
 </head>
 <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="menu">
-            <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="CreateHoSo" 
-                   class="menu-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Tạo Hồ Sơ</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="Index" 
-                   class="menu-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Quản Lý Hồ Sơ</span>
-                </a>
-            </div>
-            <div class="menu-item active">
-                <a asp-controller="baiDang" asp-action="CreateGS" class="menu-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Đăng tin</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a asp-controller="baiDang" asp-action="IndexGS" class="menu-item">
-                    <i class="fas fa-tasks"></i>
-                    <span>Quản Lí Tin Đăng</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a asp-controller="HoSo" asp-action="QuanLyUngTuyen" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Quản Lí Ứng Tuyển</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a  class="menu-item">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Đơn Hàng</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="footer-sidebar">
-            <div>Version V2.74.39</div>
-            <div>© 2025 HUNO. All Rights Reserved.</div>
-        </div>
+    @await Html.PartialAsync("_SidebarPartial", new
+        {
+            Controller = ViewContext.RouteData.Values["controller"]?.ToString(),
+            Action = ViewContext.RouteData.Values["action"]?.ToString(),
+            VaiTro = User.FindFirst("VaiTro")?.Value
+        })
+    <div class="notification-container">
+        @await Html.PartialAsync("_Notification")
     </div>
-
     <!-- Main Content -->
     <div class="main-content">
 
@@ -171,15 +133,7 @@
     </div>
 </div>
 <script>
-    // Tab switching functionality
-  /*  const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-      });
-    });
-    /*/
+  
 
 
     // Search button functionality

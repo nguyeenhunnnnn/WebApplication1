@@ -29,7 +29,8 @@ namespace WebApplication1.Repositories
 
         Task<List<BaiDang>> GetAllBaiDangByVaiTroPhuHuynh();
         IQueryable<BaiDang> GetAll();
-
+        Task<List<BaiDang>> GetAllBaiDangByTrangthaiGD(string trangthai);
+        void CapNhatThoiGianDang(int baiDangId, DateTime den);
     }
     public class DangTinRepository : IDangTinRepository
     {
@@ -135,7 +136,23 @@ namespace WebApplication1.Repositories
         {
             return _context.BaiDangs.AsQueryable();
         }
+        public void CapNhatThoiGianDang(int baiDangId, DateTime den)
+        {
+            var baiDang = _context.BaiDangs.FirstOrDefault(b => b.PK_iMaBaiDang == baiDangId);
+            if (baiDang != null)
+            {
+                baiDang.dUuTienDen = den;
+                _context.SaveChanges();
+            }
+        }
+        public async Task<List<BaiDang>> GetAllBaiDangByTrangthaiGD(string trangthai)
+        {
 
+            return await _context.BaiDangs
+                .Include(b => b.TaiKhoan)
+            .Where(b => b.sTrangThaiGD == trangthai).ToListAsync(); // Lọc theo Trang thai
+
+        }
 
 
 

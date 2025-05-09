@@ -1,4 +1,7 @@
-﻿@{
+﻿@model List<WebApplication1.Models.ViewModels.ProfileViewModel>
+
+@using WebApplication1.Models
+@{
     ViewData["Title"] = "Home Page";
 }
 <!DOCTYPE html>
@@ -11,251 +14,207 @@
     <title>HUNO - Nền tảng tuyển dụng thông minh</title>
 </head>
 <body>
- <div class="container">
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h3>Nền tảng ứng dụng công nghệ AI</h3>
-            <h1>Tuyển dụng thông minh</h1>
-            <p>Tự động hóa quy trình tìm kiếm, sàng lọc ứng viên, giúp việc tuyển dụng trở nên nhanh chóng, dễ dàng và thông minh hơn</p>
-            <button class="btn-primary">Trải nghiệm</button>
-        </div>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h3>Nền tảng ứng dụng công nghệ AI</h3>
+                <h1>Tuyển dụng thông minh</h1>
+                <p>Tự động hóa quy trình tìm kiếm, sàng lọc ứng viên, giúp việc tuyển dụng trở nên nhanh chóng, dễ dàng và thông minh hơn</p>
+                <button class="btn-primary">Trải nghiệm</button>
+            </div>
 
             <!--   <div class="hero-image robot-animation">
-            <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
-                <!-- Simplified robot illustration 
-                <rect x="100" y="70" width="100" height="120" rx="20" fill="#ffffff" />
-                <circle cx="130" cy="110" r="10" fill="#4f46e5" />
-                <circle cx="170" cy="110" r="10" fill="#4f46e5" />
-                <path d="M130 150 Q150 170 170 150" stroke="#4f46e5" stroke-width="3" />
-                <rect x="120" y="190" width="60" height="40" rx="10" fill="#ffffff" />
-                <rect x="90" y="210" width="30" height="60" rx="10" fill="#ffffff" />
-                <rect x="180" y="210" width="30" height="60" rx="10" fill="#ffffff" />
-            </svg>
-    </div>-->
-    </section>
+                    <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
+                        <!-- Simplified robot illustration
+                        <rect x="100" y="70" width="100" height="120" rx="20" fill="#ffffff" />
+                        <circle cx="130" cy="110" r="10" fill="#4f46e5" />
+                        <circle cx="170" cy="110" r="10" fill="#4f46e5" />
+                        <path d="M130 150 Q150 170 170 150" stroke="#4f46e5" stroke-width="3" />
+                        <rect x="120" y="190" width="60" height="40" rx="10" fill="#ffffff" />
+                        <rect x="90" y="210" width="30" height="60" rx="10" fill="#ffffff" />
+                        <rect x="180" y="210" width="30" height="60" rx="10" fill="#ffffff" />
+                    </svg>
+            </div>-->
+        </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stat-item">
-            <div class="stat-number">5M+</div>
-            <div class="stat-label">Thành viên</div>
-        </div>
-
-        <div class="stat-item">
-            <div class="stat-number">25K+</div>
-            <div class="stat-label">Việc làm mỗi ngày</div>
-        </div>
-
-        <div class="stat-item">
-            <div class="stat-number">50K+</div>
-            <div class="stat-label">Hồ sơ cập nhật mỗi ngày</div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features">
-        <h2 class="section-title">CHÚNG TÔI MANG ĐẾN TRẢI NGHIỆM DỊCH VỤ TỐT NHẤT</h2>
-        <p style="text-align: center; margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
-            Tại Việt Nam, BOWO là lựa chọn của hơn 20.000 doanh nghiệp hàng đầu với các ưu thế: Tiếp cận hiệu quả nhiều nguồn ứng viên tiềm năng với Giải pháp kết nối, tuyển dụng và quản lý nhân tài Talent Solution, Talent Driver, Targeted Email Marketing, Talent Referral. Thu hút hàng trăm ngàn hồ sơ ứng viên hoàn chỉnh và được cập nhật mỗi thường xuyên.
-        </p>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">📄</div>
-                <div class="feature-content">
-                    <h3>Xây dựng đội ngũ nhân tài cho doanh nghiệp</h3>
-                    <p>Thông tin đăng tuyển của bạn sẽ hiển thị trực tuyến trên BOWO và các trang đối tác của chúng tôi trong 30 ngày.</p>
-                </div>
+        <!-- Stats Section -->
+        <section class="stats">
+            <div class="stat-item">
+                <div class="stat-number">5M+</div>
+                <div class="stat-label">Thành viên</div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">👥</div>
-                <div class="feature-content">
-                    <h3>Không bỏ lỡ nhân tài</h3>
-                    <p>Truy cập vào hàng trăm ngàn hồ sơ hoàn chỉnh và được cập nhật mỗi thường xuyên để tìm kiếm những ứng viên phù hợp nhất với vị trí tuyển dụng.</p>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">25K+</div>
+                <div class="stat-label">Việc làm mỗi ngày</div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <div class="feature-content">
-                    <h3>Talent Solution Kết nối, tuyển dụng & quản lý nhân tài</h3>
-                    <p>Talent Solution - giải pháp tuyển dụng toàn diện cho doanh nghiệp được sáng tạo độc quyền bởi BOWO.</p>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Hồ sơ cập nhật mỗi ngày</div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <h2 class="section-title">CHÚNG TÔI MANG ĐẾN TRẢI NGHIỆM DỊCH VỤ TỐT NHẤT</h2>
+            <p style="text-align: center; margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Tại Việt Nam, BOWO là lựa chọn của hơn 20.000 doanh nghiệp hàng đầu với các ưu thế: Tiếp cận hiệu quả nhiều nguồn ứng viên tiềm năng với Giải pháp kết nối, tuyển dụng và quản lý nhân tài Talent Solution, Talent Driver, Targeted Email Marketing, Talent Referral. Thu hút hàng trăm ngàn hồ sơ ứng viên hoàn chỉnh và được cập nhật mỗi thường xuyên.
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-content">
+                        <h3>Xây dựng đội ngũ nhân tài cho doanh nghiệp</h3>
+                        <p>Thông tin đăng tuyển của bạn sẽ hiển thị trực tuyến trên BOWO và các trang đối tác của chúng tôi trong 30 ngày.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-content">
+                        <h3>Không bỏ lỡ nhân tài</h3>
+                        <p>Truy cập vào hàng trăm ngàn hồ sơ hoàn chỉnh và được cập nhật mỗi thường xuyên để tìm kiếm những ứng viên phù hợp nhất với vị trí tuyển dụng.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-content">
+                        <h3>Talent Solution Kết nối, tuyển dụng & quản lý nhân tài</h3>
+                        <p>Talent Solution - giải pháp tuyển dụng toàn diện cho doanh nghiệp được sáng tạo độc quyền bởi BOWO.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📣</div>
+                    <div class="feature-content">
+                        <h3>Xây dựng thương hiệu ẩn tượng trong mắt ứng viên</h3>
+                        <p>Quảng cáo tuyển dụng có thể thu hút sự chú ý của các ứng viên tài năng nhờ gắn liên kết trực tiếp đến thông tin tuyển dụng của bạn trên Logo hoặc Banner.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                        <h3>Giải pháp quảng bá thương hiệu & Thu hút nhân tài</h3>
+                        <p>Kết hợp giữa chuyên môn tuyển dụng và marketing nhằm thu hút nhân tài, quảng bá thương hiệu chuyên nghiệp.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✉️</div>
+                    <div class="feature-content">
+                        <h3>Nâng cao hiệu quả tiếp cận đối tượng tiềm năng</h3>
+                        <p>Targeted Email Marketing (Quảng bá tập trung bằng thư điện tử) là giải pháp giúp nâng cao hiệu quả tiếp cận nhóm đối tượng tiềm năng thông qua phương thức gửi thư điện tử.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍💼</div>
+                    <div class="feature-content">
+                        <h3>Đa dạng nguồn ứng viên</h3>
+                        <p>Hệ thống được thiết kế đặc biệt giúp tự động hóa quy trình quản lý tuyển dụng ứng viên qua sự giới thiệu của nhân viên nội bộ.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌎</div>
+                    <div class="feature-content">
+                        <h3>Giải pháp quốc tế cho nhu cầu tuyển dụng</h3>
+                        <p>BOWO tự hào mang đến những giải pháp toàn diện cho nhu cầu tuyển dụng nhân tài từ khắp nơi trên thế giới.</p>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="feature-card">
-                <div class="feature-icon">📣</div>
-                <div class="feature-content">
-                    <h3>Xây dựng thương hiệu ẩn tượng trong mắt ứng viên</h3>
-                    <p>Quảng cáo tuyển dụng có thể thu hút sự chú ý của các ứng viên tài năng nhờ gắn liên kết trực tiếp đến thông tin tuyển dụng của bạn trên Logo hoặc Banner.</p>
+        <!-- Job Cards Section -->
+        <section class="job-section">
+            <div class="job-cards">
+                <div class="job-card">
+                    <img src="~/uploads/hinhanh/df893b5b-b2f3-4fb0-942a-762f15458253.png" class="job-card-img" alt="VNG Cloud Sales Trainee">
+                    <div class="job-card-content">
+                        <h3> CLOUD SALES TRAINEE 2024</h3>
+                        <p>Chương trình tuyển dụng và đào tạo tài năng kinh doanh tài năng đem lại cơ hội nghề nghiệp tại VNG Cloud</p>
+                        <a href="#" class="job-btn">Seal Your Deal</a>
+                    </div>
+                </div>
+
+                <div class="job-card">
+                    <img src="~/uploads/hinhanh/gia-su-day-kem-tai-nha-lop-1.jpg" class="job-card-img" alt="Game Development Fresher">
+                    <div class="job-card-content">
+                        <h3> DEVELOPMENT FRESHER 2024</h3>
+                        <p>Chương trình tuyển dụng và đào tạo Lập trình viên chuyên nghiệp tại Game Studio lớn nhất Đông Nam Á</p>
+                        <a href="#" class="job-btn">Hà Nội</a>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <div class="feature-content">
-                    <h3>Giải pháp quảng bá thương hiệu & Thu hút nhân tài</h3>
-                    <p>Kết hợp giữa chuyên môn tuyển dụng và marketing nhằm thu hút nhân tài, quảng bá thương hiệu chuyên nghiệp.</p>
-                </div>
+        <!-- Recruiters Section -->
+        <section class="recruiters">
+            <h2 class="section-title">TOP GIA SƯ</h2>
+            <p style="text-align: center; margin-bottom: 40px;">Kết nối với những gia sư uy tín hàng đầu để lựa chọn tìm kiếm phù hợp nhất.</p>
+            <div class="recruiters-grid">
+                @{
+                    var topGiaSu = Model
+                    .Where(x => x.VaiTro == "giasu")
+                    .OrderByDescending(x => x.GoiCuoc) // Ưu tiên những người đã mua gói
+                    .Take(6)
+                    .ToList();
+                }
+                
+                    @foreach (var gs in topGiaSu)
+                    {
+                        <div class="recruiter-card">
+                            <img src="@gs.sFile_Avata_Path" class="recruiter-img" alt="@gs.HoTen">
+                            <div class="recruiter-info">
+                                <h4>@gs.HoTen</h4>
+                                <p>@gs.TieuDeCV</p>
+                                <p>@gs.TongDanhGia lượt đánh giá</p>
+                                <div class="rating">★★★★★</div>
+                            </div>
+                          
+                        </div>
+                    }
+               
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">✉️</div>
-                <div class="feature-content">
-                    <h3>Nâng cao hiệu quả tiếp cận đối tượng tiềm năng</h3>
-                    <p>Targeted Email Marketing (Quảng bá tập trung bằng thư điện tử) là giải pháp giúp nâng cao hiệu quả tiếp cận nhóm đối tượng tiềm năng thông qua phương thức gửi thư điện tử.</p>
-                </div>
+            <div class="pagination">
+                <div class="page-item">«</div>
+                <div class="page-item"><</div>
+                <div class="page-item active">1</div>
+                <div class="page-item">2</div>
+                <div class="page-item">3</div>
+                <div class="page-item">...</div>
+                <div class="page-item">10</div>
+                <div class="page-item">></div>
+                <div class="page-item">»</div>
             </div>
+        </section>
 
-            <div class="feature-card">
-                <div class="feature-icon">👨‍💼</div>
-                <div class="feature-content">
-                    <h3>Đa dạng nguồn ứng viên</h3>
-                    <p>Hệ thống được thiết kế đặc biệt giúp tự động hóa quy trình quản lý tuyển dụng ứng viên qua sự giới thiệu của nhân viên nội bộ.</p>
-                </div>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🌎</div>
-                <div class="feature-content">
-                    <h3>Giải pháp quốc tế cho nhu cầu tuyển dụng</h3>
-                    <p>BOWO tự hào mang đến những giải pháp toàn diện cho nhu cầu tuyển dụng nhân tài từ khắp nơi trên thế giới.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Job Cards Section -->
-    <section class="job-section">
-        <div class="job-cards">
-            <div class="job-card">
-                <img src="~/uploads/hinhanh/df893b5b-b2f3-4fb0-942a-762f15458253.png" class="job-card-img" alt="VNG Cloud Sales Trainee">
-                <div class="job-card-content">
-                    <h3> CLOUD SALES TRAINEE 2024</h3>
-                    <p>Chương trình tuyển dụng và đào tạo tài năng kinh doanh tài năng đem lại cơ hội nghề nghiệp tại VNG Cloud</p>
-                    <a href="#" class="job-btn">Seal Your Deal</a>
-                </div>
-            </div>
-
-            <div class="job-card">
-                <img src="~/uploads/hinhanh/gia-su-day-kem-tai-nha-lop-1.jpg" class="job-card-img" alt="Game Development Fresher">
-                <div class="job-card-content">
-                    <h3> DEVELOPMENT FRESHER 2024</h3>
-                    <p>Chương trình tuyển dụng và đào tạo Lập trình viên chuyên nghiệp tại Game Studio lớn nhất Đông Nam Á</p>
-                    <a href="#" class="job-btn">Hà Nội</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Recruiters Section -->
-    <section class="recruiters">
-        <h2 class="section-title">TOP GIA SƯ</h2>
-        <p style="text-align: center; margin-bottom: 40px;">Kết nối với những gia sư uy tín hàng đầu để lựa chọn tìm kiếm phù hợp nhất.</p>
-
-        <div class="recruiters-grid">
-            <div class="recruiter-card">
-                <img src="~/uploads/hinhanh/avatar_1.png" class="recruiter-img" alt="Phạm Lê Thiên Thư">
-                <div class="recruiter-info">
-                    <h4>Phạm Lê Thiên Thư</h4>
-                    <p>Gia sư Toán học</p>
-                    <p>187 xuất tuyển dụng</p>
-                    <div class="rating">★★★★★</div>
-                </div>
-                <div class="heart-icon">♡</div>
-            </div>
-
-            <div class="recruiter-card">
-                    <img src="~/uploads/hinhanh/avatar_1.png" class="recruiter-img" alt="Trần Hải Nguyên">
-                <div class="recruiter-info">
-                    <h4>Trần Hải Nguyên</h4>
-                        <p>Gia sư Toán học</p>
-                    <p>187 xuất tuyển dụng</p>
-                    <div class="rating">★★★★★</div>
-                </div>
-                <div class="heart-icon">♡</div>
-            </div>
-
-            <div class="recruiter-card">
-                    <img src="~/uploads/hinhanh/avatar_1.png" class="recruiter-img" alt="Jenny Trần">
-                <div class="recruiter-info">
-                    <h4>Jenny Trần</h4>
-                        <p>Gia sư Toán học</p>
-                    <p>187 xuất tuyển dụng</p>
-                    <div class="rating">★★★★★</div>
-                </div>
-                <div class="heart-icon">♡</div>
-            </div>
-
-            <div class="recruiter-card">
-                    <img src="~/uploads/hinhanh/avatar_1.png" class="recruiter-img" alt="Annie Nguyễn">
-                <div class="recruiter-info">
-                    <h4>Annie Nguyễn</h4>
-                        <p>Gia sư Toán học</p>
-                    <p>187 xuất tuyển dụng</p>
-                    <div class="rating">★★★★★</div>
-                </div>
-                <div class="heart-icon">♡</div>
-            </div>
-
-            <div class="recruiter-card">
-                    <img src="~/uploads/hinhanh/avatar_1.png" class="recruiter-img" alt="Đinh Công Hiếu">
-                <div class="recruiter-info">
-                    <h4>Đinh Công Hiếu</h4>
-                        <p>Gia sư Toán học</p>
-                    <p>187 xuất tuyển dụng</p>
-                    <div class="rating">★★★★★</div>
-                </div>
-                <div class="heart-icon">♡</div>
-            </div>
-
-            <div class="recruiter-card">
-                    <img src="~/uploads/hinhanh/avatar_1.png" class="recruiter-img" alt="Đinh Lê Thiên">
-                <div class="recruiter-info">
-                    <h4>Đinh Lê Thiên</h4>
-                        <p>Gia sư Toán học</p>
-                    <p>187 xuất tuyển dụng</p>
-                    <div class="rating">★★★★★</div>
-                </div>
-                <div class="heart-icon">♡</div>
-            </div>
-        </div>
-
-        <div class="pagination">
-            <div class="page-item">«</div>
-            <div class="page-item"><</div>
-            <div class="page-item active">1</div>
-            <div class="page-item">2</div>
-            <div class="page-item">3</div>
-            <div class="page-item">...</div>
-            <div class="page-item">10</div>
-            <div class="page-item">></div>
-            <div class="page-item">»</div>
-        </div>
-    </section>
-
-    <!-- Job Listings -->
-    <section class="job-listings">
-        <div class="job-listings-grid">
-            <div class="job-listing-card">
+        <!-- Job Listings -->
+        <section class="job-listings">
+            <div class="job-listings-grid">
+                <div class="job-listing-card">
                     <img src="~/uploads/hinhanh/gia-su-day-kem-tai-nha-lop-1.jpg" class="job-listing-img" alt="Tuyển dụng Creator">
-            </div>
+                </div>
 
-            <div class="job-listing-card">
+                <div class="job-listing-card">
                     <img src="~/uploads/hinhanh/gia-su-day-kem-tai-nha-lop-1.jpg" class="job-listing-img" alt="Tuyển dụng VNPAY">
-            </div>
+                </div>
 
-            <div class="job-listing-card">
+                <div class="job-listing-card">
                     <img src="~/uploads/hinhanh/gia-su-day-kem-tai-nha-lop-1.jpg" class="job-listing-img" alt="Đón ứng viên">
-            </div>
+                </div>
 
-            <div class="job-listing-card">
+                <div class="job-listing-card">
                     <img src="~/uploads/hinhanh/gia-su-day-kem-tai-nha-lop-1.jpg" class="job-listing-img" alt="Content Writer">
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     </div>
     <footer>
         <div class="footer-grid">

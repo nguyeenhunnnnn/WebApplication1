@@ -20,6 +20,7 @@ namespace WebApplication1.Services
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
             identity.AddClaim(new Claim("VaiTro", user.VaiTro ?? ""));
             identity.AddClaim(new Claim("Avatar", user.FileAvata ?? "/images/avatar-default.png")); // thêm dòng này
+            identity.AddClaim(new Claim("GoiCuoc", user.GoiCuoc ? "true" : "false"));
             return identity;
         }
     }

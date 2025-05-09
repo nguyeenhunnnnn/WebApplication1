@@ -36,16 +36,39 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var allBaiDangs = await _dangTinService.GetAllBaiDangByVaiTroPhuHuynh();
+           
+
+            // Nếu chưa đăng nhập
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View(allBaiDangs);
+            }
+
             var taiKhoan = await _taiKhoanRepo.GetTaiKhoanByIdAsync(userId);
-
-            if (taiKhoan == null)
-                return Unauthorized();
-
-            if (taiKhoan.VaiTro != "giasu")
+            if (taiKhoan == null || taiKhoan.VaiTro != "giasu")
                 return Forbid();
-            var baiDangs = await _dangTinService.GetAllBaiDangByVaiTroPhuHuynh();
-            return View(baiDangs);
+
+            var baiDangGiaSu = await _dangTinService.GetAllBaiDangByTaiKhoanId(userId, "Đã duyệt");
+
+            if (baiDangGiaSu.Any())
+            {
+                var tieuDeGiaSu = baiDangGiaSu.First().sTieuDe?.Trim().ToLower();
+
+                var sorted = allBaiDangs
+                    .OrderByDescending(b => b.sTieuDe?.Trim().ToLower() == tieuDeGiaSu)
+                    .ThenByDescending(b => b.dThoiGianHetHan > DateTime.Now)                     // Ưu tiên bài còn hạn
+                     .ThenBy(b => b.dThoiGianHetHan)                                     // Gần hết hạn hơn nằm trên
+                    .ToList();
+
+                return View(sorted);
+            }
+
+            return View(allBaiDangs);
         }
+
+
         [HttpGet]
         public async Task<IActionResult> Search(string Keyword,string MonHoc,string diadiem, string MucLuong, string KinhNghiem)
         {

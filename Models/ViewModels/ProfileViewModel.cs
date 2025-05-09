@@ -25,6 +25,12 @@ namespace WebApplication1.Models.ViewModels
         public string sFile_CCCD_Path { get; set; }
         public string sFile_Avata_Path { get; set; }
 
+        // lien ket voi thanh toan hien thi goi
+        public bool GoiCuoc { get; set; } = false;
+        
+        public string? TieuDeCV { get; set; }
+        
+
         //danh gia
         public List<DanhGiaGiaSu> DanhGias { get; set; } = new();
         public double DiemTrungBinh { get; set; }

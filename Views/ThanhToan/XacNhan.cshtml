@@ -1,0 +1,51 @@
+﻿@model WebApplication1.Models.ViewModels.XacNhanTTViewModel
+@using WebApplication1.Models
+
+@{
+    ViewData["Title"] = "Xác nhận thanh toán";
+    ViewData["UserRole"] = User.FindFirst("VaiTro")?.Value;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/StyleCG.css" />
+    <title>HUNO - Chon goi</title>
+
+</head>
+<body>
+    <!-- trang thanh toan-->
+    <div class="container">
+        @await Html.PartialAsync("_SidebarPartial", new
+            {
+                Controller = ViewContext.RouteData.Values["controller"]?.ToString(),
+                Action = ViewContext.RouteData.Values["action"]?.ToString(),
+                VaiTro = User.FindFirst("VaiTro")?.Value
+            })
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="job-container">
+                <div class="job-header">
+                    <h2 class="job-title">Xác nhận thanh toán</h2>
+                </div>
+                <div class="qr-section" style="text-align:center">
+                    <p>Vui lòng quét mã QR để thanh toán:</p>
+                    <img src="~/uploads/images/qr.jpg" alt="QR Code Thanh toán" style="max-width: 200px;" />
+                </div>
+                <p>Bạn đã chọn gói: <strong>@Model.GoiDichVu.TenGoi</strong></p>
+                <p>Mô tả: @Model.GoiDichVu.MoTa</p>
+                <p>Giá: <strong>@Model.GoiDichVu.Gia VNĐ</strong></p>
+                <p>Hiệu lực: <strong>@Model.GoiDichVu.SoNgayHieuLuc ngày</strong></p>
+
+                <form asp-action="ThanhToanGoi" method="post">
+                    <input type="hidden" name="BaiDangId" value="@Model.BaiDangId" />
+                    <input type="hidden" name="GoiId" value="@Model.GoiDichVu.Id" />
+                    <button type="submit" class="btn btn-primary">Xác nhận thanh toán</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

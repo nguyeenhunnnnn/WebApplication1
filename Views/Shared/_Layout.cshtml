@@ -50,9 +50,11 @@
 
         <nav class="nav-menu">
             <a asp-controller="Home" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" >Trang Chủ</a>
-            <a href="#" class="nav-item">Bảng Tin</a>
-            <a asp-controller="baiDang" asp-action="DangTin" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoSo" ? "active" : "")">Ứng tuyển</a>
-            <a href="#" class="nav-item">Sản Phẩm Và Dịch Vụ</a>
+            <a asp-controller="BangTin" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "BangTin" ? "active" : "")">Bảng Tin</a>
+            <a asp-controller="TimViec" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "TimViec" ? "active" : "")">Tìm việc</a>
+            <a style="color:white" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "baiDang" ? "active" : "")" onclick="checkLogin()" href="#">Quản Lý</a>
+            <a asp-controller="SPDV" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "SPDV" ? "active" : "")">Sản Phẩm Và Dịch Vụ</a>
+
         </nav>
 
         <div class="header-right">
@@ -86,9 +88,25 @@
             &copy; 2025 - WebApplication1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>-->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function checkLogin() {
+            // Check if user is authenticated using Razor syntax
+            var isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+
+            if (!isAuthenticated) {
+                // If not authenticated, alert and redirect to login page
+                alert("Vui lòng đăng nhập");
+                window.location.href = '/Account/Login';  // Redirect to login page
+            } else {
+                // If authenticated, navigate to "Quản Lý" page
+                window.location.href = '@Url.Action("DangTin", "baiDang")';  // Redirect to "Quản Lý"
+            }
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

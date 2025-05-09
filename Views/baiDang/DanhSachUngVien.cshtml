@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Bai Dang ";
+    ViewData["UserRole"] = User.FindFirst("VaiTro")?.Value; // nếu bạn lưu vai trò bằng claim "VaiTro"
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -27,39 +28,12 @@
 </head>
 <div class="container">
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="menu">
-            <div class="menu-item active">
-                <a asp-controller="baiDang" asp-action="DangTin" class="menu-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Đăng tin</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a asp-controller="baiDang" asp-action="Index" class="menu-item">
-                    <i class="fas fa-tasks"></i>
-                    <span>Quản Lí Tin Đăng</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Quản Lí Ứng Tuyển</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a class="menu-item">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Đơn Hàng</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="footer-sidebar">
-            <div>Version V2.74.39</div>
-            <div>© 2025 HUNO. All Rights Reserved.</div>
-        </div>
-    </div>
+    @await Html.PartialAsync("_SidebarPartial", new
+        {
+            Controller = ViewContext.RouteData.Values["controller"]?.ToString(),
+            Action = ViewContext.RouteData.Values["action"]?.ToString(),
+            VaiTro = User.FindFirst("VaiTro")?.Value
+        })
 
     <!-- Main Content -->
     <div class="main-content">
@@ -161,7 +135,7 @@
                                         <input type="hidden" name="receiverId" value="@item.GiaSuID" />
                                         <input type="hidden" name="baiDangId" value="@item.MaBaiDang" />
                                         <button type="submit" class="action-btn" >
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.0007 12C15.0007 13.6569 13.6576 15 12.0007 15C10.3439 15 9.00073 13.6569 9.00073 12C9.00073 10.3431 10.3439 9 12.0007 9C13.6576 9 15.0007 10.3431 15.0007 12Z" stroke="#8b3dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12.0012 5C7.52354 5 3.73326 7.94288 2.45898 12C3.73324 16.0571 7.52354 19 12.0012 19C16.4788 19 20.2691 16.0571 21.5434 12C20.2691 7.94291 16.4788 5 12.0012 5Z" stroke="#8b3dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 10.5H16" stroke="#8b3dff" stroke-width="1.5" stroke-linecap="round"></path> <path d="M8 14H13.5" stroke="#8b3dff" stroke-width="1.5" stroke-linecap="round"></path> <path d="M17 3.33782C15.5291 2.48697 13.8214 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22C17.5228 22 22 17.5228 22 12C22 10.1786 21.513 8.47087 20.6622 7" stroke="#8b3dff" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
                                         </button>
                                     </form>
                                     @if (item.TrangThai != "Chấp nhận")

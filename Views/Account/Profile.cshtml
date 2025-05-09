@@ -12,11 +12,37 @@
     <link rel="stylesheet" href="~/css/styleNav.css">
     <link href="~/css/styledanhgia.css" rel="stylesheet" />
     <title>BOWO - Nền tảng tuyển dụng</title>
-   
+   <style>
+        .premium-btn {
+            background-color: #a782f3;
+            color: white;
+            padding: 12px;
+            margin: 8px 16px;
+            border-radius: 30px;
+            text-align: center;
+            gap: 6px;
+            white-space: nowrap;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+            .premium-btn i {
+                margin-right: 5px;
+                font-size: 16px;
+            }
+   </style>
 </head>
 <div class="container">
     <h1>Thông Tin Cá Nhân</h1>
-
+    @if (Model.GoiCuoc && Model.GoiCuoc !=null)
+    {
+        <div class="premium-btn">
+            <i class="fas fa-crown"></i> Premium
+        </div>
+    }
     @Html.AntiForgeryToken()
     <!-- Ảnh đại diện -->
     <div class="profile-pic-container">

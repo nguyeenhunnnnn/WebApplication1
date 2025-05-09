@@ -15,8 +15,9 @@ namespace WebApplication1.Models.ViewModels
         
         [Display(Name = "Mô tả")]
         public string? sMoTa { get; set; }
-
+        [Required(ErrorMessage = "Địa điểm không được để trống")]
         public string? sDiaDiem { get; set; }
+        [Required(ErrorMessage = "Mức lương không được để trống")]
         public decimal? fMucLuong { get; set; }
 
         public string sTrangThai { get; set; } = null!;
@@ -28,11 +29,17 @@ namespace WebApplication1.Models.ViewModels
         public HoSo? HoSo { get; set; }
 
         //cột mới 
+        [Required(ErrorMessage = "Môn học không được để trống")]
         public string sMonday { get; set; }
+        
         public string sYCau { get; set; }
+       
         public string sGioiTinh { get; set; }
+        [Required(ErrorMessage = "Tuổi không được để trống")]
         public string sTuoi { get; set; }
+        
         public string sKinhNghiem { get; set; }
+        
         public string sBangCap { get; set; }
     }
 }
