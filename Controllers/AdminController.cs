@@ -12,6 +12,7 @@ using WebApplication1.Repositories;
 using WebApplication1.Services;
 using WebApplication1.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace WebApplication1.Controllers
 {
@@ -24,9 +25,12 @@ namespace WebApplication1.Controllers
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly SignInManager<TaiKhoan> _signInManager;
         private readonly IDangTinService _dangTinService;
+        private readonly IDangTinRepository _dangTinRepository;
         private readonly IHoSoService _hoSoService;
+        private readonly ICustomEmailSender _emailSender;
         private readonly IGoiDichVuService _goiService;
         private readonly IThanhToanService _thanhToanService;
+        private readonly IAccountService _accountService;
 
         public AdminController(ILogger<AdminController> logger,
             IWebHostEnvironment webHostEnvironment,
@@ -37,6 +41,9 @@ namespace WebApplication1.Controllers
             IDangTinService dangTinService,
             IGoiDichVuService goiService,
              IThanhToanService thanhToanService,
+             IAccountService accountService,
+             IDangTinRepository dangTinRepository,
+             ICustomEmailSender emailSender,
             IHoSoService hoSoService
             )
         {
@@ -50,6 +57,9 @@ namespace WebApplication1.Controllers
             _hoSoService = hoSoService;
             _goiService = goiService;
             _thanhToanService = thanhToanService;
+            _dangTinRepository = dangTinRepository;
+            _emailSender = emailSender;
+            _accountService = accountService;
         }
         public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
@@ -145,6 +155,29 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<IActionResult> TuChoi(int pd)
+        {
+            var baiDang = await _dangTinService.GetDangTinById(pd);
+            if (baiDang == null) return NotFound();
+
+            var nguoiTao = await _accountService.GetTaiKhoanByIdAsync(baiDang.FK_iMaTK);
+            if (nguoiTao == null) return NotFound();
+
+            // Gửi mail
+            string toEmail = "nguyeenhuong12345@gmail.com";
+            string subject = "Bài đăng của bạn đã bị từ chối";
+            string body = $"Xin chào {nguoiTao.UserName},\n\nBài đăng \"{baiDang.sTieuDe}\" của bạn đã bị từ chối với lý do:\n\"Cần chỉnh sửa lại bài đăng cho hợp lệ\".";
+
+            await _emailSender.SendEmailAsync(toEmail, subject, body);
+
+            // (Tuỳ chọn) Cập nhật trạng thái bài đăng nếu cần
+            baiDang.sTrangThai = "Bị từ chối";
+            await _dangTinRepository.UpdateDangTin(baiDang);
+
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> DSHS(string trangthai = "Đang chờ duyệt")
         {
             var hoSoList = await _hoSoService.GetAllHoSoByTrangThai(trangthai);

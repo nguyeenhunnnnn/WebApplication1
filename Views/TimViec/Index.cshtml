@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "Bang Tin Tim Viec";
 }
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -13,9 +14,49 @@
     <title>Tìm kiếm công việc gia sư mới nhất hôm nay</title>
     <link rel="stylesheet" href="~/css/styleTV.css">
     <link rel="stylesheet" href="~/css/styleNav.css">
+    <link href="~/css/tb.css" rel="stylesheet" />
+    <style>
+        .job-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background-color: #fff;
+            border-radius: 6px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .apply-btn {
+            background-color: #a782f3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+            .apply-btn:hover {
+                background-color: #9670e8;
+            }
+
+        .post-footer {
+            border-top: 1px solid #E4E6EB;
+            padding-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <div class="notification-container">
+            @await Html.PartialAsync("_Notification")
+        </div>
         <div class="header">
             <h1>Tìm kiếm <span>công việc gia sư mới nhất</span> hôm nay</h1>
             <p>Tiếp cận 40,000+ tin tuyển dụng gia sư mỗi ngày từ hàng nghìn phụ huynh uy tín tại Việt Nam</p>
@@ -76,7 +117,7 @@
             <div class="job-list">
                 @foreach (var item in Model)
                 {
-                    
+                    <div class="job-title-section">
                     <div class="job-card">
                         <div class="job-logo">
                             <img src="@item.sfileAvata" alt="OTIS">
@@ -106,21 +147,66 @@
                         </div>
 
                     </div>
+                        @{
+                            var monGiaSuDay = ViewBag.MonGiaSuDay as List<string> ?? new List<string>();
+                            var isAuthenticated = User.Identity.IsAuthenticated;
+                            var vaiTro = User.FindFirst("VaiTro")?.Value;
+                            var isGiaSu = isAuthenticated && vaiTro == "giasu";
+                            var baiDangMon = item.sMonday?.Split(',').Select(m => m.Trim()).ToList() ?? new List<string>();
+                            var isMatch = monGiaSuDay.Select(x => x.ToLower()).Intersect(baiDangMon.Select(x => x.ToLower())).Any();
+                        }
+                       
+                        @if (!isAuthenticated)
+                        {
+                            // Nếu chưa đăng nhập → Hiện tất cả nút Ứng tuyển
+                            <form asp-action="UngTuyen" method="post">
+                                <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
+                                <button type="submit" class="apply-btn">Ứng tuyển</button>
+                            </form>
+                        }
+                    
+                        else if (isGiaSu && isMatch)
+                        {
+                            
+                            // Nếu là gia sư và môn dạy của bài đăng trùng với bài đăng của gia sư
+                            <form asp-action="UngTuyen" method="post">
+                                @Html.AntiForgeryToken() <!-- THÊM DÒNG NÀY -->
+                                <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
+                                <button type="submit" class="apply-btn">Ứng tuyển</button>
+                            </form>
+                        }
+                    </div>
                 }
 
             </div>
-
+            @{
+                var selectedMon = Context.Request.Query["monhoc"].ToString();
+            }
             <div class="sidebar">
                 <div class="sidebar-section">
                     <h3 class="sidebar-title">Môn dạy được tìm kiếm nhiều nhất</h3>
                     <div class="popular-searches">
-                        <div class="search-tag">Toán Học</div>
-                        <div class="search-tag">Ngữ Văn</div>
-                        <div class="search-tag">Tiếng Anh</div>
-                        <div class="search-tag">Vật lý</div>
-                        <div class="search-tag">Hoá Học</div>
-                        <div class="search-tag">Tiếng Trung</div>
-                        <div class="search-tag">Tiếng Nhật</div>
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Toán Học"
+                           class="search-tag @(selectedMon == "Toán Học" ? "active" : "")">Toán Học</a>
+
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Ngữ Văn"
+                           class="search-tag @(selectedMon == "Ngữ Văn" ? "active" : "")">Ngữ Văn</a>
+
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Tiếng Anh"
+                           class="search-tag @(selectedMon == "Tiếng Anh" ? "active" : "")">Tiếng Anh</a>
+
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Vật lý"
+                           class="search-tag @(selectedMon == "Vật lý" ? "active" : "")">Vật lý</a>
+
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Hoá Học"
+                           class="search-tag @(selectedMon == "Hoá Học" ? "active" : "")">Hoá Học</a>
+
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Tiếng Trung"
+                           class="search-tag @(selectedMon == "Tiếng Trung" ? "active" : "")">Tiếng Trung</a>
+
+                        <a asp-action="SearchMH" asp-controller="TimViec" asp-route-monhoc="Tiếng Nhật"
+                           class="search-tag @(selectedMon == "Tiếng Nhật" ? "active" : "")">Tiếng Nhật</a>
+
                     </div>
                 </div>
 

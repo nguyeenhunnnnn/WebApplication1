@@ -19,6 +19,9 @@ namespace WebApplication1.Repositories
         Task<List<HoSo>> GetAllHoSoByTrangThai(string trangthai);
         Task<bool> UpdateTrangThaiHS(int id, string trangThai);
         Task<HoSo?> LayHoSoMoiNhatCuaGiaSu(string maTaiKhoan);
+        Task UpdateAsync(HoSo entity);
+        Task<HoSo> GetByIdAsync(int id);
+
 
 
     }
@@ -91,6 +94,15 @@ namespace WebApplication1.Repositories
                 .Where(h => h.FK_iMaTK == maTaiKhoan)
                 .OrderByDescending(h => h.iMaHS) // hoặc theo ngày tạo nếu có
                 .FirstOrDefaultAsync();
+        }
+        public async Task UpdateAsync(HoSo entity)
+        {
+            _context.HoSos.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<HoSo> GetByIdAsync(int id)
+        {
+            return await _context.HoSos.FindAsync(id);
         }
 
     }

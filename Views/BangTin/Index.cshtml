@@ -12,11 +12,275 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/styleNav.css">
     <link href="~/css/styleBangTin.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <title>HUNO - Bảng Tin</title>
 
+    <style>
+        .post-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        }
+
+        .post-bookmark {
+        color: #65676B;
+        cursor: pointer;
+        font-size: 16px;
+        }
+
+        .detail-btn {
+            background-color: #a782f3;
+        color: white;
+        border: none;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        }
+
+        .detail-btn:hover {
+                background-color: #a782f3;
+        }
+
+        .post-content {
+        margin-bottom: 15px;
+        }
+
+        .post-title {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 8px;
+            color: #a782f3;
+        }
+
+        .post-description {
+        font-size: 14px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        }
+
+        .post-more-link {
+        color: #65676B;
+        font-size: 13px;
+        cursor: pointer;
+        }
+
+        .post-image-container {
+        margin-bottom: 15px;
+        text-align: center;
+        }
+
+        .post-image {
+        max-width: 100%;
+        border-radius: 8px;
+        }
+
+        .volio-logo-container {
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        }
+
+        .job-title-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        background-color: #fff;
+        border-radius: 6px;
+        }
+
+        .job-title {
+        font-weight: bold;
+        font-size: 16px;
+        }
+
+        .apply-btn {
+            background-color: #a782f3;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        }
+
+        .apply-btn:hover {
+                background-color: #9670e8;
+        }
+
+        .post-footer {
+        border-top: 1px solid #E4E6EB;
+        padding-top: 10px;
+        }
+
+        .post-stats {
+        display: flex;
+        gap: 20px;
+        color: #65676B;
+        font-size: 14px;
+        }
+
+        .post-stats i {
+        margin-right: 5px;
+        }
+
+        /* Styles for job requirements in post-description */
+        .post-description p {
+        margin-top: 0;
+        margin-bottom: 12px;
+        line-height: 1.4;
+        }
+
+        .job-requirements {
+        background-color: #f7f9fc;
+        border-radius: 8px;
+        padding: 0;
+        margin-top: 12px;
+        border: 1px solid #e0e6ed;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .req-header {
+            background-color: #a782f3;
+        color: white;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 8px 8px 0 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        }
+
+        .req-header i {
+        margin-right: 8px;
+        }
+
+        .req-row {
+        display: flex;
+        padding: 12px 15px;
+        }
+
+        .req-row:not(:last-child) {
+        border-bottom: 1px solid #e0e6ed;
+        }
+
+        .req-item {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        }
+
+        .req-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #e7f3ff;
+        border-radius: 50%;
+        margin-right: 12px;
+        }
+
+        .req-icon i {
+                color: #a782f3;
+        font-size: 14px;
+        }
+
+        .req-content {
+        flex: 1;
+        }
+
+        .req-label {
+        font-size: 11px;
+        color: #65676B;
+        margin-bottom: 2px;
+        }
+
+        .req-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #050505;
+        }
+
+        .salary-item .req-icon {
+        background-color: #ffeeea;
+        }
+
+        .salary-item .req-icon i {
+        color: #e4572e;
+        }
+
+        .salary-item .req-value {
+        color: #e4572e;
+        }
+
+        .req-divider {
+        height: 1px;
+        background-color: #e0e6ed;
+        }
+
+        .req-description {
+        padding: 15px;
+        }
+
+        .req-description p {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 14px;
+        }
+
+        .req-description ul {
+        margin: 0;
+        padding-left: 20px;
+        }
+
+        .req-description li {
+        margin-bottom: 6px;
+        line-height: 1.4;
+        font-size: 13px;
+        }
+
+        .req-footer {
+        padding: 12px 15px;
+        border-radius: 0 0 8px 8px;
+        text-align: right;
+        }
+
+        .view-more-btn {
+            background-color: #a782f3;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        }
+
+        .view-more-btn i {
+        margin-left: 6px;
+        font-size: 12px;
+        }
+
+        .view-more-btn:hover {
+                background-color: #9670e8;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
+  
         <!-- Left Sidebar -->
         @if (User.Identity.IsAuthenticated)
         {
@@ -33,31 +297,29 @@
                     </div>
                 }
 
-        </div>
+            </div>
         }
 
         <!-- Main Content -->
         <div class="content">
             <!-- Search Bar -->
-            @if (User.Identity.IsAuthenticated )
-            {
-                <div class="search-bar">
-                    <div class="search-input">
-                    <span>@Model.ThongTinNguoiDung.HoTen</span>
 
+            <div class="search-bar">
+                <div class="search-input">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span>@Model.ThongTinNguoiDung.HoTen</span>
+                    }
                     <input type="text" placeholder="Hôm nay bạn muốn chia sẻ gì?" id="searchInput">
 
                 </div>
                 <div class="search-categories">
-                    <div class="search-category">
-                        <i class="far fa-image"></i> Ảnh/Video
-                    </div>
                     <div class="search-category active">
                         <i class="far fa-file-alt"></i> Bài viết
                     </div>
                 </div>
             </div>
-            }
+
             @{
                 // var danhSachNguoiTao = Model.DanhSachBaiDang
                 //.GroupBy(x => x.Nguoitao)
@@ -82,49 +344,104 @@
                 {
                     var item = Model.DanhSachBaiDang[i];
                     <!-- Post header with user info -->
-                            <div class="post-header">
-                                <div class="post-avatar">
-                                    <img src="@item.sfileAvata" alt="User Avatar">
-                                </div>
-                                <div class="post-info">
-                                    <div class="post-author">@item.Nguoitao</div>
-                                    <div class="post-time">@GetRelativeTime(item.dNgayTao)</div>
-                                </div>
-                                <div class="post-actions">
-                                    <div class="post-bookmark"><i class="far fa-bookmark"></i></div>
-                                    <div class="post-more">...</div>
+                    <div class="post-detail" style="margin-bottom: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <img src="@item.sfileAvata" alt="User Avatar">
+                            </div>
+                            <div class="post-info">
+                                <div class="post-author">@item.Nguoitao</div>
+                                <div class="post-time">@GetRelativeTime(item.dNgayTao)</div>
+                            </div>
+                            <div class="post-actions">
+                                <div class="req-footer">
+                                    <button class="view-more-btn">Chi tiết <i class="fas fa-arrow-right"></i></button>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Post content -->
-                            <div class="post-content">
-                                <div class="post-title">@item.sTieuDe</div>
-                                <div class="post-description short">@item.sMoTa</div>
-                                <div class="post-description full" style="display:none;">@item.sMoTa</div>
-                                <div class="post-more-link">Xem thêm...</div>
+                        <!-- Post content -->
+                        <div class="post-content">
+                            <div class="post-title">@item.sTieuDe</div>
+                            <div class="post-description">
+                                <div class="job-requirements">
+                                    <div class="req-header">
+                                        <i class="fas fa-briefcase"></i> Thông tin tuyển dụng
+                                    </div>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="req-row">
+                                            <div class="req-item">
+                                                <div class="req-icon"><i class="fas fa-user-clock"></i></div>
+                                                <div class="req-content">
+                                                    <div class="req-label">Kinh nghiệm</div>
+                                                    @{
+                                                        var words = item.sKinhNghiem?.Split(' ');
+                                                        var shortKinhNghiem = words != null && words.Length > 20
+                                                        ? string.Join(" ", words.Take(20)) + "..."
+                                                        : item.sKinhNghiem;
+                                                    }
+                                                    <div class="req-value">@shortKinhNghiem</div>
+                                                </div>
+                                            </div>
+                                            <div class="req-item">
+                                                <div class="req-icon"><i class="fas fa-user-graduate"></i></div>
+                                                <div class="req-content">
+                                                    <div class="req-label">Bằng cấp</div>
+                                                    <div class="req-value">@item.sBangCap</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="req-row">
+                                            <div class="req-item">
+                                                <div class="req-icon"><i class="fas fa-birthday-cake"></i></div>
+                                                <div class="req-content">
+                                                    <div class="req-label">Độ tuổi</div>
+                                                    <div class="req-value">@item.sTuoi tuổi</div>
+                                                </div>
+                                            </div>
+                                            <div class="req-item salary-item">
+                                                <div class="req-icon"><i class="fas fa-coins"></i></div>
+                                                <div class="req-content">
+                                                    <div class="req-label">Mức lương</div>
+                                                    <div class="req-value">@item.fMucLuong (/buổi)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="req-divider"></div>
+                                    }
+                                    @if (item.Vaitro == "phuhuynh"){
+                                        <div class="req-description">
+                                            <p><strong>Mô tả công việc:</strong></p>
+                                            <div class="post-description short">@item.sMoTa</div>
+                                            <div class="post-description full" style="display:none;">@item.sMoTa</div>
+                                            <div class="post-more-link">Xem thêm...</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
 
+                        @if (item.Vaitro == "giasu")
+                        {
+                            <!-- Post image - VOLIO logo-->
+                            <div class="post-image-container volio-logo-container" style="width: 100%; height: 400px; background-color:#fff">
+                                <iframe src="@Url.Content(item.FileCVPath)" width="100%" height="100%" style="border: none;"></iframe>
+                            </div>
+                        }
+                        <!-- Job title section -->
+                        @if (User.Identity.IsAuthenticated && item.Vaitro == "phuhuynh" && (string.IsNullOrEmpty(mondaygs) || item.sMonday == mondaygs))
+                        {
+                            <div class="job-title-section">
+                               
+                                <form asp-action="UngTuyen" method="post">
+                                    <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
+                                    <button type="submit" class="apply-btn">Ứng tuyển</button>
+                                </form>
                             </div>
 
-                            @if (item.Vaitro == "giasu")
-                            {
-                                <!-- Post image - VOLIO logo-->
-                                <div class="post-image-container volio-logo-container" style="width: 100%; height: 400px;">
-                                    <iframe src="@Url.Content(item.FileCVPath)" width="100%" height="100%" style="border: none;"></iframe>
-                                </div>
-                            }
-                               <!-- Job title section -->
-                             @if (User.Identity.IsAuthenticated && item.Vaitro == "phuhuynh" && (string.IsNullOrEmpty(mondaygs) || item.sMonday == mondaygs))
-                            {
-                                <div class="job-title-section">
-                            <div class="job-title">@item.sTieuDe</div>
-                                    <form asp-action="UngTuyen" method="post">
-                                        <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
-                                        <button type="submit" class="apply-btn">Ứng tuyển</button>
-                                    </form>
-                                </div>
-
-                            }
-            
+                        }
+                    </div>
                     <!-- Post footer with stats 
                     <div class="post-footer">
                     <div class="post-stats">
@@ -134,42 +451,39 @@
                     </div>
                     </div>
                     -->
+                
                     <!-- Post for you -->
                     @if(i==2)
                     {
                         <!-- For you section -->
-                        <div class="for-you">
-                            <div class="for-you-header">Dành cho bạn</div>
+                        <div class="for-you-section" style="margin: 25px 0; background-color: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); padding: 15px;">
+                                <div class="for-you">
+                                    <div class="for-you-header">Dành cho bạn</div>
 
-                            @foreach (var u in danhSachNguoiTao)
-                            {
-                                <div class="company-item">
-                                    <div class="company-logo">
-                                        <img src="@u.sfileAvata" alt="OTIS Logo">
-                                    </div>
-                                    <div class="company-info">
-                                        <div class="company-name">@u.Nguoitao</div>
-                                        <div class="company-type">@u.sMonday</div>
-                                    </div>
-                                   
+                                    @foreach (var u in danhSachNguoiTao)
+                                    {
+                                        <div class="company-item">
+                                            <div class="company-logo">
+                                                <img src="@u.sfileAvata" alt="OTIS Logo">
+                                            </div>
+                                            <div class="company-info">
+                                                <div class="company-name">@u.Nguoitao</div>
+                                                <div class="company-type">@u.sMonday</div>
+                                            </div>
+
+                                        </div>
+                                    }
+                                    <button class="view-more-btn">Xem thêm</button>
+
                                 </div>
-                            }
-                            <button class="view-more-btn">Xem thêm</button>
-
-                        </div>
+                            </div>
                     }
-                <!-- End of post -->
+                    <!-- End of post -->
                 }
-                </div>
-           
+            
 
-
-
-
-
-
+            </div>
         </div>
-
         <!-- Right Sidebar -->
         <div class="right-sidebar">
             <div class="company-suggestions" style="padding:20px">
@@ -178,56 +492,63 @@
                 {
                     @if (u.Vaitro == "phuhuynh" && u.sTrangThaiGD == "Đã duyệt")
                     {
-                    <div class="company-item">
-                        <div class="company-logo">
-                            <img src="@u.sfileAvata" alt="Technical Support">
-                        </div>
+                        <div class="company-item">
+                            <div class="company-logo">
+                                <img src="@u.sfileAvata" alt="Technical Support">
+                            </div>
 
-                        <div class="company-info">
-                            <div class="company-name">@u.Nguoitao</div>
-                            <div class="company-type">@u.sMonday</div>
+                            <div class="company-info">
+                                <div class="company-name">@u.Nguoitao</div>
+                                <div class="company-type">@u.sMonday</div>
+                            </div>
+
                         </div>
-                       
-                    </div>
                     }
                 }
-                
+
             </div>
 
             <div class="banner">
                 <img src="~/uploads/hinhanh/BannerBT.jpg"  alt="Marketing Agency">
             </div>
         </div>
-    </div>
+    
 
     <!-- Font Awesome for icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Simple interactions
-            const followBtns = document.querySelectorAll('.follow-btn');
-            followBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    if (this.innerHTML.includes('Theo dõi')) {
-                        this.innerHTML = '<i class="fas fa-check"></i> Đang theo dõi';
-                    } else {
-                        this.innerHTML = '<i class="fas fa-plus"></i> Theo dõi';
-                    }
-                });
-            });
+        // Simple interactions
+        const followBtns = document.querySelectorAll('.follow-btn');
+        followBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+        if (this.innerHTML.includes('Theo dõi')) {
+        this.innerHTML = '<i class="fas fa-check"></i> Đang theo dõi';
+        } else {
+        this.innerHTML = '<i class="fas fa-plus"></i> Theo dõi';
+        }
+        });
+        });
 
         const searchInput = document.querySelector('.search-input input');
         searchInput.addEventListener('click', function() {
-            var userRole = '@Model.ThongTinNguoiDung.VaiTroND'; // Lấy vai trò người dùng từ model
+                    
+                    var userRole = '@Model.ThongTinNguoiDung.VaiTroND'; // Lấy vai trò người dùng từ model
+                     // Nếu người dùng đã đăng nhập
+                    var isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+                    // Dựa vào vai trò, chuyển hướng đến action tương ứng
+                    if (isAuthenticated) {
+                        if (userRole === "phuhuynh") {
+                            window.location.href = '@Url.Action("DangTin", "baiDang")';
+                        } else if (userRole === "giasu") {
+                            window.location.href = '@Url.Action("CreateGS", "baiDang")';
+                        }
+                    }
 
-            // Dựa vào vai trò, chuyển hướng đến action tương ứng
-            if (userRole === "phuhuynh") {
-                window.location.href = '@Url.Action("DangTin", "baiDang")'; // Điều hướng cho phụ huynh
-            } else if (userRole === "giasu") {
-                window.location.href = '@Url.Action("CreateGS", "baiDang")'; // Điều hướng cho gia sư
-            }
+                    
         });
+        
             // Like functionality
             const likeIcons = document.querySelectorAll('.post-stats i.far.fa-heart');
             likeIcons.forEach(icon => {
@@ -266,17 +587,19 @@
             });
 
             // "Xem thêm" functionality
-            $('.post-more-link').click(function() {
-                var $post = $(this).closest('.post-content');
-                $post.find('.short').toggle();
-                $post.find('.full').toggle();
+                   // jQuery version for "Xem thêm"
+        $(document).on('click', '.post-more-link', function () {
+            var $post = $(this).closest('.req-description');
+            $post.find('.short').toggle();
+            $post.find('.full').toggle();
 
-                if ($(this).text() === 'Xem thêm...') {
-                    $(this).text('Thu gọn');
-                } else {
-                    $(this).text('Xem thêm...');
-                }
-            });
+            if ($(this).text().trim() === 'Xem thêm...') {
+                $(this).text('Thu gọn');
+            } else {
+                $(this).text('Xem thêm...');
+            }
+        });
+
            
         });
 
@@ -314,6 +637,6 @@
         }
     }
 
-    
+   
 </body>
 </html>

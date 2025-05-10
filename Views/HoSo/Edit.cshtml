@@ -1,0 +1,281 @@
+﻿@model WebApplication1.Models.ViewModels.HoSoViewModel
+@{
+    ViewData["Title"] = "Hồ Sơ";
+    ViewData["UserRole"] = User.FindFirst("VaiTro")?.Value; // nếu bạn lưu vai trò bằng claim "VaiTro"
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/styleHoso.css">
+    <link href="~/css/StyleSidebar.css" rel="stylesheet" />
+    <link href="~/css/styleNav.css" rel="stylesheet" />
+    <title>HUNO - Hồ sơ tuyển dụng</title>
+
+</head>
+<body>
+
+    <div class="container">
+
+        @await Html.PartialAsync("_SidebarPartial", new
+            {
+                Controller = ViewContext.RouteData.Values["controller"]?.ToString(),
+                Action = ViewContext.RouteData.Values["action"]?.ToString(),
+                VaiTro = User.FindFirst("VaiTro")?.Value
+            })
+        <div class="main-content">
+            <h1>THÊM HỒ SƠ MỚI</h1>
+            <form asp-action="Edit" asp-controller="HoSo" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="iMaHS" />
+                <input type="hidden" asp-for="sTrangThai" />
+                <input type="hidden" asp-for="HoTen" />
+                <input type="hidden" asp-for="Email" />
+                <input type="hidden" asp-for="DiaChi" />
+                <input type="hidden" asp-for="sDuongDanTep" />
+                <input type="hidden" asp-for="sDuongDanTepBC" />
+                <input type="hidden" asp-for="FK_iMaTK" />
+                <div class="form-content">
+                    <div class="resume-upload">
+                        <div id="file-name" style="margin-top: 10px;"></div>
+                        <div class="upload-icon" id="up-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                            </svg>
+                        </div>
+                        <p class="upload-text" id="up-text">Hồ trợ định dạng .doc, .docx, .pdf có kích thước dưới 5MB</p>
+                        <input asp-for="formFile" type="file" id="file-upload" class="upload-input" accept=".pdf,.doc,.docx" style="display:none" />
+                        <button type="button" class="upload-btn" onclick="uploadFile()">Tải CV lên</button>
+                        <div id="file-name" style="margin-top: 10px;"></div>
+                        @if (!string.IsNullOrEmpty(Model.sDuongDanTep))
+                        {
+                            <div style="margin-top:10px;">
+                                <p>📄 CV đã nộp: <a href="@Url.Content(Model.sDuongDanTep)" target="_blank">@System.IO.Path.GetFileName(Model.sDuongDanTep)</a></p>
+                                @if (System.IO.Path.GetExtension(Model.sDuongDanTep).ToLower() == ".pdf")
+                                {
+                                    <iframe src="@Url.Content(Model.sDuongDanTep)" width="100%" height="500px"></iframe>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <div class="form-fields">
+                        <div class="form-group">
+                            <label class="form-label">Tiêu đề</label>
+                            <input asp-for="sTieuDe" type="text" class="form-input" placeholder="Vui lòng nhập">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Họ và tên</label>
+                            <input asp-for="HoTen" type="text" class="form-input" placeholder="Vui lòng nhập">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Số điện thoại</label>
+                            <input asp-for="SoDienThoai" type="tel" class="form-input" placeholder="Vui lòng nhập">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input asp-for="Email" type="email" class="form-input" placeholder="Vui lòng nhập">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Địa chỉ</label>
+                            <select class="form-select">
+                                <option asp-for="DiaChi" value="">Chọn thành phố</option>
+                                <option> Hồ Chí Minh</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Kỹ năng</label>
+                            <select asp-for="sKyNang" class="form-select">
+                                <option value="">Chọn</option>
+                                <option>Giao tiếp</option>
+                                <option>Giảng dạy</option>
+                                <option>Ngoại ngữ</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">Kinh nghiệm</label>
+                            <input asp-for="sKinhNghiem" type="text" class="form-input" placeholder="Vui lòng nhập">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Học vấn</label>
+                            <select asp-for="sBangCap" class="form-select">
+                                <option value="">Chọn </option>
+                                <option>Sau Đại học</option>
+                                <option>Đại học</option>
+                                <option>Cao đẳng</option>
+                                <option>Trung cấp</option>
+                            </select>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="form-label">Upload bằng cấp</label>
+                            <div class="cccd-upload" id="cccd-upload">
+                                <span>📎 Tải ảnh CCCD</span>
+                            </div>
+                            <input type="file" id="cccd-input" asp-for="formAnhBC" style="display: none;" accept="image/*" required>
+                            <small id="cccd-error" style="color: red;"></small>
+
+                            <div style="margin-top:10px;">
+                                @if (!string.IsNullOrEmpty(Model.sDuongDanTepBC))
+                                {
+                                    <img id="cccd-preview" src="@Url.Content(Model.sDuongDanTepBC)" alt="Ảnh CCCD" style="max-width: 250px; border-radius: 10px;" />
+                                }
+                                else
+                                {
+                                    <img id="cccd-preview" src="" alt="Ảnh CCCD" style="display: none; max-width: 250px; border-radius: 10px;" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Cập nhật</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+          document.addEventListener('DOMContentLoaded', function() {
+             
+            const uploadArea = document.querySelector('.resume-upload');
+            const uploadBtn = document.querySelector('.upload-btn');
+            const submitBtn = document.querySelector('.submit-btn');
+            const previewContainer = document.getElementById('file-name');
+              const upic=document.getElementById('up-icon');
+                const upt=document.getElementById('up-text');
+
+            // Hiển thị preview hoặc thông tin file
+            function showPreview(file) {
+                previewContainer.innerHTML = ''; // Clear cũ
+
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File quá lớn. Vui lòng chọn file nhỏ hơn 5MB.');
+                    return;
+                }
+
+                const fileName = file.name;
+                const fileType = file.type;
+
+                if (fileType === 'application/pdf') {
+                    const fileURL = URL.createObjectURL(file);
+                    previewContainer.innerHTML = `
+                        <p>📄 ${fileName}</p>
+                        <iframe src="${fileURL}" width="100%" height="500px" frameborder="0"></iframe>
+                    `;
+                      upic.style.display = 'none'; // Ẩn phần tử
+                        upt.style.display = 'none'; // Ẩn phần tử
+
+
+
+                } else if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
+                    previewContainer.innerHTML = `<p>📄 ${fileName} (không thể xem trước, nhưng đã chọn)</p>`;
+                } else {
+                    previewContainer.innerHTML = '<p>Định dạng tệp không được hỗ trợ.</p>';
+                }
+
+                // Gán file vào input thật nếu có
+                const realInput = document.getElementById('file-upload');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                realInput.files = dataTransfer.files;
+            }
+
+            // Mở hộp thoại chọn file
+            function openFileDialog() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.doc,.docx,.pdf';
+                input.click();
+
+                input.addEventListener('change', function () {
+                    if (input.files.length > 0) {
+                        showPreview(input.files[0]);
+                    }
+                });
+            }
+
+            // Kéo & thả file
+            uploadArea.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#a489f0';
+            });
+
+            uploadArea.addEventListener('dragleave', function () {
+                uploadArea.style.borderColor = '#ccc';
+            });
+
+            uploadArea.addEventListener('drop', function (e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#ccc';
+
+                if (e.dataTransfer.files.length > 0) {
+                    showPreview(e.dataTransfer.files[0]);
+                }
+            });
+
+
+            // Nút upload
+            uploadBtn.addEventListener('click', function () {
+                openFileDialog();
+            });
+
+                // Xử lý upload ảnh CCCD
+            const cccdInput = document.getElementById('cccd-input');
+            const cccdUpload = document.getElementById('cccd-upload');
+            const cccdError = document.getElementById('cccd-error');
+            //const cccdError = document.getElementById('cccd-error');
+            const cccdPreview = document.getElementById('cccd-preview');
+
+            cccdUpload.addEventListener('click', function () {
+                cccdInput.click();
+            });
+
+            cccdInput.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const validTypes = ['image/jpeg', 'image/png'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+
+                    if (!validTypes.includes(file.type)) {
+                        cccdError.textContent = 'Chỉ chấp nhận file ảnh (JPEG, PNG)';
+                        this.value = '';
+                        return;
+                    }
+
+                    if (file.size > maxSize) {
+                        cccdError.textContent = 'File ảnh không được vượt quá 5MB';
+                        this.value = '';
+                        return;
+                    }
+
+                    cccdError.textContent = '';
+                    cccdUpload.innerHTML = `<span>📎 ${file.name}</span>`;
+                    // 👇 Hiển thị ảnh preview
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        cccdPreview.src = e.target.result;
+                        cccdPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            // Nút submit (bạn có thể thêm validate ở đây nếu muốn)
+            submitBtn?.addEventListener('click', function () {
+                // validate nếu cần
+            });
+          });
+
+    </script>
+</body>
+</html>
+

@@ -50,8 +50,21 @@ namespace WebApplication1.Controllers
 
             if (taiKhoan.VaiTro != "giasu")
                 return Forbid(); // 🚫 Không cho phép nếu không phải Gia Sư
-            await _IUngTuyenService.UngTuyenAsync(userId, baiDangId);
-            return RedirectToAction("Index");
+
+            try
+            {
+                TempData["Tittle"] = "Hồ sơ của bạn đang chờ chấp nhận";
+                TempData["SuccessMessage"] = "Ứng tuyển thành công!";
+                await _IUngTuyenService.UngTuyenAsync(userId, baiDangId);
+                return RedirectToAction("Index");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Nếu gia sư đã ứng tuyển vào bài đăng
+                TempData["Tittle"] = "Bạn đã ứng tuyển bài đăng này";
+                TempData["ErrorMessage"] = "Ứng tuyển thất bại!";
+                return View("Index"); // Quay lại trang Index với thông báo lỗi
+            }
         }
       
 

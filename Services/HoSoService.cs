@@ -23,7 +23,7 @@ namespace WebApplication1.Services
         Task<HoSoViewModel> GetHoSoById(int id);
         Task<List<HoSoViewModel>> GetAllHoSoByTrangThai(string trangthai);
         Task<bool> PheDuyetHSAsync(int id);
-
+        Task<bool> UpdateHoSoAsync(HoSoViewModel model);
     }
     public class HoSoService : IHoSoService
     {
@@ -144,6 +144,21 @@ namespace WebApplication1.Services
             if (baiDang == null) return false;
 
             return await _HoSoRepository.UpdateTrangThaiHS(id, "Đã duyệt");
+        }
+        public async Task<bool> UpdateHoSoAsync(HoSoViewModel model)
+        {
+            var entity = await _HoSoRepository.GetByIdAsync(model.iMaHS);
+            if (entity == null) return false;
+
+            entity.sTieuDe = model.sTieuDe;
+            entity.sKinhNghiem = model.sKinhNghiem;
+            entity.sBangCap = model.sBangCap;
+            entity.sKyNang = model.sKyNang;
+            entity.sTrangThai = model.sTrangThai;
+            entity.sDuongDanTep = model.sDuongDanTep;
+            entity.sDuongDanTepBC = model.sDuongDanTepBC;
+            await _HoSoRepository.UpdateAsync(entity);
+            return true;
         }
     }
 }

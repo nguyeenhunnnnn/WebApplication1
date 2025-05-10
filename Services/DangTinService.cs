@@ -43,6 +43,7 @@ namespace WebApplication1.Services
         Task<List<BaiDangViewModel>> GetAllBaiDangByVaiTroPhuHuynh();
         Task<List<BaiDangViewModel>> TimKiemBaiDangAsync(string Keyword, string MonHoc, string diadiem, string MucLuong, string KinhNghiem);
         Task<List<BaiDangViewModel>> GetAllBaiDangByTrangthaiGD(string trangthai);
+        Task<List<BaiDangViewModel>> SearchBaiDangsAsync(string monhoc);
     }
     public class DangTinService : IDangTinService
     {
@@ -505,7 +506,31 @@ namespace WebApplication1.Services
                  .ToList();
 
         }
+        public async Task<List<BaiDangViewModel>> SearchBaiDangsAsync(string monhoc)
+        {
+            var baiDangs = await _dangTinRepository.GetBaiDangsAsync(monhoc);
 
+            return baiDangs.Select(b => new BaiDangViewModel
+            {
+                PK_iMaBaiDang = b.PK_iMaBaiDang,
+                sMonday = b.sMonday,
+                Nguoitao = b.TaiKhoan.UserName,
+                sBangCap = b.sBangCap,
+                sGioiTinh = b.sGioiTinh,
+                sKinhNghiem = b.sKinhNghiem,
+                sTuoi = b.sTuoi,
+                sYCau = b.sYCau,
+                sTieuDe = b.sTieuDe,
+                sMoTa = b.sMoTa,
+                sDiaDiem = b.sDiaDiem,
+                fMucLuong = b.fMucLuong ?? 0,
+                sTrangThai = b.sTrangThai,
+                dNgayTao = b.dNgayTao,
+                sfileAvata = b.TaiKhoan.FileAvata,
+                FileCVPath = b.FileCVPath, // Gán file CV từ hồ sơ nếu có
+                dThoiGianHetHan = b.dThoiGianHetHan ?? DateTime.MinValue,
+            }).ToList();
+        }
 
     }
 }

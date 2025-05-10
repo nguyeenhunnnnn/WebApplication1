@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Globalization;
+using System.Text;
 
 namespace WebApplication1.Controllers
 {
@@ -214,9 +216,10 @@ namespace WebApplication1.Controllers
                     baiDangList = baiDangList.Where(bd => bd.dNgayTao.Date == dateTime.Date).ToList();
                 }
             }
-            if (!string.IsNullOrEmpty(TuKhoa))
+            if (!string.IsNullOrWhiteSpace(TuKhoa))
             {
-                baiDangList = baiDangList.Where(bd => bd.sMoTa.Contains(TuKhoa)).ToList();
+                var keyword = RemoveDiacritics(TuKhoa).ToLower();
+                baiDangList = baiDangList.Where(u => RemoveDiacritics(u.sMoTa).ToLower().Contains(keyword)).ToList();
             }
             return View("Index", baiDangList);
         }
@@ -429,7 +432,25 @@ namespace WebApplication1.Controllers
             await _dangTinService.HideBaiDang(baiDangId,Ishidden);
             return RedirectToAction("DanhSachUngVien");
         }
+        public static string RemoveDiacritics(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
 
+            var normalized = input.Normalize(NormalizationForm.FormD);
+            var builder = new StringBuilder();
+
+            foreach (var c in normalized)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    builder.Append(c);
+                }
+            }
+
+            return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
 
 
     }   

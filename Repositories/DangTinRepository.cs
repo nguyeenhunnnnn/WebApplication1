@@ -31,6 +31,7 @@ namespace WebApplication1.Repositories
         IQueryable<BaiDang> GetAll();
         Task<List<BaiDang>> GetAllBaiDangByTrangthaiGD(string trangthai);
         void CapNhatThoiGianDang(int baiDangId, DateTime den);
+        Task<List<BaiDang>> GetBaiDangsAsync(string monhoc);
     }
     public class DangTinRepository : IDangTinRepository
     {
@@ -152,6 +153,21 @@ namespace WebApplication1.Repositories
                 .Include(b => b.TaiKhoan)
             .Where(b => b.sTrangThaiGD == trangthai).ToListAsync(); // Lọc theo Trang thai
 
+        }
+        public async Task<List<BaiDang>> GetBaiDangsAsync(string monhoc)
+        {
+            var query = _context.BaiDangs
+                .Include(b => b.TaiKhoan)
+                .Where(b => b.sTrangThai == "Đã duyệt"
+                            && b.TaiKhoan.VaiTro == "phuhuynh"
+                            && !b.IsHidden);
+
+            if (!string.IsNullOrEmpty(monhoc))
+            {
+                query = query.Where(b => b.sMonday.Contains(monhoc));
+            }
+
+            return await query.ToListAsync();
         }
 
 

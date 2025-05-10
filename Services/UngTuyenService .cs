@@ -5,6 +5,7 @@ using WebApplication1.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1.Repositories;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace WebApplication1.Services
 {
     public interface IUngTuyenService
@@ -14,6 +15,8 @@ namespace WebApplication1.Services
         Task DuyetUngVien(int id, string trangThai);
         Task<List<UngTuyenViewModel>> LayDanhSachUngTuyenCuaGiaSu(string maTK, string trangthai);
         Task<List<UngTuyenViewModel>> LayDanhSachUngVienCuaPhuHuynh(string phuHuynhId, string trangthai);
+        Task HuyUngTuyenAsync(string maTK, int maBaiDang);
+        Task<List<UngTuyenViewModel>> TimKiemHoSoAsync(string tieude, DateTime? thoiGian, string maGiaSu);
     }
     public class UngTuyenService : IUngTuyenService
     {
@@ -28,6 +31,7 @@ namespace WebApplication1.Services
 
         public async Task UngTuyenAsync(string maTK, int maBaiDang)
         {
+           
             var hoSo = await _hosoRepo.LayHoSoMoiNhatCuaGiaSu(maTK);
             var ungTuyen = new UngTuyen
             {
@@ -38,7 +42,15 @@ namespace WebApplication1.Services
             };
             await _repo.ThemUngTuyenAsync(ungTuyen);
         }
+        public async Task HuyUngTuyenAsync(string maTK, int maBaiDang)
+        {
+            var ungTuyen = await _repo.GetUngTuyenAsync(maTK, maBaiDang);
 
+            if (ungTuyen == null)
+                throw new InvalidOperationException("Không tìm thấy thông tin ứng tuyển để hủy.");
+
+            await _repo.XoaUngTuyenAsync(ungTuyen);
+        }
         public async Task<List<UngTuyenViewModel>> LayDanhSachUngVien(int maBaiDang)
         {
             var list = await _repo.LayUngVienTheoBaiDang(maBaiDang);
@@ -101,5 +113,31 @@ namespace WebApplication1.Services
                 TrangThai = ut.TrangThai
             }).ToList();
         }
+
+        public async Task<List<UngTuyenViewModel>> TimKiemHoSoAsync(string tieude, DateTime? thoiGian, string maGiaSu)
+        {
+            var danhSach = await _repo.TimKiemUngTuyenAsync(tieude, thoiGian, maGiaSu);
+          
+            return danhSach.Select(u => new UngTuyenViewModel
+            {
+                Id = u.Id,
+                TenGiaSu = u.TaiKhoanGiaSu?.UserName,
+                GiaSuID = u.FK_iMaTK_GiaSu,
+                EmailGiaSu = u.TaiKhoanGiaSu?.Email,
+                AvatarUrl = u.TaiKhoanGiaSu?.FileAvata,
+                IdHoSo = u.FK_iMaHS,
+                TieuDeHoSo = u.HoSo?.sTieuDe,
+                BangCap = u.HoSo?.sBangCap,
+                phuhuynhName = u.BaiDang?.TaiKhoan?.UserName,
+                PhuHuynhId = u.BaiDang?.FK_iMaTK,
+                TrangThai = u.TrangThai,
+                NgayUngTuyen = u.NgayUngTuyen,
+                MaBaiDang = u.BaiDang?.PK_iMaBaiDang ?? 0,
+                TieuDeBaiDang = u.BaiDang?.sTieuDe,
+                fileCV = u.HoSo?.sDuongDanTep,
+                ishidden = u.BaiDang?.IsHidden ?? false
+            }).ToList();
+        }
+
     }
-    }
+}

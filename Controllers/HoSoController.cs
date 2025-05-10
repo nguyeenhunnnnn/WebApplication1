@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Globalization;
+using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace WebApplication1.Controllers
@@ -194,6 +197,103 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var hoSo = await _hoSoService.GetHoSoById(id);
+            if (hoSo == null)
+            {
+                return NotFound();
+            }
+            var HosoInfo = new HoSoViewModel
+            {
+                iMaHS = hoSo.iMaHS,
+                FK_iMaTK = hoSo.FK_iMaTK,
+                sKinhNghiem = hoSo.sKinhNghiem,
+                sBangCap = hoSo.sBangCap,
+                sKyNang = hoSo.sKyNang,
+                sTrangThai =hoSo.sTrangThai,
+                sTieuDe = hoSo.sTieuDe,
+                sDuongDanTep = hoSo.sDuongDanTep,
+                sDuongDanTepBC = hoSo.sDuongDanTepBC,
+                HoTen = hoSo.HoTen, // nếu có liên kết navigation property
+                SoDienThoai = hoSo.SoDienThoai,
+                Email = hoSo.Email,
+                DiaChi = hoSo.DiaChi
+            };
+            return View(HosoInfo);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(HoSoViewModel model)
+        {
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
+            // Xử lý tệp tải lên
+            string filePath = null;
+            if (model.formFile != null && model.formFile.Length > 0)
+            {
+                // Kiểm tra kích thước tệp (giới hạn 5MB)
+                if (model.formFile.Length > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("", "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.");
+                    return View(model);
+                }
+                filePath = model.formFile != null
+                   ? await UploadFile(model.formFile, "hoso")
+                   : null;
+
+                model.sDuongDanTep = filePath;
+            }
+            
+            string filePathBC = null;
+           
+                // Kiểm tra kích thước tệp (giới hạn 5MB)
+                if (model.formAnhBC != null && model.formAnhBC.Length > 0)
+                {
+                    // Kiểm tra kích thước tệp (giới hạn 5MB)
+                    if (model.formAnhBC.Length > 5 * 1024 * 1024)
+                    {
+                        TempData["Tittle"] = "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.";
+                        TempData["ErrorMessage"] = " Vui lòng chọn lại tệp!";
+                        ModelState.AddModelError("", "Tệp quá lớn. Vui lòng chọn tệp nhỏ hơn 5MB.");
+                        return View(model);
+                    }
+                    filePathBC = model.formAnhBC != null
+                    ? await UploadFile(model.formAnhBC, "bangcap")
+                    : null;
+                    model.sDuongDanTepBC = filePathBC;
+                }
+
+            
+            
+
+            try
+            {
+                bool result = await _hoSoService.UpdateHoSoAsync(model);
+                if (result)
+                {
+                    TempData["Tittle"] = "Hồ sơ của bạn đã được cập nhật";
+                    TempData["SuccessMessage"] = "Cập nhật Hồ sơ thành công!";
+                    return RedirectToAction("Index");
+                }
+                TempData["Tittle"] = "Hồ sơ của bạn không được cập nhật cập nhật";
+                TempData["ErrorMessage"] = "Cập nhật Hồ sơ thất bại!";
+                ModelState.AddModelError("", "Cập nhật không thành công!");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi cập nhật bài đăng.");
+                ModelState.AddModelError("", "Có lỗi xảy ra khi cập nhật bài đăng.");
+            }
+            return View(model);
+
+
+        }
         [HttpPost]
         public async Task<IActionResult> SearchHS(string kynang,string tieude, string hocvan, string kinhnghiem, string trangthai)
         {
@@ -208,10 +308,7 @@ namespace WebApplication1.Controllers
             {
                 hoSoList = hoSoList.Where(bd => bd.sKyNang.Contains(kynang)).ToList();
             }
-            if (!string.IsNullOrEmpty(tieude))
-            {
-                hoSoList = hoSoList.Where(bd => bd.sTieuDe.Contains(tieude)).ToList();
-            }
+           
             if (!string.IsNullOrEmpty(hocvan))
             {
                
@@ -222,6 +319,14 @@ namespace WebApplication1.Controllers
             {
                 hoSoList = hoSoList.Where(bd => bd.sKinhNghiem.Contains(kinhnghiem)).ToList();
             }
+
+           
+            if (!string.IsNullOrWhiteSpace(tieude))
+            {
+                var keyword = RemoveDiacritics(tieude).ToLower();
+                hoSoList = hoSoList.Where(u => RemoveDiacritics(u.sTieuDe).ToLower().Contains(keyword)).ToList();
+            }
+            
             return View("Index", hoSoList);
 
         }
@@ -271,7 +376,58 @@ namespace WebApplication1.Controllers
             var list = await _ungTuyenService.LayDanhSachUngTuyenCuaGiaSu(userId,trangthai);
             return View(list);
         }
+        [HttpPost]
+        public async Task<IActionResult> HuyUngTuyen(int baiDangId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
 
+            try
+            {
+                await _ungTuyenService.HuyUngTuyenAsync(userId, baiDangId);
+                TempData["Tittle"] = "Đã hủy ứng tuyển";
+                TempData["SuccessMessage"] = "Bạn đã hủy ứng tuyển thành công.";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Tittle"] = "Bạn đã hủy ứng tuyển thất bại.";
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
+            return RedirectToAction("QuanLyUngTuyen");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchUT(string tieude, DateTime? thoiGian)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var ketQua = await _ungTuyenService.TimKiemHoSoAsync(tieude, thoiGian, userId);
+            return View("QuanLyUngTuyen", ketQua);
+        }
+
+        public static string RemoveDiacritics(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+
+            var normalized = input.Normalize(NormalizationForm.FormD);
+            var builder = new StringBuilder();
+
+            foreach (var c in normalized)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    builder.Append(c);
+                }
+            }
+
+            return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
 
     }
- }
+}
