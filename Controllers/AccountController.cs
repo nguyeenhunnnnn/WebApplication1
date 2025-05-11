@@ -297,12 +297,116 @@ namespace WebApplication1.Controllers
             }
 
 
+        [HttpGet]
+        public async Task<IActionResult> CapNhatTaiKhoan()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            var model = new RegisterStep2ViewModel
+            {
+                id = user.Id,
+                HoTen = user.UserName,
+                Email = user.Email,
+                SDT = user.PhoneNumber,
+                CCCD = user.CCCD,
+                DiaChi = user.DiaChi,
+                sFile_Avata_Path = user.FileAvata,
+                sFile_CCCD_Path = user.FileCCCD
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CapNhatTaiKhoan(RegisterStep2ViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            // Check trùng CCCD và SDT nếu có thay đổi
+            // Check trùng CCCD và SDT nếu có thay đổi
+            if (await _accountService.PhoneExistsAsync(model.SDT, excludeUserId: user.Id))
+                ModelState.AddModelError("SDT", "SĐT đã tồn tại.");
+
+            if (await _accountService.CCCDExistAsync(model.CCCD, excludeUserId: user.Id))
+                ModelState.AddModelError("CCCD", "CCCD đã tồn tại.");
+
+            // if (!ModelState.IsValid) return View(model);
+
+            // Upload ảnh nếu có
+            if (model.sFile_Avata != null)
+            {
+                user.FileAvata = await UploadFile(model.sFile_Avata, "avatars");
+            }
+            else
+            {
+                user.FileAvata = model.sFile_Avata_Path; // giữ lại ảnh cũ nếu không thay
+            }
+
+            if (model.sFile_CCCD != null)
+            {
+                user.FileCCCD = await UploadFile(model.sFile_CCCD, "cccd");
+            }
+            else
+            {
+                user.FileCCCD = model.sFile_CCCD_Path;
+            }
+
+            // Cập nhật thông tin khác
+            user.UserName = model.HoTen;
+            user.PhoneNumber = model.SDT;
+            user.CCCD = model.CCCD;
+            user.DiaChi = model.DiaChi;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Cập nhật thành công.";
+                return RedirectToAction("Profile");
+            }
+            return View(model);
+        }
+
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(); // Xoá cookie xác thực
             return RedirectToAction("Login", "Account"); // Chuyển về trang chủ hoặc trang đăng nhập
         }
+        [HttpGet]
+        public IActionResult DoiMatKhau()
+        {
+            ViewBag.SuccessMessage = "Mật khẩu đã được thay đổi thành công!";
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> DoiMatKhau(ChangePasswordViewModel model)
+        {
+           
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("DangNhap", "TaiKhoan");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                ViewBag.SuccessMessage = "Mật khẩu đã được thay đổi thành công!";
+                return RedirectToAction("Profile");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
         public async Task<IActionResult> Profile()
         {
             var user = await _userManager.GetUserAsync(User);

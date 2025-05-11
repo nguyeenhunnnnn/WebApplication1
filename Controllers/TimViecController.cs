@@ -138,7 +138,7 @@ namespace WebApplication1.Controllers
 
             }
             await _IUngTuyenService.UngTuyenAsync(userId, baiDangId);
-            TempData["Tittle"] = "Thành công";
+            TempData["Tittle"] = "Ứng tuyển thành công.";
             TempData["SuccessMessage"] = "Hồ sơ của bạn đang chờ chấp nhận.";
             return RedirectToAction("Index");
  

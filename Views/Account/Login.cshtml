@@ -10,13 +10,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/css/styleDK.css" rel="stylesheet" />
     <link href="~/css/tb.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <title>BOWO - Nền tảng tuyển dụng</title>
   
 </head>
 <body>
     
     <div class="main-content">
-        
+        @Html.AntiForgeryToken()
         <div class="left-panel">      
         </div>
         <div class="right-panel" style="display:block">
@@ -29,14 +31,18 @@
                     <div class="form-group">
                         <label for="Email" class="form-label">Email</label>
                         <input type="email" id="Email" asp-for="Email" name="Email" class="form-input" placeholder="abc123@gmail.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="Password" class="form-label">Mật khẩu</label>
                         <div class="password-input">
                             <input type="password" id="Password" asp-for="MatKhau" name="MatKhau" class="form-input" placeholder="Ít nhất 8 ký tự">
-                            <span class="eye-icon"></span>
+                            <span class="eye-icon">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
                         </div>
+                        <span asp-validation-for="MatKhau" class="text-danger"></span>
                     </div>
 
                    
@@ -93,30 +99,43 @@
             function checkFormValidity() {
                // console.log("" + vaiTroInput.value + emailInput.value + passwordInput.value);
                // const isRoleSelected = vaiTroInput.value !== '';
-                const isEmailValid = emailInput.value.includes("@@");
-                const isPasswordValid = passwordInput.value.length >= 8;
+              //  const isEmailValid = emailInput.value.includes("@@");
+               // const isPasswordValid = passwordInput.value.length >= 8;
                // const isPasswordMatch = passwordInput.value === confirmPasswordInput.value;
-                const isTermsChecked = termsCheckbox.checked;
+                //const isTermsChecked = termsCheckbox.checked;
+
+                 const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                submitBtn.disabled = !(email && password);
 
                 // Kích hoạt hoặc vô hiệu hóa nút đăng ký
-                submitBtn.disabled = !( isEmailValid && isPasswordValid && isTermsChecked);
+              
             }
 
             // Xử lý hiển thị/ẩn mật khẩu
             document.querySelectorAll('.eye-icon').forEach(eye => {
                 eye.addEventListener('click', function() {
                     const input = this.previousElementSibling;
+                    const icon = this.querySelector('i');
                     if (input.type === 'password') {
                         input.type = 'text';
-                        this.classList.add('visible');
+                       // this.classList.add('visible');
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
                     } else {
                         input.type = 'password';
-                        this.classList.remove('visible');
+                       // this.classList.remove('visible');
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
                     }
                 });
             });
         });
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+
 </body>
 </html>
 

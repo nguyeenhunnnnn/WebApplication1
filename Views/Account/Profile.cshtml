@@ -187,7 +187,14 @@
             @Html.AntiForgeryToken()
             <button type="submit" class="submit-btn" id="submit-btn">Đăng xuất</button>
         </form>
-          
+        <form asp-action="CapNhatTaiKhoan" method="get">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="submit-btn" id="submit-btn" >Chỉnh sửa</button>
+        </form>
+        <form asp-action="DoiMatKhau" method="get">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="submit-btn" id="submit-btn">Đổi mật khẩu</button>
+        </form>
         </div>
    
 </div>

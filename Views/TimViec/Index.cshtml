@@ -159,9 +159,9 @@
                         @if (!isAuthenticated)
                         {
                             // Nếu chưa đăng nhập → Hiện tất cả nút Ứng tuyển
-                            <form asp-action="UngTuyen" method="post">
+                            <form asp-action="UngTuyen" method="post" id="ungTuyenForm">
                                 <input type="hidden" name="baiDangId" value="@item.PK_iMaBaiDang" />
-                                <button type="submit" class="apply-btn">Ứng tuyển</button>
+                                <button type="button" class="apply-btn" onclick="applyJob()">Ứng tuyển</button>
                             </form>
                         }
                     
@@ -300,8 +300,23 @@
                 });
             });
         });
-    </script>
 
+           
+        }
+    </script>
+    <script>
+        function applyJob() {
+            var isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+
+            if (!isAuthenticated) {
+                alert("Vui lòng đăng nhập để ứng tuyển.");
+                window.location.href = '/Account/Login';
+                return false;
+            } else {
+                document.getElementById("ungTuyenForm").submit();
+            }
+        }
+    </script>
     @functions {
         public string GetRelativeTime(DateTime endTime)
         {

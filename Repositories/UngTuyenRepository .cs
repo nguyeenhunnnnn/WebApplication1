@@ -24,6 +24,9 @@ namespace WebApplication1.Repositories
         Task<UngTuyen> GetUngTuyenAsync(string maTK, int maBaiDang);
         Task XoaUngTuyenAsync(UngTuyen ungTuyen);
         Task<List<UngTuyen>> TimKiemUngTuyenAsync(string tieude, DateTime? thoiGian, string maGiaSu);
+        Task<List<UngTuyen>> GetAllUngTuyenAsync();
+        Task<List<UngTuyen>> GetAllUngTuyenAsyncByTrangThai(string trangthai);
+
 
     }
     public class UngTuyenRepository : IUngTuyenRepository
@@ -40,6 +43,27 @@ namespace WebApplication1.Repositories
             _userManager = userManager;
             _signInManager = signInManager;
 
+        }
+       
+
+        public async Task<List<UngTuyen>> GetAllUngTuyenAsyncByTrangThai(string trangthai)
+        {
+            return await _context.UngTuyen
+                 .Include(ut => ut.TaiKhoanGiaSu)
+                .Include(ut => ut.BaiDang)
+                    .ThenInclude(bd => bd.TaiKhoan) // để truy xuất tác giả bài đăng
+                .Include(ut => ut.HoSo)
+                .Where(ut => ut.TrangThai == trangthai)
+                .ToListAsync();
+        }
+        public async Task<List<UngTuyen>> GetAllUngTuyenAsync()
+        {
+            return await _context.UngTuyen
+                 .Include(ut => ut.TaiKhoanGiaSu)
+                .Include(ut => ut.BaiDang)
+                    .ThenInclude(bd => bd.TaiKhoan) // để truy xuất tác giả bài đăng
+                .Include(ut => ut.HoSo)
+                .ToListAsync();
         }
         public async Task<List<UngTuyen>> LayUngVienTheoBaiDang(int maBaiDang) =>
         await _context.UngTuyen

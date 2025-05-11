@@ -14,6 +14,7 @@ namespace WebApplication1.Repositories
 
         Task<List<ThanhToan>> GetByTrangThaiAsync(bool isDuyet);
         Task DuyetThanhToanAsync(int thanhToanId);
+        Task<GoiDichVu?> GetGoiDichVuByUserIdAsync(string userId);
     }
     public class ThanhToanRepository : IThanhToanRepository
     {
@@ -102,6 +103,17 @@ namespace WebApplication1.Repositories
 
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<GoiDichVu?> GetGoiDichVuByUserIdAsync(string userId)
+        {
+            var thanhToanMoiNhat = await _context.ThanhToans
+                .Include(t => t.GoiDichVu)
+                .Where(t => t.TaiKhoanId == userId && t.IsDuyet)
+                .OrderByDescending(t => t.NgayThanhToan)
+                .FirstOrDefaultAsync();
+
+            return thanhToanMoiNhat?.GoiDichVu;
         }
     }
 }

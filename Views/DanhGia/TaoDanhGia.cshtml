@@ -7,9 +7,13 @@
     <title>Form Đánh Giá</title>
     <link href="~/css/styleformDG.css" rel="stylesheet" />
     <link href="~/css/styleNav.css" rel="stylesheet" />
+    <link href="~/css/tb.css" rel="stylesheet" />
 </head>
 <body>
     <div class="rating-container">
+        <div class="notification-container">
+            @await Html.PartialAsync("_Notification")
+        </div>
         <h2>Đánh Giá Dịch Vụ</h2>
 
         <form id="ratingForm" asp-action="TaoDanhGia" method="post">

@@ -18,9 +18,9 @@ namespace WebApplication1.Repositories
         Task<bool> DeleteTaiKhoanAsync(string id);
         Task<bool> SaveChangesAsync();
         Task<bool> DeleteChangesAsync();
-        Task<bool> EmailExistsAsync(string email);
-        Task<bool> PhoneExistsAsync(string phone);
-        Task<bool> CCCDExistAsync(string CCCD);
+        Task<bool> EmailExistsAsync(string email, string excludeUserId = null);
+        Task<bool> PhoneExistsAsync(string phone, string excludeUserId = null);
+        Task<bool> CCCDExistAsync(string CCCD, string excludeUserId = null);
         Task<bool> CheckTaiKhoanExistsAsync(string id);
         Task<bool> CheckTaiKhoanExistsByEmailAsync(string email);
         Task<bool> CheckTaiKhoanExistsByPhoneAsync(string phone);
@@ -60,18 +60,22 @@ namespace WebApplication1.Repositories
             var result= await _signInManager.PasswordSignInAsync(taiKhoan.Email, pass, true, lockoutOnFailure: true);
             return result.Succeeded;
         }
-        public async Task<bool> EmailExistsAsync(string email)
+        public async Task<bool> EmailExistsAsync(string email, string excludeUserId = null)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email);
+            return await _context.Users.AnyAsync(u => u.Email == email && (excludeUserId == null || u.Id != excludeUserId));
         }
-        public async Task<bool> PhoneExistsAsync(string phone)
+        public async Task<bool> PhoneExistsAsync(string phoneNumber, string excludeUserId = null)
         {
-            return await _context.Users.AnyAsync(u => u.PhoneNumber == phone);
+            return await _context.Users
+                .AnyAsync(u => u.PhoneNumber == phoneNumber && (excludeUserId == null || u.Id != excludeUserId));
         }
-        public async Task<bool> CCCDExistAsync(string CCCD)
+
+        public async Task<bool> CCCDExistAsync(string cccd, string excludeUserId = null)
         {
-            return await _context.Users.AnyAsync(u => u.CCCD == CCCD);
+            return await _context.Users
+                .AnyAsync(u => u.CCCD == cccd && (excludeUserId == null || u.Id != excludeUserId));
         }
+        
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0;

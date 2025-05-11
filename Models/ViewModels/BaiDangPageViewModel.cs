@@ -1,4 +1,6 @@
-﻿namespace WebApplication1.Models.ViewModels
+﻿using WebApplication1.Models.Entities;
+
+namespace WebApplication1.Models.ViewModels
 {
     public class BaiDangPageViewModel
     {
@@ -17,6 +19,7 @@
        // public string GoiCuoc { get; set; }
         public string? mondaygiasu { get; set; }
         public bool GoiCuoc { get; set; } = false;
+        public GoiDichVu? GoiDichVu { get; set; } // Thêm dòng này
 
     }
 

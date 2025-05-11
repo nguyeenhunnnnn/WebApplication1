@@ -290,10 +290,10 @@
                 </div>
                 <div class="sidebar-header">@Model.ThongTinNguoiDung.HoTen</div>
                 <div class="sidebar-subheader">@Model.ThongTinNguoiDung.Email</div>
-                @if (Model.ThongTinNguoiDung.GoiCuoc)
+                @if (Model.ThongTinNguoiDung.GoiDichVu != null)
                 {
                     <div class="premium-btn">
-                        <i class="fas fa-crown"></i> Premium 
+                        <i class="fas fa-crown"></i> @Model.ThongTinNguoiDung.GoiDichVu.TenGoi
                     </div>
                 }
 
@@ -321,11 +321,7 @@
             </div>
 
             @{
-                // var danhSachNguoiTao = Model.DanhSachBaiDang
-                //.GroupBy(x => x.Nguoitao)
-                //.Select(g => g.First()) // Lấy bài viết đầu tiên của mỗi người tạo
-                //.Take(3) // Giới hạn số lượng nếu muốn
-                // .ToList();
+                
                 var danhSachNguoiTao = Model.DanhSachBaiDang
                 .Where(x => x.Vaitro == "phuhuynh")
                 .OrderByDescending(x => x.sTrangThaiGD == "Đã duyệt")
@@ -442,15 +438,7 @@
 
                         }
                     </div>
-                    <!-- Post footer with stats 
-                    <div class="post-footer">
-                    <div class="post-stats">
-                    <i class="far fa-heart"></i> <span>135</span>
-                    <i class="far fa-comment"></i> <span>21</span>
-                    <i class="far fa-share-square"></i> <span>31</span>
-                    </div>
-                    </div>
-                    -->
+                    
                 
                     <!-- Post for you -->
                     @if(i==2)

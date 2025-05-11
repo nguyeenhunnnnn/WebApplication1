@@ -465,3 +465,166 @@ body {
     font-weight: 500;
     font-size: 14px;
 }
+@media (max-width: 768px) {
+    .sidebar {
+        width: 30%;
+    }
+
+    .content {
+        width: 60%;
+    }
+
+    .right-sidebar {
+        width: 100%;
+        order: 3;
+    }
+
+    .search-categories {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+    }
+
+    .search-category {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .post-image-container {
+        height: 300px !important;
+    }
+
+    .company-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .company-item {
+        width: 48%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        order: 1;
+        position: static;
+        padding: 10px;
+    }
+
+    .content {
+        width: 100%;
+        order: 2;
+        padding: 10px;
+    }
+
+    .right-sidebar {
+        width: 100%;
+        order: 3;
+        position: static;
+        padding: 10px;
+    }
+
+    .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .post-info {
+        margin: 10px 0;
+    }
+
+    .post-actions {
+        width: 100%;
+        margin-top: 10px;
+        text-align: right;
+    }
+
+    .post-image-container {
+        height: 200px !important;
+    }
+
+    .company-item {
+        width: 100%;
+    }
+
+    .req-row {
+        flex-direction: column;
+    }
+
+    .req-item {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .search-input {
+        flex-direction: column;
+    }
+
+        .search-input input {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+    .job-title-section {
+        flex-direction: column;
+    }
+
+    .apply-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .for-you-section {
+        padding: 10px !important;
+    }
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 480px) {
+    .sidebar-logo img {
+        max-width: 80px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .sidebar-header,
+    .sidebar-subheader {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .premium-btn {
+        width: 100%;
+        text-align: center;
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .post-title {
+        font-size: 16px;
+    }
+
+    .post-description {
+        font-size: 14px;
+    }
+
+    .req-header {
+        font-size: 14px;
+    }
+
+    .right-sidebar-header {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .banner img {
+        height: auto;
+    }
+}

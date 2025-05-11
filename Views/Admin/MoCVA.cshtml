@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Bai Dang ";
+    ViewData["UserRole"] = User.FindFirst("VaiTro")?.Value; // nếu bạn lưu vai trò bằng claim "VaiTro"
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -17,34 +18,12 @@
 
 </head>
 <div class="container">
-    <!-- Sidebar 
-    <div class="sidebar">
-
-        <div class="menu">
-            <div class="menu-item ">
-                <i class="fas fa-file-alt"></i>
-                <span>Tìm hồ sơ</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-tasks"></i>
-                <span>Quản Lí Tin Đăng</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Quản Lí Hồ Sơ</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-shopping-cart"></i>
-                <span> Quản lý Tài Khoản</span>
-            </div>
-        </div>
-
-        <div class="footer-sidebar">
-            <div>Version V2.74.39</div>
-            <div>© 2025 HUNO. All Rights Reserved.</div>
-        </div>
-    </div>
-    -->
+    @await Html.PartialAsync("_SidebarPartial", new
+        {
+            Controller = ViewContext.RouteData.Values["controller"]?.ToString(),
+            Action = ViewContext.RouteData.Values["action"]?.ToString(),
+            VaiTro = User.FindFirst("VaiTro")?.Value
+        })
     <!-- Main Content -->
     <div class="main-content">
 

@@ -1,0 +1,231 @@
+﻿@model WebApplication1.Models.ViewModels.ChangePasswordViewModel
+@{
+    ViewData["Title"] = "Đổi Mật Khẩu";
+    // hoặc null nếu bạn thực sự muốn render full HTML
+}
+
+    <link rel="stylesheet" href="~/css/StyleSidebar.css" />
+    <link rel="stylesheet" href="~/css/StyleDoiMatKhau.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .header h1 {
+                color: #1877f2;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .header p {
+                color: #65676b;
+                font-size: 14px;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1c1e21;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dddfe2;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+            input:focus {
+                outline: none;
+                border-color: #1877f2;
+                box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+            }
+
+        .password-strength {
+            margin-top: 5px;
+            height: 5px;
+            background-color: #dddfe2;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .password-hint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #65676b;
+        }
+
+        button {
+            width: 100%;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background-color: #166fe5;
+            }
+
+            button:disabled {
+                background-color: #e4e6eb;
+                color: #bcc0c4;
+                cursor: not-allowed;
+            }
+
+        .error {
+            color: #c00;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        input.input-error {
+            border-color: #c00;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #42b72a;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+    </style>
+
+
+<div class="container">
+   
+    <div class="header">
+        <h1>Đổi Mật Khẩu</h1>
+        <p>Để bảo mật tài khoản, vui lòng điền đầy đủ thông tin bên dưới</p>
+    </div>
+
+    <form id="passwordChangeForm" asp-action="DoiMatKhau" method="post">
+        <div class="form-group">
+            <label for="currentPassword">Mật khẩu hiện tại</label>
+            <input type="password" id="currentPassword" asp-for="CurrentPassword" class="form-control" />
+            <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="newPassword">Mật khẩu mới</label>
+            <input type="password" id="newPassword" asp-for="NewPassword" class="form-control" />
+            <div class="password-strength">
+                <div class="password-strength-bar" id="passwordStrengthBar"></div>
+            </div>
+            <div class="password-hint">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số</div>
+            <span asp-validation-for="NewPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+            <input type="password" id="confirmPassword" asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" id="submitButton" disabled>Xác nhận</button>
+    </form>
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="success-message" id="successMessage" style="display: none;">
+            @ViewBag.SuccessMessage
+        </div>
+    }
+   
+    
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('passwordChangeForm');
+            const newPassword = document.getElementById('newPassword');
+            const submitButton = document.getElementById('submitButton');
+            const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+            const successMessage = document.getElementById('successMessage');
+
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                if (password.length >= 8) strength += 25;
+                if (/[a-z]/.test(password)) strength += 25;
+                if (/[A-Z]/.test(password)) strength += 25;
+                if (/[0-9]/.test(password)) strength += 25;
+                return strength;
+            }
+
+            function updatePasswordStrengthBar() {
+                const strength = checkPasswordStrength(newPassword.value);
+                passwordStrengthBar.style.width = strength + '%';
+
+                if (strength < 25) {
+                    passwordStrengthBar.style.backgroundColor = '#ff4d4d';
+                } else if (strength < 50) {
+                    passwordStrengthBar.style.backgroundColor = '#ffa64d';
+                } else if (strength < 75) {
+                    passwordStrengthBar.style.backgroundColor = '#ffff4d';
+                } else {
+                    passwordStrengthBar.style.backgroundColor = '#4dff4d';
+                }
+
+                submitButton.disabled = strength < 100;
+            }
+
+            newPassword.addEventListener('input', updatePasswordStrengthBar);
+
+            form.addEventListener('submit', function (e) {
+                if (!submitButton.disabled) {
+                 setTimeout(function() {
+                        form.style.display = 'none';
+                        successMessage.style.display = 'block';
+                    }, 1500);
+            });
+        });
+    </script>
+}

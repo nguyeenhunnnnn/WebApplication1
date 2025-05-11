@@ -13,6 +13,9 @@ using WebApplication1.Services;
 using WebApplication1.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Hosting;
+using System.Globalization;
+using System.Text;
 
 namespace WebApplication1.Controllers
 {
@@ -27,10 +30,12 @@ namespace WebApplication1.Controllers
         private readonly IDangTinService _dangTinService;
         private readonly IDangTinRepository _dangTinRepository;
         private readonly IHoSoService _hoSoService;
+        private readonly IHoSoRepository _HoSoRepository;
         private readonly ICustomEmailSender _emailSender;
         private readonly IGoiDichVuService _goiService;
         private readonly IThanhToanService _thanhToanService;
         private readonly IAccountService _accountService;
+        private readonly IUngTuyenService _ungTuyenService;
 
         public AdminController(ILogger<AdminController> logger,
             IWebHostEnvironment webHostEnvironment,
@@ -44,7 +49,9 @@ namespace WebApplication1.Controllers
              IAccountService accountService,
              IDangTinRepository dangTinRepository,
              ICustomEmailSender emailSender,
-            IHoSoService hoSoService
+             IHoSoRepository hoSoRepository,
+            IHoSoService hoSoService,
+            IUngTuyenService ungTuyenService
             )
         {
             _logger = logger;
@@ -60,6 +67,8 @@ namespace WebApplication1.Controllers
             _dangTinRepository = dangTinRepository;
             _emailSender = emailSender;
             _accountService = accountService;
+            _HoSoRepository = hoSoRepository;
+            _ungTuyenService = ungTuyenService;
         }
         public async Task<IActionResult> Index(string trangthai = "Đang chờ duyệt")
         {
@@ -174,10 +183,36 @@ namespace WebApplication1.Controllers
             // (Tuỳ chọn) Cập nhật trạng thái bài đăng nếu cần
             baiDang.sTrangThai = "Bị từ chối";
             await _dangTinRepository.UpdateDangTin(baiDang);
+            TempData["Tittle"] = "Đã từ chối bài đăng, gửi email đến gia sư";
+            TempData["SuccessMessage"] = "Từ chối thành công!";
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> TuChoiGS(int pd)
+        {
+            var hoso = await _HoSoRepository.GetByIdAsync(pd);
+            if (hoso == null)
+            { 
+                return NotFound(); }
+
+            var nguoiTao = await _accountService.GetTaiKhoanByIdAsync(hoso.FK_iMaTK);
+            if (nguoiTao == null) return NotFound();
+
+            // Gửi mail
+            string toEmail = "nguyeenhuong12345@gmail.com";
+            string subject = "Hồ sơ của bạn đã bị từ chối";
+            string body = $"Xin chào {nguoiTao.UserName},\n\nBài đăng \"{hoso.sTieuDe}\" của bạn đã bị từ chối với lý do:\n\"Cần chỉnh sửa lại hồ sơ cho hợp lệ\".";
+
+            await _emailSender.SendEmailAsync(toEmail, subject, body);
+
+            // (Tuỳ chọn) Cập nhật trạng thái bài đăng nếu cần
+            hoso.sTrangThai = "Bị từ chối";
+            await _HoSoRepository.UpdateAsync(hoso);
+            TempData["Tittle"] = "Đã từ chối hồ sơ, gửi email đến gia sư";
+            TempData["SuccessMessage"] = "Từ chối thành công!";
 
             return RedirectToAction("Index");
         }
-
         public async Task<IActionResult> DSHS(string trangthai = "Đang chờ duyệt")
         {
             var hoSoList = await _hoSoService.GetAllHoSoByTrangThai(trangthai);
@@ -199,28 +234,59 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> DeleteHS(int id)
         {
             var result = await _hoSoService.DeleteChangesAsync(id);
+           var hoso= await _hoSoService.GetHoSoById(id);
+            var nguoiTao = await _accountService.GetTaiKhoanByIdAsync(hoso.FK_iMaTK);
+            if (nguoiTao == null) return NotFound();
             if (result)
             {
-                TempData["Success"] = "Xóa tin thành công!";
-                return RedirectToAction("Index");
+                // Gửi mail
+                string toEmail = "nguyeenhuong12345@gmail.com";
+                string subject = "Hồ sơ của bạn đã bị xoá";
+                string body = $"Xin chào {nguoiTao.UserName},\n\nHồ sơ \"{hoso.sTieuDe}\" của bạn đã bị xoá với lý do:\n\"Hồ sơ của bạn vi phạm tiêu chuẩn cộng đồng\".";
+
+                await _emailSender.SendEmailAsync(toEmail, subject, body);
+
+                TempData["Tittle"] = "Xoá hồ sơ, gửi email đến gia sư";
+                TempData["SuccessMessage"] = "Đã xoá hồ sơ thành công!";
+                return RedirectToAction("DSHS");
             }
             else
             {
-                TempData["Error"] = "Xóa tin không thành công!";
-                return RedirectToAction("Index");
+                TempData["Tittle"] = "Vui lòng kiểm tra lại";
+                TempData["ErrorMessage"] = "Xoá hồ sơ thất bại !";
+                return RedirectToAction("DSHS");
             }
         }
         [HttpGet]
         public async Task<IActionResult> PheDuyetHS(int pd)
         {
             var result = await _hoSoService.PheDuyetHSAsync(pd);
+            var hoso = await _hoSoService.GetHoSoById(pd);
+            var nguoiTao = await _accountService.GetTaiKhoanByIdAsync(hoso.FK_iMaTK);
+            if (nguoiTao == null) return NotFound();
             if (result)
             {
-                TempData["Message"] = "Phê duyệt thành công";
+                // Gửi mail
+                string toEmail = "nguyeenhuong12345@gmail.com";
+                string subject = "Hồ sơ của bạn đã được phê duyệt";
+                string body = $"Xin chào {nguoiTao.UserName},\n\nHồ sơ \"{hoso.sTieuDe}\" của bạn đã được phê duyệt.\n\"Hiện giờ bạn có thể kết nối với phụ huynh, thực hiện ứng tuyển.\".";
+
+                await _emailSender.SendEmailAsync(toEmail, subject, body);
+
+                TempData["Tittle"] = "Đã phê duyệt hồ sơ";
+                TempData["SuccessMessage"] = "Phê duyệt thành công!";
             }
             else
             {
-                TempData["Error"] = "Không thể phê duyệt";
+                // Gửi mail
+                string toEmail = "nguyeenhuong12345@gmail.com";
+                string subject = "Hồ sơ của bạn đã bị từ chối phê duyệt";
+                string body = $"Xin chào {nguoiTao.UserName},\n\nHồ sơ \"{hoso.sTieuDe}\" của bạn đã bị từ chối phê duyệt với lý do:\n\"Cần chỉnh sửa lại hồ sơ cho hợp lệ\".";
+
+                await _emailSender.SendEmailAsync(toEmail, subject, body);
+
+                TempData["Tittle"] = "Vui lòng kiểm tra lại";
+                TempData["ErrorMessage"] = "Phê duyệt thất bại !";
             }
             return RedirectToAction("DSHS");
         }
@@ -288,11 +354,20 @@ namespace WebApplication1.Controllers
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
-                TempData["SuccessMessage"] = "Xoá tài khoản thành công.";
+                // Gửi mail
+                string toEmail = "nguyeenhuong12345@gmail.com";
+                string subject = "Hồ sơ của bạn đã bị từ chối";
+                string body = $"Xin chào {user.UserName},\n\nTài khoản \"{user.Email}\" của bạn đã xoá với lý do:\n\"Tài khoản có những hành vi vi phạm tiêu chuẩn cộng đồng.\".";
+
+                await _emailSender.SendEmailAsync(toEmail, subject, body);
+
+                TempData["Tittle"] = "Đã xoá tài khoản, gửi email ";
+                TempData["SuccessMessage"] = "Xoá tài khoản thành công!";
             }
             else
             {
-                TempData["ErrorMessage"] = "Xoá tài khoản thất bại.";
+                TempData["Tittle"] = "Vui lòng kiểm tra lại";
+                TempData["ErrorMessage"] = "Xoá tài khoản thất bại !";
             }
 
             return RedirectToAction("DanhSachUser");
@@ -370,6 +445,8 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 _goiService.UpdateAsync(model);
+                TempData["Tittle"] = "Gói dịch vụ đã được cập nhật";
+                TempData["SuccessMessage"] = "Cập nhật gói thành công!";
                 return RedirectToAction("QuanLyGoi");
             }
             return View(model);
@@ -387,6 +464,8 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> DeleteGDVConfirmed(int id)
         {
             await _goiService.DeleteAsync(id);
+            TempData["Tittle"] = "Gói dịch vụ đã được xoá";
+            TempData["SuccessMessage"] = "Xoá gói thành công!";
             return RedirectToAction("QuanLyGoi");
         }
         // quan ly giao dich
@@ -402,9 +481,23 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Duyet(int id)
         {
             await _thanhToanService.DuyetThanhToanAsync(id);
-
+            TempData["Tittle"] = "Đã duyệt thanh toán";
+            TempData["SuccessMessage"] = "Duyệt thanh toán thành công!";
             return RedirectToAction("QuanLyGD", new { trangthaiGD = "Đã duyệt" });
         }
 
+        public async Task<IActionResult> QLUT(string trangthai= "Chờ duyệt")
+        {
+            var ungTuyenList = await _ungTuyenService.GetAllUngTuyenAsync(trangthai);
+            return View(ungTuyenList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> TimKiem(string tuKhoa, DateTime? thoiGian)
+        {
+           var ungTuyenList = await _ungTuyenService.TimKiemUngTuyenAsync(tuKhoa,thoiGian);
+            return View("QLUT", ungTuyenList);
+        }
+
+        
     }
 }

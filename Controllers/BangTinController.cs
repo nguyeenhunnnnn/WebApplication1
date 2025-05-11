@@ -45,6 +45,10 @@ namespace WebApplication1.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var taiKhoan = await _taiKhoanRepo.GetTaiKhoanByIdAsync(userId);
 
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (taiKhoan == null)
                 return Unauthorized();
 

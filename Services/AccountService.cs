@@ -21,9 +21,9 @@ namespace WebApplication1.Services
         Task<bool> DeleteTaiKhoanAsync(string id);
         Task<bool> SaveChangesAsync();
         Task<bool> DeleteChangesAsync();
-        Task<bool> EmailExistsAsync(string email);
-        Task<bool> PhoneExistsAsync(string phone);
-        Task<bool> CCCDExistAsync(string CCCD);
+        Task<bool> EmailExistsAsync(string email, string excludeUserId = null);
+        Task<bool> PhoneExistsAsync(string phone, string excludeUserId = null);
+        Task<bool> CCCDExistAsync(string CCCD, string excludeUserId = null);
         Task<bool> CheckTaiKhoanExistsAsync(string id);
         Task<bool> CheckTaiKhoanExistsByEmailAsync(string email);
         Task<bool> CheckTaiKhoanExistsByPhoneAsync(string phone);
@@ -127,17 +127,17 @@ namespace WebApplication1.Services
         {
             return await _accountRepository.DeleteChangesAsync();
         }
-        public async Task<bool> EmailExistsAsync(string email)
+        public async Task<bool> EmailExistsAsync(string email, string excludeUserId = null)
         {
-            return await _accountRepository.EmailExistsAsync(email);
+            return await _accountRepository.EmailExistsAsync(email,excludeUserId);
         }
-        public async Task<bool> PhoneExistsAsync(string phone)
+        public async Task<bool> PhoneExistsAsync(string phone, string excludeUserId = null)
         {
-            return await _accountRepository.PhoneExistsAsync(phone);
+            return await _accountRepository.PhoneExistsAsync(phone,excludeUserId);
         }
-        public async Task<bool> CCCDExistAsync(string CCCD)
+        public async Task<bool> CCCDExistAsync(string CCCD, string excludeUserId = null)
         {
-            return await _accountRepository.CCCDExistAsync(CCCD);
+            return await _accountRepository.CCCDExistAsync(CCCD, excludeUserId);
         }
         public async Task<bool> CheckTaiKhoanExistsAsync(string id)
         {

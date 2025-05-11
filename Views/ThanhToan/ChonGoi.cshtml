@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/StyleSidebar.css" />
     <link rel="stylesheet" href="~/css/StyleCG.css" />
+    <link href="~/css/tb.css" rel="stylesheet" />
     <title>HUNO - Chon goi</title>
 
 </head>
@@ -25,6 +26,9 @@
                 Action = ViewContext.RouteData.Values["action"]?.ToString(),
                 VaiTro = User.FindFirst("VaiTro")?.Value
             })
+        <div class="notification-container">
+            @await Html.PartialAsync("_Notification")
+        </div>
         <!-- Main Content -->
         <div class="main-content">
             <div class="job-container">

@@ -39,6 +39,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Tiêu đề</label>
                                     <input asp-for="sTieuDe"  type="text" class="form-control" placeholder="Vui lòng nhập">
+                                    <span asp-validation-for="sTieuDe" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-col">
@@ -54,6 +55,7 @@
                                             <option>Tiếng Nhật</option>
                                             <option>Tiếng Nga</option>
                                         </select>
+                                        <span asp-validation-for="sMonday" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -68,6 +70,7 @@
                                     <option>Hà Nội</option>
                                     <option>Đà Nẵng</option>
                                 </select>
+                                <span asp-validation-for="sDiaDiem" class="text-danger"></span>
                             </div>
                             <button class="add-btn">
                                 <i class="fas fa-plus"></i>
@@ -88,6 +91,7 @@
                             <textarea rows="4" cols="50" asp-for="sYCau" class="editor-content">
                             
                             </textarea>
+                            
                         </div>
 
                         <div class="form-row">
@@ -95,6 +99,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Mức lương</label>
                                     <input asp-for="fMucLuong"  type="text" class="form-control" placeholder="120000">
+                                    <span asp-validation-for="fMucLuong" class="text-danger"></span>
                                 </div>
                             </div>
            
@@ -121,6 +126,7 @@
                                            
                                         <label for="female">Nữ</label>
                                     </div>
+                                        
                             </div>
                         </div>
                             </div>
@@ -128,6 +134,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Tuổi</label>
                                     <input asp-for="sTuoi"  type="text" class="form-control" placeholder="21-24">
+                                    <span asp-validation-for="sTuoi" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -204,6 +211,11 @@
                             });
                         });
                     </script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
                     </body>
                     </html>
 

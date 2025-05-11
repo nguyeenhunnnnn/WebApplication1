@@ -30,13 +30,15 @@ namespace WebApplication1.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IBangTinRepository _bangTinRepository;
+        private readonly IThanhToanRepository _thanhToanRepo;
         private readonly UserManager<TaiKhoan> _userManager;
 
-        public BangTinService(ApplicationDbContext context, IBangTinRepository bangTinRepository, UserManager<TaiKhoan> userManager)
+        public BangTinService(ApplicationDbContext context, IBangTinRepository bangTinRepository, UserManager<TaiKhoan> userManager, IThanhToanRepository thanhToanRepo)
         {
             _context = context;
             _bangTinRepository = bangTinRepository;
             _userManager = userManager;
+            _thanhToanRepo = thanhToanRepo;
         }
         public async Task<bool> SaveChangesAsync()
         {
@@ -88,6 +90,8 @@ namespace WebApplication1.Services
                 thongTinNguoiDungVm.mondaygiasu = currentUser.BaiDangs.Select(b => b.sMonday).FirstOrDefault() ?? "";
                 thongTinNguoiDungVm.GoiCuoc = currentUser.GoiCuoc;
                 thongTinNguoiDungVm.AvatarUrl = currentUser.FileAvata;
+
+                thongTinNguoiDungVm.GoiDichVu = await _thanhToanRepo.GetGoiDichVuByUserIdAsync(currentUser.Id);
             }
 
 

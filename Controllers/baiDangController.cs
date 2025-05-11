@@ -432,6 +432,12 @@ namespace WebApplication1.Controllers
             await _dangTinService.HideBaiDang(baiDangId,Ishidden);
             return RedirectToAction("DanhSachUngVien");
         }
+        [HttpPost]
+        public async Task<IActionResult> TimKiem(string tuKhoa, DateTime? thoiGian)
+        {
+            var ungTuyenList = await _IUngTuyenService.TimKiemUngTuyenAsync(tuKhoa, thoiGian);
+            return View("DanhSachUngVien", ungTuyenList);
+        }
         public static string RemoveDiacritics(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

@@ -96,6 +96,7 @@ namespace WebApplication1.Services
                 TenGoi = t.GoiDichVu.TenGoi,
                 SoTien = t.GoiDichVu.Gia,
                 NgayThanhToan = t.NgayThanhToan,
+                NgayDang = t.BaiDang.dNgayTao,
                 DayUuTienDen = t.BaiDang.dUuTienDen,
                 TrangThaiGD = t.BaiDang.sTrangThaiGD
             }).ToList();

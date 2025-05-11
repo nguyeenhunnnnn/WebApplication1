@@ -39,11 +39,16 @@ namespace WebApplication1.Controllers
 
             // Kiểm tra đã đánh giá chưa
             if (await _context.DanhGiaGiaSus.AnyAsync(d => d.NguoiDanhGiaId == userId && d.GiaSuId == giaSuId))
-                return BadRequest("Bạn đã đánh giá gia sư này rồi.");
-
+            {
+                TempData["Tittle"] = "Bạn đã đánh giá gia sư này rồi.";
+                TempData["ErrorMessage"] = "Đánh giá thất bại !";
+                return View();
+            }
             await _danhGiaService.AddDanhGiaAsync(userId!, giaSuId, soSao, noiDung);
-           // return RedirectToAction("ChiTiet", "Profile", new { id = giaSuId });
-           return RedirectToAction("Index", "Home");
+            TempData["Tittle"] = "Đánh giá của bạn đã được gửi.";
+            TempData["SuccessMessage"] = "Đánh giá thành công!";
+            // return RedirectToAction("ChiTiet", "Profile", new { id = giaSuId });
+            return RedirectToAction("DanhSachUngVien", "baiDang");
         }
         public IActionResult Index()
         {

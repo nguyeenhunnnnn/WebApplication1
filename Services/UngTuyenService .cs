@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1.Repositories;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Globalization;
+using System.Text;
 namespace WebApplication1.Services
 {
     public interface IUngTuyenService
@@ -17,18 +19,95 @@ namespace WebApplication1.Services
         Task<List<UngTuyenViewModel>> LayDanhSachUngVienCuaPhuHuynh(string phuHuynhId, string trangthai);
         Task HuyUngTuyenAsync(string maTK, int maBaiDang);
         Task<List<UngTuyenViewModel>> TimKiemHoSoAsync(string tieude, DateTime? thoiGian, string maGiaSu);
+        Task<List<UngTuyenViewModel>> GetAllUngTuyenAsync(string trangthai);
+        Task<List<UngTuyenViewModel>> TimKiemUngTuyenAsync(string tuKhoa, DateTime? thoiGian);
     }
     public class UngTuyenService : IUngTuyenService
     {
         private readonly IUngTuyenRepository _repo;
+        private readonly ApplicationDbContext _context;
         private readonly IHoSoRepository _hosoRepo;
 
-        public UngTuyenService(IUngTuyenRepository repo, IHoSoRepository hosoRepo)
+        public UngTuyenService(IUngTuyenRepository repo, IHoSoRepository hosoRepo, ApplicationDbContext context)
         {
             _repo = repo;
             _hosoRepo = hosoRepo;
+            _context = context;
+        }
+        public async Task<List<UngTuyenViewModel>> TimKiemUngTuyenAsync(string tuKhoa, DateTime? thoiGian)
+        {
+            var query = _context.UngTuyen
+                .Include(ut => ut.TaiKhoanGiaSu)
+                .Include(ut => ut.BaiDang).ThenInclude(bd => bd.TaiKhoan)
+                .Include(ut => ut.HoSo)
+                .AsQueryable();
+
+            // Lọc theo ngày (vẫn có thể xử lý ở SQL)
+            if (thoiGian.HasValue)
+            {
+                query = query.Where(ut => ut.NgayUngTuyen.Date == thoiGian.Value.Date);
+            }
+
+            // Thực thi SQL trước, rồi lọc theo từ khóa ở client
+            var list = await query.ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                var keyword = RemoveDiacritics(tuKhoa).ToLower();
+                list = list.Where(ut =>
+                    RemoveDiacritics(ut.TaiKhoanGiaSu.UserName ?? "").ToLower().Contains(keyword) ||
+                    RemoveDiacritics(ut.BaiDang?.sTieuDe ?? "").ToLower().Contains(keyword) ||
+                    RemoveDiacritics(ut.HoSo?.sTieuDe ?? "").ToLower().Contains(keyword)
+                ).ToList();
+            }
+
+            return list.Select(ut => new UngTuyenViewModel
+            {
+                Id = ut.Id,
+                TenGiaSu = ut.TaiKhoanGiaSu.UserName,
+                GiaSuID = ut.TaiKhoanGiaSu.Id,
+                EmailGiaSu = ut.TaiKhoanGiaSu.Email,
+                AvatarUrl = ut.TaiKhoanGiaSu.FileAvata,
+                IdHoSo = ut.HoSo.iMaHS,
+                TieuDeHoSo = ut.HoSo.sTieuDe,
+                BangCap = ut.HoSo.sBangCap,
+                phuhuynhName = ut.BaiDang.TaiKhoan.UserName,
+                PhuHuynhId = ut.BaiDang.TaiKhoan.Id,
+                PhuHuynhAvatarUrl=ut.BaiDang.TaiKhoan.FileAvata,
+                TrangThai = ut.TrangThai,
+                NgayUngTuyen = ut.NgayUngTuyen,
+                MaBaiDang = ut.BaiDang.PK_iMaBaiDang,
+                TieuDeBaiDang = ut.BaiDang.sTieuDe,
+                fileCV = ut.HoSo.sDuongDanTep,
+                ishidden = ut.BaiDang.IsHidden
+            }).ToList();
         }
 
+
+        public async Task<List<UngTuyenViewModel>> GetAllUngTuyenAsync(string trangthai)
+        {
+            var list = await _repo.GetAllUngTuyenAsyncByTrangThai(trangthai);
+            return list.Select(u => new UngTuyenViewModel
+            {
+                Id = u.Id,
+                TenGiaSu = u.TaiKhoanGiaSu.UserName,
+                GiaSuID = u.TaiKhoanGiaSu.Id,
+                EmailGiaSu = u.TaiKhoanGiaSu.Email,
+                AvatarUrl = u.TaiKhoanGiaSu.FileAvata,
+                TieuDeHoSo = u.HoSo.sTieuDe,
+                BangCap = u.HoSo.sBangCap,
+                IdHoSo = u.HoSo.iMaHS,
+                phuhuynhName = u.BaiDang.TaiKhoan.UserName,
+                PhuHuynhId = u.BaiDang.TaiKhoan.Id,
+                PhuHuynhAvatarUrl = u.BaiDang.TaiKhoan.FileAvata,
+                TrangThai = u.TrangThai,
+                NgayUngTuyen = u.NgayUngTuyen,
+                fileCV = u.HoSo.sDuongDanTep,
+                ishidden = u.BaiDang.IsHidden,
+                TieuDeBaiDang=u.BaiDang.sTieuDe,
+                MaBaiDang = u.FK_iMaBaiDang
+            }).ToList();
+        }
         public async Task UngTuyenAsync(string maTK, int maBaiDang)
         {
            
@@ -66,6 +145,7 @@ namespace WebApplication1.Services
                 IdHoSo = u.HoSo.iMaHS,
                 phuhuynhName=u.BaiDang.TaiKhoan.UserName,
                 PhuHuynhId = u.BaiDang.TaiKhoan.Id,
+                PhuHuynhAvatarUrl = u.BaiDang.TaiKhoan.FileAvata,
                 TrangThai = u.TrangThai,
                 NgayUngTuyen = u.NgayUngTuyen,
                 fileCV = u.HoSo.sDuongDanTep,
@@ -89,6 +169,7 @@ namespace WebApplication1.Services
                 TieuDeBaiDang = u.BaiDang?.sTieuDe,
                 phuhuynhName = u.BaiDang?.TaiKhoan?.UserName,
                 PhuHuynhId = u.BaiDang.TaiKhoan.Id,
+                PhuHuynhAvatarUrl = u.BaiDang.TaiKhoan.FileAvata,
                 TrangThai = u.TrangThai,
                 NgayUngTuyen = u.NgayUngTuyen
             }).ToList();
@@ -138,6 +219,24 @@ namespace WebApplication1.Services
                 ishidden = u.BaiDang?.IsHidden ?? false
             }).ToList();
         }
+        public static string RemoveDiacritics(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
 
+            var normalized = input.Normalize(NormalizationForm.FormD);
+            var builder = new StringBuilder();
+
+            foreach (var c in normalized)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    builder.Append(c);
+                }
+            }
+
+            return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
     }
 }

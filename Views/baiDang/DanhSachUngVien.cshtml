@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="~/css/styleDangTin.css" />
     <link rel="stylesheet" href="~/css/StyleSidebar.css" />
     <link rel="stylesheet" href="~/css/styleQlbd.css" />
+    <link href="~/css/tb.css" rel="stylesheet" />
     <title>HUNO - Danh sach ung tuyen</title>
 
     <style>
@@ -34,7 +35,9 @@
             Action = ViewContext.RouteData.Values["action"]?.ToString(),
             VaiTro = User.FindFirst("VaiTro")?.Value
         })
-
+    <div class="notification-container">
+        @await Html.PartialAsync("_Notification")
+    </div>
     <!-- Main Content -->
     <div class="main-content">
 
@@ -49,31 +52,11 @@
                         <a href="?trangthai=Từ chối">Từ chối</a>
                     </form>
                 </div>
-                <form method="post" asp-action="SearchDB">
+                <form method="post" asp-action="TimKiem">
                     <div class="search-row">
-
                         <div class="search-field">
-                            <label class="search-label">Môn học</label>
-                            <select name="MonDay" class="search-select">
-                                <option value="" selected>Chọn</option>
-                                <option value="Toán học">Toán Học</option>
-                                <option value="Ngữ Văn">Ngữ Văn</option>
-                                <option value="Tiếng Anh">Tiếng Anh</option>
-                                <option>Vật Lý</option>
-                                <option>Tiếng Nhật</option>
-                                <option>Tiếng Nga</option>
-
-                            </select>
-                        </div>
-                        <div class="search-field">
-                            <label class="search-label">Địa điểm</label>
-                            <select name="Diadiem" class="search-select">
-                                <option value="" selected>Chọn</option>
-                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                                <option value="Hà Nội">Hà nội</option>
-                                <option value="Đà Nẵng">Đà Nẵng</option>
-                                <option value="Ninh Bình">Ninh Bình</option>
-                            </select>
+                            <label class="search-label">Từ khóa</label>
+                            <input name="TuKhoa" type="text" class="search-input" placeholder="Nhập từ khóa">
                         </div>
                         <div class="search-field">
                             <label class="search-label">Thời gian đăng</label>
@@ -88,13 +71,6 @@
                                     </svg>
                                 </span>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="search-row">
-                        <div class="search-field">
-                            <label class="search-label">Từ khóa</label>
-                            <input name="TuKhoa" type="text" class="search-input" placeholder="Nhập từ khóa">
                         </div>
                         <button class="search-btn" type="submit">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

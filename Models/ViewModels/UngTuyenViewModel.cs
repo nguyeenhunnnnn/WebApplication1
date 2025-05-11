@@ -12,6 +12,7 @@
         public string BangCap { get; set; }
         public string phuhuynhName { get; set; } 
         public string PhuHuynhId { get; set; }// ID của phụ huynh
+        public string PhuHuynhAvatarUrl { get; set; } // Đường dẫn đến ảnh đại diện của phụ huynh
         public string TrangThai { get; set; }
         public DateTime NgayUngTuyen { get; set; }
         public int MaBaiDang { get; set; }

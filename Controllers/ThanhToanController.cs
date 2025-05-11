@@ -52,6 +52,12 @@ namespace WebApplication1.Controllers
                 BaiDangId = baiDangId,
                 GoiDichVu = goi
             };
+            if (goi == null)
+            {
+                TempData["Tittle"] = "Vui lòng chọn lại gói";
+                TempData["ErrorMessage"] = "Gói dịch vụ không tồn tại.";
+                return RedirectToAction("ChonGoi", new { BaiDangId = baiDangId });
+            }
             return View(vm);
         }
 
@@ -76,11 +82,20 @@ namespace WebApplication1.Controllers
             {
                 baiDang.sTrangThaiGD = "Chờ duyệt"; // bạn nên dùng enum hoặc hằng số nếu có
                 await _baiDangRepo.UpdateDangTin(baiDang);
+                TempData["Tittle"] = "Thanh toán của bạn đang chờ duyệt";
+                TempData["SuccessMessage"] = "Thanh toán thành công!";
+                return RedirectToAction("Index", "baiDang");
             }
-            // Đẩy bài đăng lên đầu (cập nhật NgayDang)
-            //_baiDangRepo.CapNhatThoiGianDang(BaiDangId, DateTime.Now.AddDays(goi.SoNgayHieuLuc));
+            else
+            {
+                TempData["Tittle"] = "Vui lòng thanh toán lại.";
+                TempData["ErrorMessage"] = "Thanh toán thất bại !";
+                return View();
+            }
+                // Đẩy bài đăng lên đầu (cập nhật NgayDang)
+                //_baiDangRepo.CapNhatThoiGianDang(BaiDangId, DateTime.Now.AddDays(goi.SoNgayHieuLuc));
 
-            return RedirectToAction("Index", "baiDang");
+                return RedirectToAction("Index", "baiDang");
         }
 
         public async Task<IActionResult> DonHang()
