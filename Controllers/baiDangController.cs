@@ -361,7 +361,10 @@ namespace WebApplication1.Controllers
                     "Chúc mừng bạn đã được nhận!",
                     "Bạn đã được chấp nhận làm gia sư cho bài đăng này."
                 );
-                
+                // Ẩn bài đăng
+                await _dangTinService.HideBaiDang(baiDangId, true);
+
+
                 // Từ chối các gia sư còn lại
                 var ungViens = await _ungTuyenRepo.GetUngTuyenByBaiDangId(baiDangId);
                 foreach (var uv in ungViens)

@@ -494,8 +494,30 @@ namespace WebApplication1.Controllers
                 };
                 return View(model);
             }
+            if (user.VaiTro == "Admin")
+            {
+                var model = new ProfileViewModel
+                {
+                    VaiTro = user.VaiTro,
+                    Email = user.Email,
+                    MatKhau = user.PasswordHash,
+                    CCCD = user.CCCD,
+                    SDT = user.PhoneNumber,
+                    HoTen = user.UserName,
+                    DiaChi = user.DiaChi,
+                    sFile_Avata_Path = user.FileAvata,
+                    sFile_CCCD_Path = user.FileCCCD,
+                    sFile_Avata = null,
+                    sFile_CCCD = null,
+                    // hien thị goi cuoc cua nguoi dung
+                    //tengoi=user.ThanhToans.FirstOrDefault()?.GoiDichVu.TenGoi, //THEM
+                    // ➕ Truyền dữ liệu đánh giá vào ViewModel
+                   
+                };
+                return View(model);
+            }
 
-                return View();
+            return View();
         }
         private void KeepStep1Data()
         {
